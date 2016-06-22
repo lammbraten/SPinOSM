@@ -13,9 +13,9 @@ import de.spinosm.osm.datatypes.OSMRelation;
 import de.spinosm.osm.datatypes.OSMWay;
 
 public interface OSMAPI {
-	OSMNode getNode(String uid) throws IOException, SAXException, ParserConfigurationException;
-	OSMWay getWay(String uid);
-	OSMRelation getRelation(String uid);
+	OSMNode getNode(String id) throws IOException, SAXException, ParserConfigurationException;
+	OSMWay getWay(String id);
+	OSMRelation getRelation(String id);
 	InputStream connect(String query) throws IOException;
 	Document getOsmData(InputStream xml) throws SAXException, IOException, ParserConfigurationException;
 

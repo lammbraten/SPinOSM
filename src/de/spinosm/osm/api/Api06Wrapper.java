@@ -42,8 +42,8 @@ public class Api06Wrapper implements OSMAPI {
 	}
 
 	@Override
-	public OSMNode getNode(String uid) throws IOException, SAXException, ParserConfigurationException {
-		List<OSMNode> nodes = getNodes(getOsmData(connect("node/" + uid)));
+	public OSMNode getNode(String id) throws IOException, SAXException, ParserConfigurationException {
+		List<OSMNode> nodes = getNodes(getOsmData(connect("node/" + id)));
 		if (!nodes.isEmpty()) {
 			return nodes.iterator().next();
 		}
@@ -51,13 +51,13 @@ public class Api06Wrapper implements OSMAPI {
 	}
 
 	@Override
-	public OSMWay getWay(String uid) {
+	public OSMWay getWay(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public OSMRelation getRelation(String uid) {
+	public OSMRelation getRelation(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -102,7 +102,7 @@ public class Api06Wrapper implements OSMAPI {
 					version = namedItemVersion.getNodeValue();
 				}
 
-				osmNodes.add(new OSMNode(id, latitude, longitude, version, tags));
+				osmNodes.add(new OSMNode(id, latitude, longitude, version));
 			}
 
 		}
