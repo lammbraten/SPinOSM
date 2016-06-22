@@ -76,7 +76,7 @@ public class Api06WrapperTest {
         if (testException != null)
             expected.expect(testException);
 		
-		assertNotNull(api06wrapper.connect("node/"+testNodeId));
+		assertNotNull(api06wrapper.connectWith("node/"+testNodeId));
 	}
 	
 	@Test
@@ -102,8 +102,8 @@ public class Api06WrapperTest {
         if (testException != null)
             expected.expect(testException);
         
-		InputStream xml = api06wrapper.connect("node/"+testNodeId);
-		assertNotNull(api06wrapper.getOsmData(xml));
+		InputStream xml = api06wrapper.connectWith("node/"+testNodeId);
+		assertNotNull(api06wrapper.getOsmDataFrom(xml));
 	}
 	
 	@Ignore("not ready to test now")

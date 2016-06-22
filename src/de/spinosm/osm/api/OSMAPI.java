@@ -16,7 +16,7 @@ public interface OSMAPI {
 	OSMNode getNode(String id) throws IOException, SAXException, ParserConfigurationException;
 	OSMWay getWay(String id);
 	OSMRelation getRelation(String id);
-	InputStream connect(String query) throws IOException;
-	Document getOsmData(InputStream xml) throws SAXException, IOException, ParserConfigurationException;
+	InputStream connectWith(String query) throws IOException;
+	Document getOsmDataFrom(InputStream xml) throws SAXException, IOException, ParserConfigurationException;
 
 }
