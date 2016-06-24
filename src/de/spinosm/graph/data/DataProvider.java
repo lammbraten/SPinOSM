@@ -1,4 +1,4 @@
-package de.spinosm.graph;
+package de.spinosm.graph.data;
 
 public interface DataProvider {
 

@@ -1,5 +1,7 @@
 package de.spinosm.graph;
 
-public class StreetGraph extends OsmApiWrapper {
+import de.spinosm.graph.data.OsmApiWrapper;
+
+public class StreetGraph extends DirectedGraph{
 
 }
