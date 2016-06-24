@@ -1,13 +1,16 @@
 package de.spinosm.graph;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class DirectedGraph implements Graph {
 
+	LinkedList<Knot> nodes;
+	
+	
 	@Override
-	public List<Knot> getVertices() {
-		// TODO Auto-generated method stub
-		return null;
+	public LinkedList<Knot> getNodes() {
+		return nodes;
 	}
 
 }

@@ -1,8 +1,9 @@
 package de.spinosm.graph;
 
-import java.util.List;
+import java.util.LinkedList;
 
 public interface Graph {
 
-	public List<Knot> getVertices();
+	LinkedList<Knot> getNodes();
+	public void setNodes(LinkedList<Knot> nodes);
 }
