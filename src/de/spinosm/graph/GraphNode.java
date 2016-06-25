@@ -8,14 +8,14 @@ public abstract class GraphNode implements Knot {
 	
 	@Override
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
+		if(!edges.isEmpty())
+			return true;
 		return false;
 	}
 
 	@Override
 	public Knot next() {
-		// TODO Auto-generated method stub
-		return null;
+		return edges.iterator().next().getOtherKnotThan(this);
 	}
 
 	@Override
@@ -24,21 +24,23 @@ public abstract class GraphNode implements Knot {
 	}
 
 	@Override
-	public Edge getCheapestEdge() {
-		// TODO Auto-generated method stub
-		return null;
+	public void removeEdge(Edge toRemove) {
+		edges.removeIf(e -> e.equals(toRemove));
 	}
 
 	@Override
-	public void removeEdge(Edge e) {
-		// TODO Auto-generated method stub
-
+	public void addEdge(Edge e) {
+		edges.add(e);
 	}
 
 	@Override
-	public void addEdge() {
-		// TODO Auto-generated method stub
-
+	public void setEdges(LinkedList<Edge> edges) {
+		this.edges = edges;
+		
 	}
 
+	@Override
+	public void getOutDegree() {
+		this.edges.size();
+	}
 }

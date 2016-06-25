@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 public interface Knot extends Iterator<Knot> {
 	public LinkedList<Edge> getEdges();
+	public void setEdges(LinkedList<Edge> edges);
 	public Edge getCheapestEdge();
 	public void removeEdge(Edge e);
-	public void addEdge();
-	
-
+	void addEdge(Edge e);
+	public void getOutDegree();
 }

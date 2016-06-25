@@ -13,4 +13,13 @@ public abstract class DirectedGraph implements Graph {
 		return nodes;
 	}
 
+
+	@Override
+	/**
+	 * Heyho
+	 */
+	public void setNodes(LinkedList<Knot> nodes) {
+		this.nodes = nodes;		
+	}
+
 }

@@ -10,19 +10,24 @@ public class StreetGraph extends DirectedGraph{
 	private DataProvider dataprovider;
 	
 	StreetGraph(DataProvider dataprovider){
+		super();
 		this.dataprovider = dataprovider;
+	}
+	
+	StreetGraph(DataProvider dataprovider, LinkedList<Knot> knots){
+		this.dataprovider = dataprovider;
+		this.nodes = knots;
 	}
 	
 	
 	@Override
 	public void setNodes(LinkedList<Knot> nodes) {
-		this.nodes = nodes;
-		
+		super.setNodes(nodes);	
 	}
 	
 	@Override
 	public LinkedList<Knot> getNodes() {
-		return this.nodes;
+		return super.getNodes();
 	}
 
 }
