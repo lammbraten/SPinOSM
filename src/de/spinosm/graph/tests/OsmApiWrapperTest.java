@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,8 +23,8 @@ public class OsmApiWrapperTest {
 	private static final int RELATIONINDEX = 2;
 	private static final boolean TEST_SHOULD_FAIL = true;
 	private static final long[] EXISTING_ELEMENTS = {
-			26576175L, //Node
-			23564402L, //Way
+			203986826L, //Node
+			38156114L, //Way
 			180627L //Relation
 	};
 	private static final long[] FAILING_ELEMENTS = {
@@ -85,6 +86,58 @@ public class OsmApiWrapperTest {
 			assertNotNull(osmapiwrapper.getWay(testcase[WAYINDEX]));
 	}
 	
+	@Test 
+	public void getNodesForWay(){
+		if(testShouldFail){
+			try{
+				assertFalse(osmapiwrapper.getNodesForWay(testcase[WAYINDEX]).size() > 0);
+				fail();
+			}catch(Exception e){}
+		}else
+			assertTrue(osmapiwrapper.getNodesForWay(testcase[WAYINDEX]).size() > 0);
+	}
+	
+	@Test 
+	public void getRelationsForWay(){
+		if(testShouldFail){
+			try{
+				assertFalse(osmapiwrapper.getRelationsForWay(testcase[WAYINDEX]).size() > 0);		
+			}catch(Exception e){}
+		}else
+			assertTrue(osmapiwrapper.getRelationsForWay(testcase[WAYINDEX]).size() > 0);
+	}
+	
+	@Test 
+	public void getWaysForNode(){
+		if(testShouldFail){
+			try{
+				assertFalse(osmapiwrapper.getWaysForNode(testcase[NODEINDEX]).size() > 0);		
+			}catch(Exception e){}
+		}else
+			assertTrue(osmapiwrapper.getWaysForNode(testcase[NODEINDEX]).size() > 0);
+	}	
+	
+	@Test 
+	public void getRelationsForNode(){
+		if(testShouldFail){
+			try{
+				assertFalse(osmapiwrapper.getRelationsForNode(testcase[NODEINDEX]).size() > 0);	
+			}catch(Exception e){}
+		}else
+			assertTrue(osmapiwrapper.getRelationsForNode(testcase[NODEINDEX]).size() > 0);
+	}	
+	
+	@Test
+	@Ignore("No testdata yet")
+	public void getRelationsForRelation(){
+		if(testShouldFail){
+			try{
+				assertFalse(osmapiwrapper.getRelationsForRelation(testcase[RELATIONINDEX]).size() > 0);			
+			}catch(Exception e){}
+		}else
+			assertTrue(osmapiwrapper.getRelationsForRelation(testcase[RELATIONINDEX]).size() > 0);
+	}	
+		
 	@Test
 	public void getRelation(){
 		if(testShouldFail)
