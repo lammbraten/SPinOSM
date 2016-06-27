@@ -5,11 +5,11 @@ import java.util.List;
 
 public abstract class DirectedGraph implements Graph {
 
-	LinkedList<Knot> nodes;
+	LinkedList<RouteableNode> nodes;
 	
 	
 	@Override
-	public LinkedList<Knot> getNodes() {
+	public LinkedList<RouteableNode> getNodes() {
 		return nodes;
 	}
 
@@ -18,7 +18,7 @@ public abstract class DirectedGraph implements Graph {
 	/**
 	 * Heyho
 	 */
-	public void setNodes(LinkedList<Knot> nodes) {
+	public void setNodes(LinkedList<RouteableNode> nodes) {
 		this.nodes = nodes;		
 	}
 
