@@ -2,24 +2,21 @@ package de.spinosm.graph;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 
 public abstract class DirectedGraph implements Graph {
 
-	LinkedList<RouteableNode> nodes;
+	TreeSet<RouteableNode> nodes;
 	
 	
 	@Override
-	public LinkedList<RouteableNode> getNodes() {
+	public TreeSet<RouteableNode> getNodes() {
 		return nodes;
 	}
 
 
 	@Override
-	/**
-	 * Heyho
-	 */
-	public void setNodes(LinkedList<RouteableNode> nodes) {
+	public void setNodes(TreeSet<RouteableNode> nodes) {
 		this.nodes = nodes;		
 	}
-
 }

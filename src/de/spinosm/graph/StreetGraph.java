@@ -1,33 +1,65 @@
 package de.spinosm.graph;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
-import de.spinosm.graph.data.OsmApiWrapper;
+import de.westnordost.osmapi.map.data.OsmNode;
 
 public class StreetGraph extends DirectedGraph{
 
 	private DataProvider dataprovider;
+	private TreeSet<StreetJunction> nodes;
 	
-	StreetGraph(DataProvider dataprovider){
+	public StreetGraph(DataProvider dataprovider){
 		super();
 		this.dataprovider = dataprovider;
 	}
 	
-	StreetGraph(DataProvider dataprovider, LinkedList<RouteableNode> knots){
+	public StreetGraph(DataProvider dataprovider, TreeSet<StreetJunction> nodes){
 		this.dataprovider = dataprovider;
-		this.nodes = knots;
+		this.nodes = nodes;
 	}
 	
-	
-	@Override
-	public void setNodes(LinkedList<RouteableNode> nodes) {
-		super.setNodes(nodes);	
+	public void setStreetJunctions(TreeSet<StreetJunction> junctions) {
+		this.nodes = junctions;	
 	}
 	
-	@Override
-	public LinkedList<RouteableNode> getNodes() {
-		return super.getNodes();
+	public TreeSet<StreetJunction> getStreetJunctions() {
+		return this.nodes;	
 	}
+	
+
+	public StreetJunction getNode(long id){
+		StreetJunction returnValue = checkBufferedNodesForId(id);
+		if(returnValue != null)
+			return returnValue;
+		
+		return getNodeFromServer(id);
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	private StreetJunction getNodeFromServer(long id) {
+		StreetJunction returnValue;
+		OsmNode osmNode = (OsmNode) this.dataprovider.getNode(id);
+		returnValue = new StreetJunction(osmNode);
+		this.nodes.add(returnValue);
+		return returnValue;
+	}
+
+	/**
+	 * @param id
+	 */
+	private StreetJunction checkBufferedNodesForId(long id) {
+		for(StreetJunction n : nodes)
+			if(n.getId() == id)
+				return n;
+		return null;
+	}
+	
+
+	
 
 }

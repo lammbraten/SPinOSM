@@ -1,9 +1,9 @@
 package de.spinosm.graph;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 
 public interface Graph {
 
-	LinkedList<RouteableNode> getNodes();
-	public void setNodes(LinkedList<RouteableNode> nodes);
+	TreeSet<RouteableNode> getNodes();
+	public void setNodes(TreeSet<RouteableNode> nodes);
 }

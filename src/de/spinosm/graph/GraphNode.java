@@ -1,32 +1,33 @@
 package de.spinosm.graph;
 
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 
 
-public abstract class GraphNode implements RouteableNode {
+public abstract class GraphNode implements RouteableNode, Comparable {
 
 	private LinkedList<RouteableEdge> edges;
-	private String id;
+	private long id;
 	private int distance;
 	
 	
-	public GraphNode(String id, int distance){
+	public GraphNode(long id, int distance){
 		this.setId(id);
 		this.setDistance(distance);
 	}
 	
-	public GraphNode(String id){
+	public GraphNode(long id){
 		this.setId(id);
 		this.setDistance(Integer.MAX_VALUE);
 	}
 	
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(long l) {
+		this.id = l;
 	}
 
 	public int getDistance() {
@@ -75,5 +76,38 @@ public abstract class GraphNode implements RouteableNode {
 	@Override
 	public void getOutDegree() {
 		this.edges.size();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other == null)
+			return false;
+		if(this == other)
+			return true;
+		if(this.getClass().equals(other.getClass())){
+			GraphNode otherGraphNode = (GraphNode) other;
+			if(this.id == otherGraphNode.id &&
+					this.edges.equals(otherGraphNode.edges) &&
+					this.distance == otherGraphNode.distance)
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "" + this.getId();
+	}
+	
+	
+	@Override
+	public int compareTo(Object other) {
+		if(other == null )
+			return 1;
+		if(this.getClass().equals(other.getClass())){
+			GraphNode otherGraphNode = (GraphNode) other;
+			return (int) (this.id - otherGraphNode.id);
+		}
+		return 1;
 	}
 }
