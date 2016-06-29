@@ -1,4 +1,4 @@
-package de.spinosm.graph.tests;
+package de.spinsom.graph;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package de.spinosm.graph.tests;
+package de.spinsom.graph;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,9 @@ import de.westnordost.osmapi.map.data.OsmNode;
 
 @RunWith(Parameterized.class)
 public class StreetGraphTest {
-	private static final boolean TEST_SHOULD_FAIL = true;
+	private static final int TEST_SHOULD_WORK = 0;
+	private static final int TEST_SHOULD_FAIL = 1;
+	private static final int TEST_THROWS_EXCEPTION = 2;
 	private static final OsmNode EXISTING_NODE1 = new OsmNode(1636160756l, 1,  50.8992329, 7.0318133, null, null);
 	private static final OsmNode EXISTING_NODE2 = new OsmNode(203986826l, 7, 50.8975988, 7.0364495, null, null);
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(1861698092l, 2, 50.8978525, 7.0351034, null, null);
@@ -48,20 +50,21 @@ public class StreetGraphTest {
 			NOT_EXISTING_NODE
 	};
 	
-	private boolean testShouldFail;
+	private int testResult;
 	private StreetGraph streetGraph;
 	private OsmNode[] testSet;
+	private TreeSet<StreetJunction> bufferedTreeSet;
 	static OsmApiWrapper osmapiwrapper;
 	
-	public StreetGraphTest(boolean testShouldFail, StreetJunction[] buffer, OsmNode[] testSet){
+	
+	public StreetGraphTest(int testResult, StreetJunction[] buffer, OsmNode[] testSet){
 		super();
-		streetGraph = new StreetGraph(osmapiwrapper);
-		this.testShouldFail = testShouldFail;
-		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
+		this.testResult = testResult;
+		bufferedTreeSet = new TreeSet<StreetJunction>();
 		for(StreetJunction sj : buffer){
 			bufferedTreeSet.add(sj);
 		}
-		this.streetGraph.setStreetJunctions(bufferedTreeSet);
+		streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);		
 		this.testSet = testSet;
 	}
 	
@@ -77,24 +80,49 @@ public class StreetGraphTest {
  	@Parameters
  	public static Collection values() {
  		return Arrays.asList(new Object[][] {	
- 			{!TEST_SHOULD_FAIL, ALL_NODES_BUFFERED, TEST_SET1},
- 			{!TEST_SHOULD_FAIL, SOME_NODES_BUFFERED, TEST_SET1},
- 			{!TEST_SHOULD_FAIL, NO_NODES_BUFFERED, TEST_SET1},
- 			{TEST_SHOULD_FAIL, ALL_NODES_BUFFERED, TEST_SET2}
+ 			{TEST_SHOULD_WORK, ALL_NODES_BUFFERED, TEST_SET1},
+ 			{TEST_SHOULD_WORK, SOME_NODES_BUFFERED, TEST_SET1},
+ 			{TEST_SHOULD_WORK, NO_NODES_BUFFERED, TEST_SET1},
+ 			{TEST_SHOULD_FAIL, NO_NODES_BUFFERED, TEST_SET2}
  		});
  	}
 
 	@Test
-	public void testGetNodes() {
-		if(testShouldFail)
-			assertNull(streetGraph.getNodes());
-		else
-			assertNotNull(streetGraph.getStreetJunctions());	
+	public void testgetStreetJunctions() {
+		switch(testResult){
+			case TEST_SHOULD_WORK:
+				assertNotNull(streetGraph.getStreetJunctions());
+				break;
+			case TEST_SHOULD_FAIL:
+				assertTrue(streetGraph.getStreetJunctions().isEmpty());		
+				break;
+			case TEST_THROWS_EXCEPTION: //Not Used yet
+				try{
+					streetGraph.getStreetJunctions();
+					fail();
+				} catch(Exception e){}
+				break;
+		}		
 	}
 
 	@Test
 	public void testSetNodes() {
-		fail("Not yet implemented");
+		int size = bufferedTreeSet.size();
+		switch(testResult){
+			case TEST_SHOULD_WORK:
+				streetGraph.setStreetJunctions(bufferedTreeSet);
+				assertEquals(3, streetGraph.getStreetJunctions().size());
+				break;
+			case TEST_SHOULD_FAIL:
+				assertTrue(streetGraph.getStreetJunctions().isEmpty());		
+				break;
+			case TEST_THROWS_EXCEPTION: //Not Used yet
+				try{
+					streetGraph.getStreetJunctions();
+					fail();
+				} catch(Exception e){}
+				break;
+		}
 	}
 
 	@Test
