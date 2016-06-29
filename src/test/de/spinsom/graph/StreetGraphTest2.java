@@ -16,21 +16,18 @@ import de.westnordost.osmapi.map.data.OsmNode;
 
 public class StreetGraphTest2 {
 	
-	private static final int TEST_SHOULD_WORK = 0;
-	private static final int TEST_SHOULD_FAIL = 1;
-	private static final int TEST_THROWS_EXCEPTION = 2;
 	private static final OsmNode EXISTING_NODE1 = new OsmNode(1636160756l, 1,  50.8992329, 7.0318133, null, null);
 	private static final OsmNode EXISTING_NODE2 = new OsmNode(203986826l, 7, 50.8975988, 7.0364495, null, null);
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(1861698092l, 2, 50.8978525, 7.0351034, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
 	private static final StreetJunction[] EXISTING_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE2),
-			new StreetJunction(EXISTING_NODE3)
+			new StreetJunction(EXISTING_NODE1, null),
+			new StreetJunction(EXISTING_NODE2, null),
+			new StreetJunction(EXISTING_NODE3, null)
 	};
 	private static final StreetJunction[] INITIAL_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE3)
+			new StreetJunction(EXISTING_NODE1, null),
+			new StreetJunction(EXISTING_NODE3, null)
 	};
 	private static final StreetJunction[] NO_NODES_BUFFERED = {
 	};
@@ -94,7 +91,7 @@ public class StreetGraphTest2 {
 	}
 
 
-	@Test(timeout = 10000)
+	@Test()
 	public void testGetNode() {
 		System.out.println(streetGraph.getStreetJunctions().size());
 		//Test for loaded Nodes

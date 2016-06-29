@@ -1,9 +1,14 @@
 package de.spinosm.graph;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
+import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
+import de.westnordost.osmapi.map.data.OsmWay;
+import de.westnordost.osmapi.map.data.Way;
 
 public class StreetGraph extends DirectedGraph{
 
@@ -34,17 +39,15 @@ public class StreetGraph extends DirectedGraph{
 		if(returnValue != null)
 			return returnValue;
 		
-		return getNodeFromServer(id);
+		return getStreetJunctionFromDataProvider(id);
 	}
 
 	/**
 	 * @param id
 	 * @return
 	 */
-	private StreetJunction getNodeFromServer(long id) {
-		StreetJunction returnValue;
-		OsmNode osmNode = (OsmNode) this.dataprovider.getNode(id);
-		returnValue = new StreetJunction(osmNode);
+	private StreetJunction getStreetJunctionFromDataProvider(long id) {
+		StreetJunction returnValue = this.dataprovider.getStreetJunction(id);
 		this.nodes.add(returnValue);
 		return returnValue;
 	}

@@ -1,12 +1,17 @@
 package de.spinosm.graph.data;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
+import de.spinosm.graph.RouteableEdge;
+import de.spinosm.graph.StreetEdge;
+import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.map.MapDataDao;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
 import de.westnordost.osmapi.map.data.Node;
+import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
 import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
@@ -78,4 +83,63 @@ public class OsmApiWrapper implements DataProvider {
 	public OsmConnection getConnection(){
 		return osm;
 	}
+
+	@Override
+	public StreetJunction getStreetJunction(long id) {
+		StreetJunction returnValue;
+		OsmNode osmNode = (OsmNode) this.getNode(id);
+		returnValue = buildNewStreetJunction(osmNode);
+		return null;
+	}
+
+	@Override
+	public StreetEdge getStreetEdge(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<StreetEdge> getStreetEdges(Collection<Long> ids) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private StreetJunction buildNewStreetJunction(OsmNode osmNode) {
+		StreetJunction returnValue;
+		LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode.getId());	
+		returnValue = new StreetJunction(osmNode, waysFromNode);
+		return returnValue;
+	}
+	
+	private LinkedList<RouteableEdge> getRouteableEdgesForNode(long id) {
+		LinkedList<RouteableEdge> waysFromNode = new LinkedList<RouteableEdge>();
+		List<Way> ways = this.getWaysForNode(id);
+		for(Way way : ways){
+			if(wayIsUseable(way))
+			for(long n  : way.getNodeIds())
+				System.out.println(way.getId()+": " +n);
+			//StreetEdge edge = new StreetEdge();
+		}
+		return null;
+	}
+
+	private boolean wayIsUseable(Way way) {
+		if(way.getTags().containsKey("highway"))
+			return OsmHighwayValues.isRouateable(way.getTags().get("highway"));
+		return false;
+	}
+
+
 }
