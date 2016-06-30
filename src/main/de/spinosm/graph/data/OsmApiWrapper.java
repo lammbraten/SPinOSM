@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.spinosm.common.Common;
+import de.spinosm.common.OsmHighwayValues;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
@@ -126,20 +128,34 @@ public class OsmApiWrapper implements DataProvider {
 	private LinkedList<RouteableEdge> getRouteableEdgesForNode(long id) {
 		LinkedList<RouteableEdge> waysFromNode = new LinkedList<RouteableEdge>();
 		List<Way> ways = this.getWaysForNode(id);
+		StreetJunction startNode= new StreetJunction((OsmNode) this.getNode(id));
 		for(Way way : ways){
-			if(wayIsUseable(way))
-			for(long n  : way.getNodeIds())
-				System.out.println(way.getId()+": " +n);
-			//StreetEdge edge = new StreetEdge();
+			if(Common.wayIsUseable(way)){
+				for(long nid : way.getNodeIds()){
+					if(isJunction(nid)){
+						StreetJunction endNode= new StreetJunction((OsmNode) this.getNode(nid));
+						Common.calcCost(startNode, endNode, way);
+						
+					}
+					
+					System.out.println(way.getId()+": " +n);
+				//StreetEdge edge = new StreetEdge()					
+				}
+			}
+
 		}
 		return null;
 	}
 
-	private boolean wayIsUseable(Way way) {
-		if(way.getTags().containsKey("highway"))
-			return OsmHighwayValues.isRouateable(way.getTags().get("highway"));
+	/**
+	 * Have to Test this. Maybe there are Nodes which have 2 ways, but are juntions. 
+	 * Or there are Nodes with 3 ways, that aren't juntions
+	 * @param id
+	 * @return
+	 */
+	private boolean isJunction(long id) {
+		if(this.getWaysForNode(id).size() > 2)
+			return true;
 		return false;
 	}
-
-
 }

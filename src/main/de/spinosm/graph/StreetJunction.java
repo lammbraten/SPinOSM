@@ -8,17 +8,23 @@ import de.westnordost.osmapi.map.data.OsmNode;
 
 public class StreetJunction extends GraphNode {
 
-	LatLon position; //needed for Heuristic
+	private LatLon position; //needed for Heuristic
+	private boolean edgesLoaded = false;
 
 	public StreetJunction(OsmNode osmNode, LinkedList<RouteableEdge> edges){
 		super(osmNode.getId());
-		super.setEdges(edges);
+		this.setEdges(edges);	
 		this.setPostion(osmNode.getPosition());
 	}
 	
 	public StreetJunction(StreetJunction streetJunction) {
 		super(streetJunction.getId(), streetJunction.getDistance());
 		this.setPostion(streetJunction.position);
+	}
+	
+	public StreetJunction(OsmNode osmNode){
+		super(osmNode.getId());		
+		this.setPostion(osmNode.getPosition());
 	}
 
 	public LatLon getPostion() {
@@ -36,4 +42,20 @@ public class StreetJunction extends GraphNode {
 				return true;
 		return false;
 	}
+	
+	@Override
+	public void setEdges(LinkedList<RouteableEdge> edges) {
+		if(edges != null){
+			super.setEdges(edges);	
+			this.setEdgesLoaded(true);			
+		}
+	}
+
+	public boolean isEdgesLoaded() {
+		return edgesLoaded;
+	}
+
+	private void setEdgesLoaded(boolean edgesLoaded) {
+		this.edgesLoaded = edgesLoaded;
+	}	
 }

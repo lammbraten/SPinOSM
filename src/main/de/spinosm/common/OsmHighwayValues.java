@@ -1,4 +1,6 @@
-package de.spinosm.graph.data;
+package de.spinosm.common;
+
+import de.westnordost.osmapi.map.data.Way;
 
 public class OsmHighwayValues {
 	private static final String MOTORWAY = "motorway";
@@ -28,7 +30,8 @@ public class OsmHighwayValues {
 	private static final String CONSTRUCTION = "construction";
 	
 	
-	public static boolean isRouateable(String value){
+	public static boolean isRouateableForCars(Way way) {
+		String value = way.getTags().get("highway");
 		if(value.equals(MOTORWAY)||
 				value.equals(TRUNK)||
 				value.equals(PRIMARY)||
@@ -46,5 +49,48 @@ public class OsmHighwayValues {
 			return true;
 		return false;
 	}
+
+
+	public static boolean isRouateableForTrucks(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean isRouateableForPedestrians(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean isRouateableForBicycles(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean getCarSpeedLimits(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean getTruckSpeedLimits(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean getPedestrianSpeeds(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean getBycicleSpeeds(Way way) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 
 }
