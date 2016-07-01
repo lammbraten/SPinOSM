@@ -28,7 +28,7 @@ public class Common {
 	}
 	
 
-	public static boolean getSpeedLimits(Way way, Vehicle vehicle) {
+	public static int getSpeedLimits(Way way, Vehicle vehicle) {
 		if(way.getTags().containsKey("highway")){
 			switch(vehicle){
 			case CAR:
@@ -40,10 +40,10 @@ public class Common {
 			case BICYCLE:
 				return OsmHighwayValues.getBycicleSpeeds(way);
 			default:
-				return false;
+				throw new IllegalArgumentException("Vehicle unknown!");
 			}
 		}
-		return false;
+		throw new IllegalArgumentException("Not a Highway!");
 	}
 
 	public static int calcCost(StreetJunction startNode, StreetJunction endNode, Way way) {

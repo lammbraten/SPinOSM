@@ -28,6 +28,7 @@ public class OsmHighwayValues {
 	private static final String CYCLEWAY = "cycleway";
 	private static final String PROPOSED = "proposed";
 	private static final String CONSTRUCTION = "construction";
+	private static final String TRACK = "track";
 	
 	
 	public static boolean isRouateableForCars(Way way) {
@@ -58,7 +59,19 @@ public class OsmHighwayValues {
 
 
 	public static boolean isRouateableForPedestrians(Way way) {
-		// TODO Auto-generated method stub
+		if(!way.getTags().get("sidewalk").contains("none"))
+			return true;
+		String value = way.getTags().get("highway");
+		if(value.equals(RESIDENTIAL)||
+				value.equals(SERVICE)||
+				value.equals(LIVING_STREET)||
+				value.equals(PEDESTRIAN)||
+				value.equals(TRACK)||
+				value.equals(ROAD)||
+				value.equals(FOOTWAY)||
+				value.equals(STEPS)||
+				value.equals(PATH))
+			return true;
 		return false;
 	}
 
@@ -69,27 +82,59 @@ public class OsmHighwayValues {
 	}
 
 
-	public static boolean getCarSpeedLimits(Way way) {
-		// TODO Auto-generated method stub
-		return false;
+	public static int getCarSpeedLimits(Way way) throws NumberFormatException {
+		if(way.getTags().containsKey("maxspeed"))
+			return Integer.parseInt(way.getTags().get("maxspeed"));			
+
+		String value = way.getTags().get("highway");
+		switch(value){
+			case MOTORWAY:
+				return 130;
+			case TRUNK:
+				return 120;
+			case PRIMARY:
+				return 100;
+			case SECONDARY:
+				return 100;
+			case TERTIARY:
+				return 100;
+			case RESIDENTIAL:
+				return 50;
+			case MOTORWAY_LINK:
+				return 80;
+			case TRUNK_LINK:
+				return 70;
+			case PRIMARY_LINK:
+				return 50;
+			case SECONDARY_LINK:
+				return 40;
+			case TERTIARY_LINK:
+				return 30;
+			case LIVING_STREET:
+				return 6;
+			case ROAD:
+				return 50;
+			default:
+				return 50;
+		}
 	}
 
 
-	public static boolean getTruckSpeedLimits(Way way) {
+	public static int getTruckSpeedLimits(Way way) {
 		// TODO Auto-generated method stub
-		return false;
+		return -1;
 	}
 
 
-	public static boolean getPedestrianSpeeds(Way way) {
+	public static int getPedestrianSpeeds(Way way) {
 		// TODO Auto-generated method stub
-		return false;
+		return -1;
 	}
 
 
-	public static boolean getBycicleSpeeds(Way way) {
+	public static int getBycicleSpeeds(Way way) {
 		// TODO Auto-generated method stub
-		return false;
+		return -1;
 	}
 	
 
