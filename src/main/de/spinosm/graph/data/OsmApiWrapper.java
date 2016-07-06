@@ -6,12 +6,14 @@ import java.util.List;
 
 import de.spinosm.common.Common;
 import de.spinosm.common.OsmHighwayValues;
+import de.spinosm.common.Vehicle;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.map.MapDataDao;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
+import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Relation;
@@ -130,32 +132,54 @@ public class OsmApiWrapper implements DataProvider {
 		List<Way> ways = this.getWaysForNode(id);
 		StreetJunction startNode= new StreetJunction((OsmNode) this.getNode(id));
 		for(Way way : ways){
-			if(Common.wayIsUseable(way)){
-				for(long nid : way.getNodeIds()){
-					if(isJunction(nid)){
-						StreetJunction endNode= new StreetJunction((OsmNode) this.getNode(nid));
-						Common.calcCost(startNode, endNode, way);
+			if(Common.wayIsUseable(way, Vehicle.CAR)){
+				Common.calcCost(getRawEdgeCoordinates(way), way);
 						
-					}
 					
-					System.out.println(way.getId()+": " +n);
+					//System.out.println(way.getId()+": " + nid);
 				//StreetEdge edge = new StreetEdge()					
-				}
 			}
-
 		}
 		return null;
+
 	}
 
+	private LinkedList<LatLon> getRawEdgeCoordinates(Way way) {
+		LinkedList<LatLon> nodePositions = new LinkedList<LatLon>();
+		for(long n : getNodeIdsToNextJunction(way))
+			nodePositions.add(this.getNode(n).getPosition());
+		return nodePositions;
+	}
+	
 	/**
 	 * Have to Test this. Maybe there are Nodes which have 2 ways, but are juntions. 
 	 * Or there are Nodes with 3 ways, that aren't juntions
 	 * @param id
 	 * @return
 	 */
-	private boolean isJunction(long id) {
+	public boolean isJunction(long id) {
 		if(this.getWaysForNode(id).size() > 2)
+			//if()Prüfe ob ways auch highways sind. isRouteable
 			return true;
 		return false;
+	}
+	
+	private boolean isOneWay(Way way){
+		if(way.getTags().containsKey("oneway")) {
+			String value = way.getTags().get("oneway");
+			if(value.equals("yes")||value.equals("true")||value.equals("1")||value.equals("-1"))
+				return true;
+		}
+		return false;
+	}
+	
+	private LinkedList<Long> getNodeIdsToNextJunction(Way way){
+		for(long node : way.getNodeIds()){
+			
+		}
+		if(isOneWay(way)){
+			//TODO: prüfe laufrichtung
+		}
+		return null;
 	}
 }

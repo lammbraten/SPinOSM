@@ -128,13 +128,13 @@ public class OsmHighwayValues {
 
 	public static int getPedestrianSpeeds(Way way) {
 		// TODO Auto-generated method stub
-		return -1;
+		return 7;
 	}
 
 
 	public static int getBycicleSpeeds(Way way) {
 		// TODO Auto-generated method stub
-		return -1;
+		return 20;
 	}
 	
 
