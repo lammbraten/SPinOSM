@@ -86,16 +86,6 @@ public class OsmApiWrapperTest {
 			assertNotNull(osmapiwrapper.getWay(testcase[WAYINDEX]));
 	}
 	
-	@Test 
-	public void getNodesForWay(){
-		if(testShouldFail){
-			try{
-				assertFalse(osmapiwrapper.getNodesForWay(testcase[WAYINDEX]).size() > 0);
-				fail();
-			}catch(Exception e){}
-		}else
-			assertTrue(osmapiwrapper.getNodesForWay(testcase[WAYINDEX]).size() > 0);
-	}
 	
 	@Test 
 	public void getRelationsForWay(){

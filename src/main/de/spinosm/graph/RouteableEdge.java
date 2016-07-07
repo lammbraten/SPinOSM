@@ -1,8 +1,8 @@
 package de.spinosm.graph;
 
 public interface RouteableEdge {
-	public int getCost();
-	public void setCost(int cost);
+	public double getCost();
+	public void setCost(double cost);
 	public RouteableNode getStart();
 	public void setStart(RouteableNode start);
 	public RouteableNode getEnd();

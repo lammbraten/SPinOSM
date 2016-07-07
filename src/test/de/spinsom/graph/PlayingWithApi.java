@@ -19,6 +19,7 @@ public class PlayingWithApi {
 	private static long KOELNERSTRASSE = 182261569l;
 	private static long KIMPLERSTRASSE = 25977672l;
 	private static long HAFELSTRASSE = 144455735l;
+	private static long BIRMESSTRASSE = 27850800l;
 	
 	private static OsmApiWrapper osmapi = new OsmApiWrapper();
 
@@ -34,9 +35,9 @@ public class PlayingWithApi {
 	@Test
 	@Ignore
 	public void testKoelnerStraﬂe() {
-		for(Node n : osmapi.getNodesForWay(KOELNERSTRASSE)){
-			List<Way> ways = osmapi.getWaysForNode(n.getId());
-			System.out.println(n.getId() + ":" + ways.size());
+		for(Long n : osmapi.getWay(KOELNERSTRASSE).getNodeIds()){
+			List<Way> ways = osmapi.getWaysForNode(n);
+			System.out.println(n + ":" + ways.size());
 			if(ways.size() > 2){
 				for(Way way : ways){
 					System.out.println("\t" +way.getId() +": ");
@@ -50,20 +51,24 @@ public class PlayingWithApi {
 	}
 	
 	@Test
-	public void testOtherStraﬂe() {
-		for(Node n : osmapi.getNodesForWay(HAFELSTRASSE)){
-			List<Way> ways = osmapi.getWaysForNode(n.getId());
-			System.out.println(n.getId() + ":" + ways.size());
-			if(ways.size() > 2){
+	public void testOtherStreet() {
+		for(Long n : osmapi.getWay(BIRMESSTRASSE).getNodeIds()){
+			List<Way> ways = osmapi.getWaysForNode(n);
+			System.out.println(n + ":" + ways.size());
+			if(ways.size() >= 2){
 				for(Way way : ways){
 					System.out.println("\t" +way.getId() +": ");
+					
 					for (long nid : way.getNodeIds()){
-						System.out.println("\t\t"+nid);
+						//System.out.println("\t\t"+nid);
 					}
 				}
 			}
 		}
-		System.out.println(osmapi.getWaysForNode(415866943l));
+		/*System.out.println("-----------------------------");
+		for(long nid : osmapi.getWay(HAFELSTRASSE).getNodeIds())
+			System.out.println(nid);
+		System.out.println(osmapi.getWaysForNode(415866943l));*/
 	}
 
 }

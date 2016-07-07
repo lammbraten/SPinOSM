@@ -4,21 +4,21 @@ public abstract class DirectedEdge implements RouteableEdge {
 
 	private GraphNode startNode;
 	private GraphNode endNode;
-	private int cost;
+	private double cost;
 	
-	DirectedEdge(GraphNode start, GraphNode end, int cost){
+	DirectedEdge(GraphNode start, GraphNode end, double cost2){
 		this.startNode = start;
 		this.endNode = end;
-		this.cost = cost;
+		this.cost = cost2;
 	}
 	
 	@Override
-	public int getCost() {
+	public double getCost() {
 		return cost;
 	}
 	
 	@Override
-	public void setCost(int cost) {
+	public void setCost(double cost) {
 		this.cost = cost;
 	}
 	
