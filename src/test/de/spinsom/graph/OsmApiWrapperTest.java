@@ -14,6 +14,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
 
 @RunWith(Parameterized.class)
@@ -23,8 +25,8 @@ public class OsmApiWrapperTest {
 	private static final int RELATIONINDEX = 2;
 	private static final boolean TEST_SHOULD_FAIL = true;
 	private static final long[] EXISTING_ELEMENTS = {
-			203986826L, //Node
-			38156114L, //Way
+			2880765573l, //Node
+			144455735l, //Way
 			180627L //Relation
 	};
 	private static final long[] FAILING_ELEMENTS = {
@@ -134,5 +136,20 @@ public class OsmApiWrapperTest {
 			assertNull(osmapiwrapper.getRelation(testcase[RELATIONINDEX]));
 		else
 			assertNotNull(osmapiwrapper.getRelation(testcase[RELATIONINDEX]));
+	}
+	
+	@Test
+	public void getStreetJunction(){
+		if(testShouldFail)
+			try{
+				assertNull(osmapiwrapper.getStreetJunction(testcase[NODEINDEX]));
+				fail();
+			}catch(IllegalArgumentException e){
+				
+			}catch(Exception e){fail();}
+		else{
+			StreetJunction sj = osmapiwrapper.getStreetJunction(testcase[NODEINDEX]);
+			assertNotNull(sj);		
+		}
 	}
 }
