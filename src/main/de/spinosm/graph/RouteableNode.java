@@ -8,6 +8,8 @@ public interface RouteableNode extends Iterator<RouteableNode> {
 	public void setEdges(LinkedList<RouteableEdge> edges);
 	//public RouteableEdge getCheapestEdge();
 	public void removeEdge(RouteableEdge e);
-	void addEdge(RouteableEdge e);
+	public void addEdge(RouteableEdge e);
 	public void getOutDegree();
+	public long getId();
+	boolean hasSameId(RouteableNode n);
 }

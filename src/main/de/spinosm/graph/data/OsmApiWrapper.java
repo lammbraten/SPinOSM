@@ -178,7 +178,7 @@ public class OsmApiWrapper implements DataProvider {
 			if(startingNode.getId() == nid){
 				if(direction < 0){
 					LinkedList<Long> shapingNodeIds = new LinkedList<Long>() ;	
-					for(int i = nids.indexOf(nid); i >= 0; i--){
+					for(int i = nids.indexOf(nid)-1; i >= 0; i--){
 						shapingNodeIds.add(nids.get(i));
 						if(isRouteableJunction(nids.get(i))){
 							return new StreetEdge(startingNode, new StreetJunction((OsmNode) this.getNode(nids.get(i))), calcCost(way, shapingNodeIds ));
@@ -186,7 +186,7 @@ public class OsmApiWrapper implements DataProvider {
 					}
 				}else if(direction > 0){
 					LinkedList<Long> shapingNodeIds = new LinkedList<Long>() ;					
-					for(int i = nids.indexOf(nid); i < nids.size(); i++){
+					for(int i = nids.indexOf(nid)+1; i < nids.size(); i++){
 						shapingNodeIds.add(nids.get(i));
 						if(isRouteableJunction(nids.get(i))){
 							return new StreetEdge(startingNode, new StreetJunction((OsmNode) this.getNode(nids.get(i))), calcCost(way, shapingNodeIds ));
@@ -253,7 +253,7 @@ public class OsmApiWrapper implements DataProvider {
 			
 		}
 		if(isOneWay(way)){
-			//TODO: prüfe laufrichtung
+
 		}
 		return null;
 	}*/

@@ -48,7 +48,7 @@ public class StreetGraph extends DirectedGraph{
 	 */
 	private StreetJunction getStreetJunctionFromDataProvider(long id) {
 		StreetJunction returnValue = this.dataprovider.getStreetJunction(id);
-		this.nodes.add(returnValue);
+		this.integrateNewNodeToGraph(returnValue);
 		return returnValue;
 	}
 
@@ -62,7 +62,27 @@ public class StreetGraph extends DirectedGraph{
 		return null;
 	}
 	
-
+	private void integrateNewNodeToGraph(StreetJunction newNode){
+		//Prüfe ob benachbarte knoten schon im graph. wenn ja verlinke sie
+		linkWithAlredyKnownNodes(newNode);
+		this.nodes.add(newNode);
+	}
 	
+	private void linkWithAlredyKnownNodes(StreetJunction newNode){
+		for(RouteableEdge edge : newNode.getEdges()){
+			RouteableNode other = edge.getOtherKnotThan(newNode);
+			if(nodes.contains(other))
+					linkEdgeWithAlredyKnownNode(edge, other);
+				
+		}
+	}
+
+	private void linkEdgeWithAlredyKnownNode(RouteableEdge edge, RouteableNode toReplace){
+		for(RouteableNode node : nodes){
+			if(node.hasSameId(toReplace)){
+				edge.replace(toReplace, node);
+			}
+		}
+	}
 
 }

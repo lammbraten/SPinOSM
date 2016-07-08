@@ -8,4 +8,5 @@ public interface RouteableEdge {
 	public RouteableNode getEnd();
 	public void setEnd(RouteableNode end);
 	public RouteableNode getOtherKnotThan(RouteableNode that);
+	public void replace(RouteableNode oldNode, RouteableNode newNode);
 }

@@ -57,5 +57,5 @@ public class StreetJunction extends GraphNode {
 
 	private void setEdgesLoaded(boolean edgesLoaded) {
 		this.edgesLoaded = edgesLoaded;
-	}	
+	}
 }

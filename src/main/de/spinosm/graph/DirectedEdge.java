@@ -52,16 +52,31 @@ public abstract class DirectedEdge implements RouteableEdge {
 		else
 			throw new IllegalArgumentException("The Knot " + that + " isn't in this Graph");
 	}
+	
+	@Override
+	public void replace(RouteableNode oldNode, RouteableNode newNode){
+		if(isStartKnot(oldNode))
+			this.setStart(newNode);
+		else if(isEndKnot(oldNode))
+			this.setEnd(newNode);
+		else
+			throw new IllegalArgumentException("The Knot " + oldNode + " isn't in this Graph");
+	}
+	
+	@Override
+	public String toString(){
+		return "s: " + this.getStart() + "; e: " + this.getEnd() + "; c: " + this.getCost();
+	}
 
 	private boolean isStartKnot(RouteableNode that) {
-		if(that.equals(startNode))
+		if(that.hasSameId(startNode))
 			return true;
 		return false;
 	}
 
 	private boolean isEndKnot(RouteableNode that) {
-		if(that.equals(endNode))
+		if(that.hasSameId(endNode))
 			return true;
 		return false;
-	}
+	}	
 }

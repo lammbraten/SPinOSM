@@ -93,6 +93,12 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 		}
 		return false;
 	}
+	
+	
+	@Override
+	public boolean hasSameId(RouteableNode n) {
+		return (this.getId() == n.getId());
+	}
 
 	@Override
 	public String toString() {
