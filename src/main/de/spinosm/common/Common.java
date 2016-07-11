@@ -50,12 +50,12 @@ public class Common {
 
 	public static double calcCost(LinkedList<LatLon> nodes, Way way) {
 		double distance = 0.0;
-		for(LatLon node : nodes){
+		for(int i = 0; i < nodes.size()-1; i++){
 			if(nodes.iterator().hasNext()){
-				distance += calcDistance(node, nodes.iterator().next());				
+				distance += calcDistance(nodes.get(i), nodes.get(i+1));				
 			}
 		}
-		return getSpeedLimits(way, Vehicle.CAR) * distance;
+		return distance / getSpeedLimits(way, Vehicle.CAR) ;
 	}
 	
 	/**

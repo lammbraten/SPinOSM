@@ -120,7 +120,7 @@ public class StreetGraphTest2 {
 	}
 	@Test()
 	public void testGraphBuilding() {
-		streetGraph.setNodes(null);
+		streetGraph.setStreetJunctions(new TreeSet<StreetJunction>());
 		for(StreetJunction sj : EXISTING_NODE_ARRAY){
 			streetGraph.getNode(sj.getId());
 		}
