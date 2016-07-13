@@ -57,7 +57,7 @@ public class CommonTest {
 	private static double SHORT_DISTANCE = 0.0229;
 	private static double TARTANBAHN_DISTANCE = 0.400;
 	
-	private static double COST_FOR_MIDDLEDISTANCE = 0.008914;
+	private static double COST_FOR_MIDDLEDISTANCE = 0.008904603;
 
 	@Test
 	public void calcDistanceTest() {

@@ -22,8 +22,10 @@ import oauth.signpost.OAuthConsumer;
 
 public class OsmApiWrapper implements DataProvider {
 
-	private static final String OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
-	//private static final String OSM_TEST_API_URL = "http://api06.dev.openstreetmap.org/api/0.6/";
+	private static final String SECURE_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
+	private static final String OSM_API_URL = "http://api.openstreetmap.org/api/0.6/";
+	private static final String OSM_TEST_API_URL = "http://api06.dev.openstreetmap.org/api/0.6/";
+	private static final String XAPI = "http://informationfreeway.org/api/0.6/";
 	private static final String USER_AGENT = "SPinOSM";
 	private static final int TIMEOUT = 10000; //10 secs
 	private static final int MAX_ATTEMPTS = 5;
@@ -32,10 +34,11 @@ public class OsmApiWrapper implements DataProvider {
 	private static final int UPTHEROAD = 1; 
 	
 	private OsmConnection osm;
-	private MapDataHandler mdh;
+	private MapDataDao mddao;
 	
 	public OsmApiWrapper(){
 		this.osm = new OsmConnection(OSM_API_URL, USER_AGENT, OSM_AUTH, TIMEOUT);
+		this.mddao = new MapDataDao(osm);
 
 		//this.myMapDataHandler = new OsmMapDataFactory();
 
@@ -43,61 +46,61 @@ public class OsmApiWrapper implements DataProvider {
 	
 	public Node getNode(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getNode(id);}catch(OsmConnectionException e){}
+			try{return mddao.getNode(id);}catch(OsmConnectionException e){}
+		return null;
+	}
+	
+	public List<Node> getNodes(Collection<Long> nodeIds){
+		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
+			try{return mddao.getNodes(nodeIds);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public Way getWay(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getWay(id);}catch(OsmConnectionException e){}
+			try{return mddao.getWay(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
-	/*public List<Node> getNodesForWay(long id){
-		ListOsmElementHandler<Node> nodeListHandler = new ListOsmElementHandler<Node>(Node.class);
-		new MapDataDao(osm).getWayComplete(id, nodeListHandler);
-		return nodeListHandler.get();
-	}*/
-	
 	public List<Way> getWays(Collection<Long> wayIds){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getWays(wayIds);}catch(OsmConnectionException e){}
+			try{return mddao.getWays(wayIds);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public List<Way> getWaysForNode(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getWaysForNode(id);}catch(OsmConnectionException e){}
+			try{return mddao.getWaysForNode(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public Relation getRelation(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getRelation(id);}catch(OsmConnectionException e){}
+			try{return mddao.getRelation(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public List<Relation> getRelations(Collection<Long> relationIds){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getRelations(relationIds);}catch(OsmConnectionException e){}
+			try{return mddao.getRelations(relationIds);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public List<Relation> getRelationsForNode(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getRelationsForNode(id);}catch(OsmConnectionException e){}
+			try{return mddao.getRelationsForNode(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public List<Relation> getRelationsForRelation(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getRelationsForRelation(id);}catch(OsmConnectionException e){}
+			try{return mddao.getRelationsForRelation(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
 	public List<Relation> getRelationsForWay(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return new MapDataDao(osm).getRelationsForWay(id);}catch(OsmConnectionException e){}
+			try{return mddao.getRelationsForWay(id);}catch(OsmConnectionException e){}
 		return null;
 	}
 	
@@ -174,22 +177,25 @@ public class OsmApiWrapper implements DataProvider {
 
 	private RouteableEdge parseToRouteableEdge(int direction, Way way, StreetJunction startingNode) {
 		List<Long> nids = way.getNodeIds();
-		for(long nid : nids){
-			if(startingNode.getId() == nid){
+		List<Node> nodes =  this.getNodes(nids);
+		for(Node node : nodes){
+			if(startingNode.getId() == node.getId()){
 				if(direction < 0){
-					LinkedList<Long> shapingNodeIds = new LinkedList<Long>() ;	
-					for(int i = nids.indexOf(nid)-1; i >= 0; i--){
-						shapingNodeIds.add(nids.get(i));
-						if(isRouteableJunction(nids.get(i))){
-							return new StreetEdge(startingNode, new StreetJunction((OsmNode) this.getNode(nids.get(i))), calcCost(way, shapingNodeIds ));
+					LinkedList<Node> shapingNodes = new LinkedList<Node>();	
+					shapingNodes.add(node);
+					for(int i = nodes.indexOf(node)-1; i >= 0; i--){
+						shapingNodes.add(nodes.get(i));
+						if(isRouteableJunction(nodes.get(i))){
+							return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 						}
 					}
 				}else if(direction > 0){
-					LinkedList<Long> shapingNodeIds = new LinkedList<Long>() ;					
-					for(int i = nids.indexOf(nid)+1; i < nids.size(); i++){
-						shapingNodeIds.add(nids.get(i));
-						if(isRouteableJunction(nids.get(i))){
-							return new StreetEdge(startingNode, new StreetJunction((OsmNode) this.getNode(nids.get(i))), calcCost(way, shapingNodeIds ));
+					LinkedList<Node> shapingNodes = new LinkedList<Node>();	
+					shapingNodes.add(node);
+					for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
+						shapingNodes.add(nodes.get(i));
+						if(isRouteableJunction(nodes.get(i))){
+							return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 						}
 					}
 				}else{
@@ -200,10 +206,10 @@ public class OsmApiWrapper implements DataProvider {
 		throw new IllegalArgumentException("Starting-Node is not in given way!");
 	}
 
-	private double calcCost(Way way, LinkedList<Long> shapingNodeIds) {
+	private double calcCost(Way way, LinkedList<Node> shapingNodes) {
 		LinkedList<LatLon> nodes = new LinkedList<LatLon>();
-		for(long nid : shapingNodeIds)
-			nodes.add(this.getNode(nid).getPosition());
+		for(Node node : shapingNodes)
+			nodes.add(node.getPosition());
 		return Common.calcCost(nodes, way);
 	}
 
@@ -216,8 +222,8 @@ public class OsmApiWrapper implements DataProvider {
 	}*/
 	
 
-	public boolean isRouteableJunction(long id) {
-		List<Way> waysOfNode = this.getWaysForNode(id);
+	public boolean isRouteableJunction(Node node) {
+		List<Way> waysOfNode = this.getWaysForNode(node.getId());
 		if(waysOfNode.size() >= 2)
 			return hasAnotherRoute(waysOfNode);
 		return false;
