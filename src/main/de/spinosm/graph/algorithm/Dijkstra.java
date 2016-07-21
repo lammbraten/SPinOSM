@@ -2,23 +2,24 @@ package de.spinosm.graph.algorithm;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
-import de.spinosm.graph.Graph;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
 
-public class Dijkstra implements ShortestPath{
+import org.jgrapht.*;
+import org.jgrapht.graph.*;
+import org.jgrapht.traverse.*;
 
-	private StreetGraph graph; 
+public class Dijkstra<V, E> implements ShortestPath{
+
+	private Graph graph; 
 	
 	private TreeSet<RouteableNode> calculatedNodes;
 	private TreeSet<RouteableNode> openNodes;
 	
-	public Dijkstra(StreetGraph g) {
+	public Dijkstra(Graph<V, E> g) {
 		this.graph = g;
 	}
 
