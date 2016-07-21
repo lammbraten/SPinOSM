@@ -1,54 +1,60 @@
 package de.spinosm.graph;
 
-public abstract class DirectedEdge implements RouteableEdge {
+import java.io.Serializable;
 
-	private GraphNode startNode;
-	private GraphNode endNode;
-	private double cost;
+public abstract class DirectedEdge implements RouteableEdge, Cloneable,
+Serializable{
+
+
+	private static final long serialVersionUID = -9135933798984497839L;
 	
-	DirectedEdge(GraphNode start, GraphNode end, double cost2){
-		this.startNode = start;
-		this.endNode = end;
-		this.cost = cost2;
+	private RouteableNode source;
+	private RouteableNode target;
+	private double weight;
+	
+	DirectedEdge(GraphNode start, GraphNode end, double weight){
+		this.source = start;
+		this.target = end;
+		this.weight = weight;
 	}
 	
 	@Override
-	public double getCost() {
-		return cost;
+	public double getWeight() {
+		return weight;
 	}
 	
 	@Override
-	public void setCost(double cost) {
-		this.cost = cost;
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 	
 	@Override
 	public RouteableNode getStart() {
-		return startNode;
+		return source;
 	}
 	
 	@Override
 	public void setStart(RouteableNode start) {
-		this.startNode = (GraphNode) start;		
+		this.source = (GraphNode) start;		
 	}
 
 	@Override
 	public RouteableNode getEnd() {
-		return endNode;
+		return target;
 	}
 	
 	@Override
 	public void setEnd(RouteableNode end) {
-		this.endNode = (GraphNode) end;
+		this.target = (GraphNode) end;
 		
 	}
 	
 	@Override
 	public RouteableNode getOtherKnotThan(RouteableNode that) {
 		if(isStartKnot(that))
-			return endNode;
+			return target;
 		else if(isEndKnot(that))
-			return startNode;
+			return source;
 		else
 			throw new IllegalArgumentException("The Knot " + that + " isn't in this Graph");
 	}
@@ -65,18 +71,28 @@ public abstract class DirectedEdge implements RouteableEdge {
 	
 	@Override
 	public String toString(){
-		return "s: " + this.getStart() + "; e: " + this.getEnd() + "; c: " + this.getCost();
+		return "s: " + this.getStart() + "; e: " + this.getEnd() + "; c: " + this.getWeight();
 	}
 
 	private boolean isStartKnot(RouteableNode that) {
-		if(that.hasSameId(startNode))
+		if(that.hasSameId(source))
 			return true;
 		return false;
 	}
 
 	private boolean isEndKnot(RouteableNode that) {
-		if(that.hasSameId(endNode))
+		if(that.hasSameId(target))
 			return true;
 		return false;
 	}	
+	
+
+    @Override 
+    public Object clone(){
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError();
+        }
+    }
 }
