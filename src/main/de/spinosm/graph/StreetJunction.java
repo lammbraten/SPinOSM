@@ -51,6 +51,7 @@ public class StreetJunction extends GraphNode {
 		}
 	}
 
+	@Override
 	public boolean isEdgesLoaded() {
 		return edgesLoaded;
 	}

@@ -23,7 +23,7 @@ import oauth.signpost.OAuthConsumer;
 public class OsmApiWrapper implements DataProvider {
 
 	private static final String SECURE_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
-	private static final String OSM_API_URL = "http://api.openstreetmap.org/api/0.6/";
+	private static final String OSM_API_URL = "http://openstreetmap.org/api/0.6/";
 	private static final String OSM_TEST_API_URL = "http://api06.dev.openstreetmap.org/api/0.6/";
 	private static final String XAPI = "http://informationfreeway.org/api/0.6/";
 	private static final String USER_AGENT = "SPinOSM";

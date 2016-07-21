@@ -9,10 +9,10 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 
 	private LinkedList<RouteableEdge> edges;
 	private long id;
-	private int distance;
+	private double distance;
 	
 	
-	public GraphNode(long id, int distance){
+	public GraphNode(long id, double distance){
 		this.setId(id);
 		this.setDistance(distance);
 	}
@@ -30,11 +30,13 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 		this.id = l;
 	}
 
-	public int getDistance() {
+	@Override
+	public double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(int distance) {
+	@Override
+	public void setDistance(double distance) {
 		if(distance < 0)
 			throw new IllegalArgumentException("Distance must be positive!");
 		this.distance = distance;

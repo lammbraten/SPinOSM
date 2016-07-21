@@ -34,7 +34,7 @@ public class StreetGraph extends DirectedGraph{
 	}
 	
 
-	public StreetJunction getNode(long id){
+	public RouteableNode getNode(long id){
 		StreetJunction returnValue = checkBufferedNodesForId(id);
 		if(returnValue != null)
 			return returnValue;

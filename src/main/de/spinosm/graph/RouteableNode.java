@@ -12,4 +12,7 @@ public interface RouteableNode extends Iterator<RouteableNode> {
 	public void getOutDegree();
 	public long getId();
 	boolean hasSameId(RouteableNode n);
+	public void setDistance(double distance);
+	public double getDistance();
+	public boolean isEdgesLoaded();
 }

@@ -4,6 +4,6 @@ import java.util.TreeSet;
 
 public interface Graph {
 
-	TreeSet<RouteableNode> getNodes();
+	public TreeSet<RouteableNode> getNodes();
 	public void setNodes(TreeSet<RouteableNode> nodes);
 }
