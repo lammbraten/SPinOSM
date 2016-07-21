@@ -14,7 +14,25 @@ import org.jgrapht.traverse.*;
 
 public class Dijkstra<V, E> implements ShortestPath{
 
-	private Graph graph; 
+	@Override
+	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public StreetGraph getGraph() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGraph(StreetGraph g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+/*	private Graph graph; 
 	
 	private TreeSet<RouteableNode> calculatedNodes;
 	private TreeSet<RouteableNode> openNodes;
@@ -27,7 +45,7 @@ public class Dijkstra<V, E> implements ShortestPath{
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
 		TreeSet<RouteableNode> S = new TreeSet<RouteableNode>();
 		TreeSet<RouteableNode> Q = new TreeSet<RouteableNode>();
-		Q.add(graph.getNode(start.getId()));
+		Q.add(graph..getNode(start.getId()));
 		Q.first().setDistance(0);
 		
 		LinkedList<RouteableNode> pi = new LinkedList<RouteableNode>();
@@ -70,7 +88,7 @@ public class Dijkstra<V, E> implements ShortestPath{
 		return graph;
 	}
 	
-	
+	*/
 
 
 }

@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -79,19 +80,15 @@ public class StreetGraphTest2 {
 		streetGraph= null;
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetSetStreetJunctions() {
 		//Test for initialValues
 		assertEquals(INITIAL_NODE_ARRAY.length, streetGraph.getStreetJunctions().size());
 		//Test for NullPointerExption
-		streetGraph.setStreetJunctions(null);		
-		try {
-			streetGraph.getStreetJunctions().size();
-			fail("No Exeption was thrown");
-		} catch (NullPointerException e){//alles gut 
-		}catch (Exception e) {fail("Wrong Exeption");}
-		//Test for settin new Nodes
+		streetGraph = new StreetGraph(osmapiwrapper);
+		assertEquals(0,streetGraph.getStreetJunctions().size());
+		//Test for setting new Nodes
 		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
 		for(StreetJunction sj : EXISTING_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
@@ -100,7 +97,7 @@ public class StreetGraphTest2 {
 		assertEquals(bufferedTreeSet, streetGraph.getStreetJunctions());
 	}
 
-	@Ignore
+	
 	@Test()
 	public void testGetNode() {
 		System.out.println(streetGraph.getStreetJunctions().size());
@@ -120,14 +117,17 @@ public class StreetGraphTest2 {
 	}
 	@Test()
 	public void testGraphBuilding() {
-		streetGraph.setStreetJunctions(new TreeSet<StreetJunction>());
+		//streetGraph.setStreetJunctions(new TreeSet<StreetJunction>());
+		streetGraph = new StreetGraph(osmapiwrapper);
 		for(StreetJunction sj : EXISTING_NODE_ARRAY){
 			streetGraph.getNode(sj.getId());
 		}
-		for(StreetJunction sj : streetGraph.getStreetJunctions()){
+		for(RouteableNode sj : streetGraph.getStreetJunctions()){
 			System.out.println(sj.getId());
 			System.out.println("\t" +sj.getEdges());
 		}
 	}
+	
+	
 
 }

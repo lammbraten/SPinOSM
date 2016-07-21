@@ -1,41 +1,52 @@
 package de.spinosm.graph;
 
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.Set;
 import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
-import de.westnordost.osmapi.map.data.Node;
-import de.westnordost.osmapi.map.data.OsmNode;
-import de.westnordost.osmapi.map.data.OsmWay;
-import de.westnordost.osmapi.map.data.Way;
 
-public class StreetGraph extends DirectedGraph{
 
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+
+public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, StreetEdge>{
+
+
+	private static final long serialVersionUID = -67998995199008728L;
+	
 	private DataProvider dataprovider;
-	private TreeSet<StreetJunction> nodes;
+	//private TreeSet<StreetJunction> nodes;
 	
 	public StreetGraph(DataProvider dataprovider){
-		super();
+		
+		super(StreetEdge.class);
 		this.dataprovider = dataprovider;
 	}
 	
 	public StreetGraph(DataProvider dataprovider, TreeSet<StreetJunction> nodes){
-		this.dataprovider = dataprovider;
-		this.nodes = nodes;
+		super(StreetEdge.class);
+		this.dataprovider = dataprovider;;
+		for(StreetJunction v : nodes)
+			super.addVertex(v);
 	}
 	
 	public void setStreetJunctions(TreeSet<StreetJunction> junctions) {
-		this.nodes = junctions;	
+		if(junctions != null){
+			super.removeAllVertices(junctions);
+			for(StreetJunction v : junctions)
+				super.addVertex(v);
+		}else{
+			throw new IllegalArgumentException("junctions is null");
+		}
 	}
 	
-	public TreeSet<StreetJunction> getStreetJunctions() {
-		return this.nodes;	
+	public Set<RouteableNode> getStreetJunctions() {
+		return super.vertexSet();	
 	}
 	
 
 	public RouteableNode getNode(long id){
-		StreetJunction returnValue = checkBufferedNodesForId(id);
+		RouteableNode returnValue = checkBufferedNodesForId(id);
 		if(returnValue != null)
 			return returnValue;
 		
@@ -55,8 +66,8 @@ public class StreetGraph extends DirectedGraph{
 	/**
 	 * @param id
 	 */
-	private StreetJunction checkBufferedNodesForId(long id) {
-		for(StreetJunction n : nodes)
+	private RouteableNode checkBufferedNodesForId(long id) {
+		for(RouteableNode n : super.vertexSet())
 			if(n.getId() == id)
 				return n;
 		return null;
@@ -65,20 +76,20 @@ public class StreetGraph extends DirectedGraph{
 	private void integrateNewNodeToGraph(StreetJunction newNode){
 		//Prüfe ob benachbarte knoten schon im graph. wenn ja verlinke sie
 		linkWithAlredyKnownNodes(newNode);
-		this.nodes.add(newNode);
+		super.addVertex(newNode);
 	}
 	
 	private void linkWithAlredyKnownNodes(StreetJunction newNode){
 		for(RouteableEdge edge : newNode.getEdges()){
 			RouteableNode other = edge.getOtherKnotThan(newNode);
-			if(nodes.contains(other))
-					linkEdgeWithAlredyKnownNode(edge, other);
+			if(super.containsVertex(other))
+					linkEdgeWithAlreedyKnownNode(edge, other);
 				
 		}
 	}
 
-	private void linkEdgeWithAlredyKnownNode(RouteableEdge edge, RouteableNode toReplace){
-		for(RouteableNode node : nodes){
+	private void linkEdgeWithAlreedyKnownNode(RouteableEdge edge, RouteableNode toReplace){
+		for(RouteableNode node : super.vertexSet()){
 			if(node.hasSameId(toReplace)){
 				edge.replace(toReplace, node);
 			}
