@@ -23,8 +23,8 @@ public class StreetGraphTest2 {
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(45107637l, 2, 51.3087028, 6.5891021, null, null);
 	private static final OsmNode EXISTING_NODE4 = new OsmNode(1573918799l, 2, 51.3083259, 6.5869527, null, null);
 	private static final OsmNode EXISTING_NODE5 = new OsmNode(415866944l, 2, 51.3082266, 6.5865005, null, null);
-	private static final OsmNode EXISTING_NODE6 = new OsmNode(415866943l , 2, 51.3078516, 6.5848661, null, null);
-	private static final OsmNode EXISTING_NODE7 = new OsmNode(3580697599l , 2, 51.3078953, 6.5848224, null, null);
+	private static final OsmNode EXISTING_NODE6 = new OsmNode(415866943l, 2, 51.3078516, 6.5848661, null, null);
+	private static final OsmNode EXISTING_NODE7 = new OsmNode(415866943l , 2, 51.3078953, 6.5848224, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
 	private static final StreetJunction[] EXISTING_NODE_ARRAY = {
 			new StreetJunction(EXISTING_NODE1, null),

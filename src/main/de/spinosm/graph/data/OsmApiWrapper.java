@@ -1,5 +1,6 @@
 package de.spinosm.graph.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,8 @@ import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
+import de.westnordost.osmapi.map.handler.DefaultMapDataHandler;
+import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
 import de.westnordost.osmapi.map.handler.MapDataHandler;
 import oauth.signpost.OAuthConsumer;
 
@@ -51,8 +54,15 @@ public class OsmApiWrapper implements DataProvider {
 	}
 	
 	public List<Node> getNodes(Collection<Long> nodeIds){
-		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return mddao.getNodes(nodeIds);}catch(OsmConnectionException e){}
+		/*for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
+			List<Node> nodes = new LinkedList<Node>();
+			for(Long nid : nodeIds)
+				try{nodes.add(mddao.getNode(nid));}catch(OsmConnectionException e){}
+			return nodes;
+		}*/
+		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
+			try{return mddao.getNodes(nodeIds);}catch(OsmConnectionException e){}			
+		}
 		return null;
 	}
 	
@@ -60,6 +70,16 @@ public class OsmApiWrapper implements DataProvider {
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
 			try{return mddao.getWay(id);}catch(OsmConnectionException e){}
 		return null;
+	}
+	
+	public List<Node> getWayNodesComplete(long id) {
+		ListOsmElementHandler<Node>  mdh = new ListOsmElementHandler<Node>(Node.class);
+		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
+			try{
+				mddao.getWayComplete(id, mdh);
+				break;
+			}catch(OsmConnectionException e){}
+		return mdh.get();
 	}
 	
 	public List<Way> getWays(Collection<Long> wayIds){
@@ -158,10 +178,10 @@ public class OsmApiWrapper implements DataProvider {
 		for(Way way : ways){
 			try{
 				waysFromNode.add(parseToRouteableEdge(DOWNTHEROAD, way, thatNode));
-			}catch(Exception e){}
+			}catch(Exception e){System.out.println(e.getMessage());}
 			try{
 				waysFromNode.add(parseToRouteableEdge(UPTHEROAD, way, thatNode));
-			}catch(Exception e){}
+			}catch(Exception e){System.out.println(e.getMessage());}
 						
 			/*if(Common.wayIsUseable(way, Vehicle.CAR)){
 				Common.calcCost(getRawEdgeCoordinates(way), way);
@@ -177,7 +197,7 @@ public class OsmApiWrapper implements DataProvider {
 
 	private RouteableEdge parseToRouteableEdge(int direction, Way way, StreetJunction startingNode) {
 		List<Long> nids = way.getNodeIds();
-		List<Node> nodes =  this.getNodes(nids);
+		List<Node> nodes =  inWayOrder(this.getNodes(nids), nids);
 		for(Node node : nodes){
 			if(startingNode.getId() == node.getId()){
 				if(direction < 0){
@@ -203,7 +223,22 @@ public class OsmApiWrapper implements DataProvider {
 				}
 			}
 		}
-		throw new IllegalArgumentException("Starting-Node is not in given way!");
+		throw new IllegalArgumentException("Starting-Node is not in given way! \n"
+				+ "Direction: " + direction + "\n"
+				+ "way: " + way.getId() + "\n"
+				+ "StartingNode: " + startingNode + "\n"
+				+ "nids-size: " + nids.size());
+	}
+
+	private List<Node> inWayOrder(List<Node> nodes, List<Long> nids) {
+		ArrayList<Node> orderedList = new ArrayList<Node>();
+		
+		for(long nid : nids)
+			for(Node node : nodes)
+				if(node.getId() == nid)
+					orderedList.add(node);				
+		
+		return orderedList;
 	}
 
 	private double calcCost(Way way, LinkedList<Node> shapingNodes) {
@@ -242,6 +277,8 @@ public class OsmApiWrapper implements DataProvider {
 		}
 		return false;
 	}
+
+
 	
 	/*
 	private boolean isOneWay(Way way){
