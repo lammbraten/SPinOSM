@@ -1,7 +1,6 @@
 package de.spinosm.graph;
 
 import java.util.LinkedList;
-import java.util.TreeSet;
 
 
 

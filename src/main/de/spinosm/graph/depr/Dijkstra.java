@@ -1,4 +1,4 @@
-package de.spinosm.graph.algorithm;
+package de.spinosm.graph.depr;
 
 import java.util.LinkedList;
 import java.util.List;

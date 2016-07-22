@@ -54,7 +54,7 @@ public class OsmApiWrapperTest {
     public ExpectedException expected = ExpectedException.none();
 	
  	@Parameters
- 	public static Collection values() {
+ 	public static Collection<Object[]> values() {
  		return Arrays.asList(new Object[][] {	
  			{!TEST_SHOULD_FAIL, EXISTING_ELEMENTS},
  			{TEST_SHOULD_FAIL, FAILING_ELEMENTS},

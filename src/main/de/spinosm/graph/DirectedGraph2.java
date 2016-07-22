@@ -1,7 +1,5 @@
 package de.spinosm.graph;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeSet;
 
 import org.jgrapht.Graph;

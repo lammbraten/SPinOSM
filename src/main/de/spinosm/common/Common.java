@@ -2,7 +2,6 @@ package de.spinosm.common;
 
 import java.util.LinkedList;
 
-import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Way;
 

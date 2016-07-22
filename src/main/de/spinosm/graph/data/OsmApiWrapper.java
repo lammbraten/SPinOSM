@@ -18,9 +18,7 @@ import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
-import de.westnordost.osmapi.map.handler.DefaultMapDataHandler;
 import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
-import de.westnordost.osmapi.map.handler.MapDataHandler;
 import oauth.signpost.OAuthConsumer;
 
 public class OsmApiWrapper implements DataProvider {
@@ -53,7 +51,7 @@ public class OsmApiWrapper implements DataProvider {
 		return null;
 	}
 	
-	public List<Node> getNodes(Collection<Long> nodeIds){
+	public List<Node> getNodes(List<Long> nodeIds){
 		/*for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
 			List<Node> nodes = new LinkedList<Node>();
 			for(Long nid : nodeIds)
@@ -61,7 +59,7 @@ public class OsmApiWrapper implements DataProvider {
 			return nodes;
 		}*/
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++){
-			try{return mddao.getNodes(nodeIds);}catch(OsmConnectionException e){}			
+			try{return inWayOrder(mddao.getNodes(nodeIds), nodeIds);}catch(OsmConnectionException e){}			
 		}
 		return null;
 	}
@@ -182,14 +180,6 @@ public class OsmApiWrapper implements DataProvider {
 			try{
 				waysFromNode.add(parseToRouteableEdge(UPTHEROAD, way, thatNode));
 			}catch(Exception e){System.out.println(e.getMessage());}
-						
-			/*if(Common.wayIsUseable(way, Vehicle.CAR)){
-				Common.calcCost(getRawEdgeCoordinates(way), way);
-						
-					
-					//System.out.println(way.getId()+": " + nid);
-				//StreetEdge edge = new StreetEdge()					
-			}*/
 		}
 		return waysFromNode;
 
@@ -197,7 +187,7 @@ public class OsmApiWrapper implements DataProvider {
 
 	private RouteableEdge parseToRouteableEdge(int direction, Way way, StreetJunction startingNode) {
 		List<Long> nids = way.getNodeIds();
-		List<Node> nodes =  inWayOrder(this.getNodes(nids), nids);
+		List<Node> nodes =  this.getNodes(nids);
 		for(Node node : nodes){
 			if(startingNode.getId() == node.getId()){
 				if(direction < 0){
@@ -230,6 +220,13 @@ public class OsmApiWrapper implements DataProvider {
 				+ "nids-size: " + nids.size());
 	}
 
+	/**
+	 * Had to write this because OSM-Delivers for request for multiply nodes the nodes not ordered
+	 * OSM does this even for GET way/<id\>/complete
+	 * @param nodes - The undordered array
+	 * @param nids - Nodes should be in this order
+	 * @return the ordered List of Nodes
+	 */
 	private List<Node> inWayOrder(List<Node> nodes, List<Long> nids) {
 		ArrayList<Node> orderedList = new ArrayList<Node>();
 		
@@ -247,15 +244,6 @@ public class OsmApiWrapper implements DataProvider {
 			nodes.add(node.getPosition());
 		return Common.calcCost(nodes, way);
 	}
-
-	/*
-	private LinkedList<LatLon> getRawEdgeCoordinates(Way way) {
-		LinkedList<LatLon> nodePositions = new LinkedList<LatLon>();
-		for(long n : getNodeIdsToNextJunction(way))
-			nodePositions.add(this.getNode(n).getPosition());
-		return nodePositions;
-	}*/
-	
 
 	public boolean isRouteableJunction(Node node) {
 		List<Way> waysOfNode = this.getWaysForNode(node.getId());
@@ -277,27 +265,4 @@ public class OsmApiWrapper implements DataProvider {
 		}
 		return false;
 	}
-
-
-	
-	/*
-	private boolean isOneWay(Way way){
-		if(way.getTags().containsKey("oneway")) {
-			String value = way.getTags().get("oneway");
-			if(value.equals("yes")||value.equals("true")||value.equals("1")||value.equals("-1"))
-				return true;
-		}
-		return false;
-	}*/
-	
-	/*
-	private LinkedList<Long> getNodeIdsToNextJunction(Way way){
-		for(long node : way.getNodeIds()){
-			
-		}
-		if(isOneWay(way)){
-
-		}
-		return null;
-	}*/
 }

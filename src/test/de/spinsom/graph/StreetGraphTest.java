@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -78,7 +77,7 @@ public class StreetGraphTest {
 	}
 	
  	@Parameters
- 	public static Collection values() {
+ 	public static Collection<Object[]> values() {
  		return Arrays.asList(new Object[][] {	
  			{TEST_SHOULD_WORK, ALL_NODES_BUFFERED, TEST_SET1},
  			{TEST_SHOULD_WORK, SOME_NODES_BUFFERED, TEST_SET1},
