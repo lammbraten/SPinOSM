@@ -15,4 +15,5 @@ public interface RouteableNode extends Iterator<RouteableNode> {
 	public void setDistance(double distance);
 	public double getDistance();
 	public boolean isEdgesLoaded();
+	public boolean equals(Object other);
 }

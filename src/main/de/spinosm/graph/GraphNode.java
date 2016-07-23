@@ -87,9 +87,9 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 			return true;
 		if(this.getClass().equals(other.getClass())){
 			GraphNode otherGraphNode = (GraphNode) other;
-			if(this.id == otherGraphNode.id &&
+			if(this.id == otherGraphNode.id /*&&
 					this.edges.equals(otherGraphNode.edges) &&
-					this.distance == otherGraphNode.distance)
+					this.distance == otherGraphNode.distance*/)
 				return true;
 		}
 		return false;

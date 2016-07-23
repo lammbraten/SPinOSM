@@ -12,7 +12,7 @@ Serializable{
 	private RouteableNode target;
 	private double weight;
 	
-	DirectedEdge(GraphNode start, GraphNode end, double weight){
+	DirectedEdge(RouteableNode start, RouteableNode end, double weight){
 		this.source = start;
 		this.target = end;
 		this.weight = weight;

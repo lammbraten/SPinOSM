@@ -6,46 +6,29 @@ import java.util.TreeSet;
 
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 
 import org.jgrapht.*;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.*;
 import org.jgrapht.traverse.*;
 
 public class Dijkstra<V, E> implements ShortestPath{
-
-	@Override
-	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public StreetGraph getGraph() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setGraph(StreetGraph g) {
-		// TODO Auto-generated method stub
-		
-	}
-
-/*	private Graph graph; 
+	private StreetGraph graph; 
 	
 	private TreeSet<RouteableNode> calculatedNodes;
 	private TreeSet<RouteableNode> openNodes;
 	
-	public Dijkstra(Graph<V, E> g) {
-		this.graph = g;
+	public Dijkstra(StreetGraph streetgraph) {
+		this.graph = streetgraph;
 	}
 
 	@Override
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
 		TreeSet<RouteableNode> S = new TreeSet<RouteableNode>();
 		TreeSet<RouteableNode> Q = new TreeSet<RouteableNode>();
-		Q.add(graph..getNode(start.getId()));
+		Q.add(graph.getNode(start.getId()));
 		Q.first().setDistance(0);
 		
 		LinkedList<RouteableNode> pi = new LinkedList<RouteableNode>();
@@ -62,14 +45,22 @@ public class Dijkstra<V, E> implements ShortestPath{
 				RouteableNode v = e.getOtherKnotThan(u);
 				if(!S.contains(v)){
 					if(Q.contains(v)){
-						if(v.getDistance()  > (u.getDistance() + e.getCost())){
-							v.setDistance(u.getDistance() + e.getCost());
-							pi.set(pi.indexOf(v), u);
+						if(v.getDistance()  > (u.getDistance() + e.getWeight())){
+							v.setDistance(u.getDistance() + + e.getWeight());
+							int vI = pi.indexOf(v);
+							if(vI != -1)
+								pi.set(vI, u);
+							else
+								pi.add(u);
 						}
 					}else{
 						Q.add(v);
-						v.setDistance(u.getDistance() + e.getCost());
-						pi.set(pi.indexOf(v), u);
+						v.setDistance(u.getDistance() + + e.getWeight());
+						int vI = pi.indexOf(v);
+						if(vI != -1)
+							pi.set(vI, u);
+						else
+							pi.add(u);
 					}
 				}
 			}
@@ -88,7 +79,7 @@ public class Dijkstra<V, E> implements ShortestPath{
 		return graph;
 	}
 	
-	*/
+
 
 
 }

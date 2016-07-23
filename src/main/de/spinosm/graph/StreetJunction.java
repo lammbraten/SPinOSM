@@ -38,7 +38,7 @@ public class StreetJunction extends GraphNode {
 	@Override
 	public boolean equals(Object other) {
 		if(super.equals(other))
-			if(this.position.equals(((StreetJunction)other).position))
+			//if(this.position.equals(((StreetJunction)other).position))
 				return true;
 		return false;
 	}

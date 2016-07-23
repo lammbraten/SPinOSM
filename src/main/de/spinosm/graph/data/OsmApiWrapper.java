@@ -217,7 +217,8 @@ public class OsmApiWrapper implements DataProvider {
 				+ "Direction: " + direction + "\n"
 				+ "way: " + way.getId() + "\n"
 				+ "StartingNode: " + startingNode + "\n"
-				+ "nids-size: " + nids.size());
+				+ "nids-size: " + nids.size() + "\n"
+				+ "--------------------------") ; 
 	}
 
 	/**
