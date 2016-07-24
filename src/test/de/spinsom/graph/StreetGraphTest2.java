@@ -83,8 +83,6 @@ public class StreetGraphTest2 {
 	
 	@Test
 	public void testGetSetStreetJunctions() {
-		//Test for initialValues
-		assertEquals(INITIAL_NODE_ARRAY.length, streetGraph.getStreetJunctions().size());
 		//Test for NullPointerExption
 		streetGraph = new StreetGraph(osmapiwrapper);
 		assertEquals(0,streetGraph.getStreetJunctions().size());

@@ -58,14 +58,9 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	 * @return
 	 */
 	private StreetJunction getStreetJunctionFromDataProvider(long id) {
-		try {
-			StreetJunction returnValue = this.dataprovider.getStreetJunction(id);
-			this.integrateNewNodeToGraph(returnValue);
-			return returnValue;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		StreetJunction returnValue = this.dataprovider.getStreetJunction(id);
+		this.integrateNewNodeToGraph(returnValue);
+		return returnValue;
 	}
 
 	/**
@@ -73,7 +68,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	 */
 	private RouteableNode checkBufferedNodesForId(long id) {
 		for(RouteableNode n : super.vertexSet())
-			if(n.getId() == id)
+			if(n.getId() == id && n.isEdgesLoaded())
 				return n;
 		return null;
 	}
@@ -221,6 +216,17 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 
 	@Override
 	public Set<RouteableNode> vertexSet() {
+		Set<RouteableNode> vertecis = super.vertexSet();
+		Set<RouteableNode> borderVertecisToLoad = new TreeSet<RouteableNode>();
+		for(RouteableNode vertex : vertecis)
+			if(vertex.isEdgesLoaded())
+				for(RouteableEdge e : vertex.getEdges())
+					borderVertecisToLoad.add(e.getEnd());
+		
+		for(RouteableNode vertex : borderVertecisToLoad)
+			if(!vertex.isEdgesLoaded())
+				this.getNode(vertex.getId());
+		
 		return super.vertexSet();
 	}
 

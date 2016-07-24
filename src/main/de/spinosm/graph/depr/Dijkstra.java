@@ -43,6 +43,12 @@ public class Dijkstra<V, E> implements ShortestPath{
 			
 			for(RouteableEdge e : u.getEdges()){
 				RouteableNode v = e.getOtherKnotThan(u);
+				
+				System.out.println(v.getId() +" : " + end.getId());
+				if(v.getId() == end.getId())
+					return pi;
+				
+				
 				if(!S.contains(v)){
 					if(Q.contains(v)){
 						if(v.getDistance()  > (u.getDistance() + e.getWeight())){

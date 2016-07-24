@@ -24,8 +24,8 @@ public class PlayingWithJgrapht {
 	private static StreetGraph streetgraph;
 	private static OsmApiWrapper osmapi;
 	
-	private static long start = 300677464l;
-	private static long end = 1579971675l;
+	private static long start = 45107617l;
+	private static long end = 116108105l;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -41,9 +41,14 @@ public class PlayingWithJgrapht {
 	public void test() {
 		StreetJunction startJunction = osmapi.getStreetJunction(start);
 		StreetJunction endJunction = osmapi.getStreetJunction(end);
+		
+		streetgraph.addVertex(startJunction);
+		streetgraph.addVertex(endJunction);
+		
 		//DijkstraShortestPath<RouteableNode, StreetEdge> dijkstra = new DijkstraShortestPath<RouteableNode, StreetEdge>(streetgraph, startJunction, endJunction);
 		
-		//List<StreetEdge> graphPath = dijkstra.findPathBetween(streetgraph, startJunction, endJunction);
+		//List<StreetEdge> graphPath = DijkstraShortestPath.findPathBetween(streetgraph, startJunction, endJunction);
+//		dijkstra.getPath();
 		List<RouteableNode> graphPath = new Dijkstra(streetgraph).getShortestPath(startJunction, endJunction);
 		for(RouteableNode n : graphPath)
 			System.out.println(n);

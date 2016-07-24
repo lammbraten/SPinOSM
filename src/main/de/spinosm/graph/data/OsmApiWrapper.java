@@ -224,7 +224,7 @@ public class OsmApiWrapper implements DataProvider {
 	/**
 	 * Had to write this because OSM-Delivers for request for multiply nodes the nodes not ordered
 	 * OSM does this even for GET way/<id\>/complete
-	 * @param nodes - The undordered array
+	 * @param nodes - The unordered array
 	 * @param nids - Nodes should be in this order
 	 * @return the ordered List of Nodes
 	 */
