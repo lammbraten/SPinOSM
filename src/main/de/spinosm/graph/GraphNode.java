@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 
 
-public abstract class GraphNode implements RouteableNode, Comparable {
+public abstract class GraphNode implements RouteableNode {
 
 	private LinkedList<RouteableEdge> edges;
 	private long id;
@@ -85,7 +85,7 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 			return false;
 		if(this == other)
 			return true;
-		if(this.getClass().equals(other.getClass())){
+		if(other instanceof GraphNode){
 			GraphNode otherGraphNode = (GraphNode) other;
 			if(this.id == otherGraphNode.id /*&&
 					this.edges.equals(otherGraphNode.edges) &&
@@ -108,13 +108,15 @@ public abstract class GraphNode implements RouteableNode, Comparable {
 	
 	
 	@Override
-	public int compareTo(Object other) {
+	public int compareTo(RouteableNode other) {
 		if(other == null )
+			return 0;
+		if(this.equals(other))
+			return 0;
+		if(this.getDistance() > other.getDistance()) 
 			return 1;
-		if(this.getClass().equals(other.getClass())){
-			GraphNode otherGraphNode = (GraphNode) other;
-			return (int) (this.id - otherGraphNode.id);
-		}
-		return 1;
+		if(this.getDistance() < other.getDistance()) 
+			return -1;
+		return 0;
 	}
 }

@@ -176,10 +176,14 @@ public class OsmApiWrapper implements DataProvider {
 		for(Way way : ways){
 			try{
 				waysFromNode.add(parseToRouteableEdge(DOWNTHEROAD, way, thatNode));
-			}catch(Exception e){System.out.println(e.getMessage());}
+			}catch(Exception e){
+				//System.out.println(e.getMessage());
+			}
 			try{
 				waysFromNode.add(parseToRouteableEdge(UPTHEROAD, way, thatNode));
-			}catch(Exception e){System.out.println(e.getMessage());}
+			}catch(Exception e){
+				//System.out.println(e.getMessage());
+			}
 		}
 		return waysFromNode;
 

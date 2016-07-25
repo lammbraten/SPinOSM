@@ -8,6 +8,7 @@ import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.pattern.DistanceComparator;
 
 import org.jgrapht.*;
 import org.jgrapht.Graph;
@@ -26,15 +27,20 @@ public class Dijkstra<V, E> implements ShortestPath{
 
 	@Override
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
-		TreeSet<RouteableNode> S = new TreeSet<RouteableNode>();
-		TreeSet<RouteableNode> Q = new TreeSet<RouteableNode>();
+		LinkedList<RouteableNode> S = new LinkedList<RouteableNode>();
+		TreeSet<RouteableNode> Q = new TreeSet<RouteableNode>(/*new DistanceComparator()*/);
 		Q.add(graph.getNode(start.getId()));
 		Q.first().setDistance(0);
 		
 		LinkedList<RouteableNode> pi = new LinkedList<RouteableNode>();
 		
 		while(!Q.isEmpty()){
+			
+			//RouteableNode u = Q.pollLast();
 			RouteableNode u = Q.first();
+			
+			System.out.println(u.getId() + ": " + u.getDistance());
+			
 			Q.remove(u);
 			S.add(u);
 			
@@ -44,15 +50,19 @@ public class Dijkstra<V, E> implements ShortestPath{
 			for(RouteableEdge e : u.getEdges()){
 				RouteableNode v = e.getOtherKnotThan(u);
 				
-				System.out.println(v.getId() +" : " + end.getId());
+				//System.out.println(v.getId() +" : " + end.getId());
 				if(v.getId() == end.getId())
 					return pi;
 				
 				
 				if(!S.contains(v)){
 					if(Q.contains(v)){
+						//v = getVertexFrom(v, Q); Nicht nörig, dain StreetGraph schon richtig verlinkt wird.
+							
 						if(v.getDistance()  > (u.getDistance() + e.getWeight())){
-							v.setDistance(u.getDistance() + + e.getWeight());
+							Q.remove(v);
+							v.setDistance(u.getDistance() + e.getWeight());
+							Q.add(v);
 							int vI = pi.indexOf(v);
 							if(vI != -1)
 								pi.set(vI, u);
@@ -60,8 +70,8 @@ public class Dijkstra<V, E> implements ShortestPath{
 								pi.add(u);
 						}
 					}else{
+						v.setDistance(u.getDistance() + e.getWeight());						
 						Q.add(v);
-						v.setDistance(u.getDistance() + + e.getWeight());
 						int vI = pi.indexOf(v);
 						if(vI != -1)
 							pi.set(vI, u);
@@ -72,6 +82,13 @@ public class Dijkstra<V, E> implements ShortestPath{
 			}
 		}
 		return pi;
+	}
+
+	private RouteableNode getVertexFrom(RouteableNode ref, TreeSet<RouteableNode> q) {
+		for(RouteableNode vertex : q)
+			if(ref.equals(vertex))
+				return vertex;				
+		return null;
 	}
 
 	@Override

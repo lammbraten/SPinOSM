@@ -3,7 +3,7 @@ package de.spinosm.graph;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public interface RouteableNode extends Iterator<RouteableNode> {
+public interface RouteableNode extends Iterator<RouteableNode> ,  Comparable<RouteableNode>{
 	public LinkedList<RouteableEdge> getEdges();
 	public void setEdges(LinkedList<RouteableEdge> edges);
 	//public RouteableEdge getCheapestEdge();
@@ -16,4 +16,5 @@ public interface RouteableNode extends Iterator<RouteableNode> {
 	public double getDistance();
 	public boolean isEdgesLoaded();
 	public boolean equals(Object other);
+	public int compareTo(RouteableNode other);
 }
