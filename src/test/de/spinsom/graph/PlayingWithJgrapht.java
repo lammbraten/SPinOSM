@@ -15,8 +15,8 @@ import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.data.OsmApiWrapper;
-import de.spinosm.graph.depr.Dijkstra;
 
 
 public class PlayingWithJgrapht {
@@ -24,9 +24,13 @@ public class PlayingWithJgrapht {
 	private static StreetGraph streetgraph;
 	private static OsmApiWrapper osmapi;
 	
-	private static long start = 45107617l; //Eichhornstraﬂe - Koenlnerstraﬂe
+	private static long start =  2524487607l; //Campus-S¸d
+	private static long end = 417403147l; //Campus-West
+
+			
+	//private static long start = 45107617l; //Eichhornstraﬂe - Koenlnerstraﬂe
 	//private static long end = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
-	private static long end = 1579971496l;  // Raderfeld - Gropperstraﬂe
+	//private static long end = 1579971496l;  // Raderfeld - Gropperstraﬂe
 
 	
 	@BeforeClass
