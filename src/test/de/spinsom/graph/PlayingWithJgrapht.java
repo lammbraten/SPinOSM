@@ -24,8 +24,10 @@ public class PlayingWithJgrapht {
 	private static StreetGraph streetgraph;
 	private static OsmApiWrapper osmapi;
 	
-	private static long start = 45107617l;
-	private static long end = 116108105l;
+	private static long start = 45107617l; //Eichhornstraﬂe - Koenlnerstraﬂe
+	//private static long end = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
+	private static long end = 1579971496l;  // Raderfeld - Gropperstraﬂe
+
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

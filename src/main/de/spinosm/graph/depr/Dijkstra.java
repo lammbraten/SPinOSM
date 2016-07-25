@@ -1,7 +1,10 @@
 package de.spinosm.graph.depr;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import de.spinosm.graph.RouteableEdge;
@@ -32,7 +35,7 @@ public class Dijkstra<V, E> implements ShortestPath{
 		Q.add(graph.getNode(start.getId()));
 		Q.first().setDistance(0);
 		
-		LinkedList<RouteableNode> pi = new LinkedList<RouteableNode>();
+		TreeMap<RouteableNode, RouteableNode> pi = new TreeMap<RouteableNode, RouteableNode>();
 		
 		while(!Q.isEmpty()){
 			
@@ -51,8 +54,10 @@ public class Dijkstra<V, E> implements ShortestPath{
 				RouteableNode v = e.getOtherKnotThan(u);
 				
 				//System.out.println(v.getId() +" : " + end.getId());
-				if(v.getId() == end.getId())
-					return pi;
+				if(v.getId() == end.getId()){
+					pi.put(v, u);
+					return buildLinkedList(pi);
+				}
 				
 				
 				if(!S.contains(v)){
@@ -63,26 +68,33 @@ public class Dijkstra<V, E> implements ShortestPath{
 							Q.remove(v);
 							v.setDistance(u.getDistance() + e.getWeight());
 							Q.add(v);
-							int vI = pi.indexOf(v);
-							if(vI != -1)
-								pi.set(vI, u);
-							else
-								pi.add(u);
+							pi.put(v, u);
+
 						}
 					}else{
 						v.setDistance(u.getDistance() + e.getWeight());						
 						Q.add(v);
-						int vI = pi.indexOf(v);
-						if(vI != -1)
-							pi.set(vI, u);
-						else
-							pi.add(u);
+						pi.put(v, u);
 					}
 				}
 			}
 		}
-		return pi;
+		return null;
 	}
+
+	private List<RouteableNode> buildLinkedList(TreeMap<RouteableNode, RouteableNode> pi) {
+		RouteableNode v = pi.lastEntry().getKey();
+		LinkedList<RouteableNode> returnValue = new LinkedList<RouteableNode>();	
+		returnValue.add(v);
+		while(v != pi.firstEntry().getKey()){
+			v = pi.get(v);
+			returnValue.add(v);
+		}
+		
+		return returnValue;
+	}
+
+
 
 	private RouteableNode getVertexFrom(RouteableNode ref, TreeSet<RouteableNode> q) {
 		for(RouteableNode vertex : q)
