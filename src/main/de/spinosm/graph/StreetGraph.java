@@ -58,7 +58,12 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	 * @return
 	 */
 	private StreetJunction getStreetJunctionFromDataProvider(long id) {
-		StreetJunction returnValue = this.dataprovider.getStreetJunction(id);
+		StreetJunction returnValue = null;
+		try {
+			returnValue = this.dataprovider.getStreetJunction(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.integrateNewNodeToGraph(returnValue);
 		return returnValue;
 	}

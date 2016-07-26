@@ -37,12 +37,15 @@ public class OsmApiWrapper implements DataProvider {
 	private OsmConnection osm;
 	private MapDataDao mddao;
 	
+	private OsmElementBuffer<Node> osmNodeListBuffer;
+	private OsmElementBuffer<Way> osmWaysOfNodeBuffer;
+	
 	public OsmApiWrapper(){
 		this.osm = new OsmConnection(OSM_API_URL, USER_AGENT, OSM_AUTH, TIMEOUT);
 		this.mddao = new MapDataDao(osm);
 
-		//this.myMapDataHandler = new OsmMapDataFactory();
-
+		osmNodeListBuffer = new OsmElementBuffer<Node>();
+		osmWaysOfNodeBuffer = new OsmElementBuffer<Way>();
 	}
 	
 	public Node getNode(long id){
@@ -71,13 +74,9 @@ public class OsmApiWrapper implements DataProvider {
 	}
 	
 	public List<Node> getWayNodesComplete(long id) {
-		ListOsmElementHandler<Node>  mdh = new ListOsmElementHandler<Node>(Node.class);
-		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{
-				mddao.getWayComplete(id, mdh);
-				break;
-			}catch(OsmConnectionException e){}
-		return mdh.get();
+		if(osmNodeListBuffer.contains(id))
+			return getWayCompleteFromBuffer(id);
+		return getWayCompleteFromServer(id);
 	}
 	
 	public List<Way> getWays(Collection<Long> wayIds){
@@ -87,9 +86,9 @@ public class OsmApiWrapper implements DataProvider {
 	}
 	
 	public List<Way> getWaysForNode(long id){
-		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
-			try{return mddao.getWaysForNode(id);}catch(OsmConnectionException e){}
-		return null;
+		if(osmWaysOfNodeBuffer.contains(id))
+			return getWaysOfNodeFromBuffer(id);
+		return getWayForNodeFromServer(id);
 	}
 	
 	public Relation getRelation(long id){
@@ -164,15 +163,15 @@ public class OsmApiWrapper implements DataProvider {
 	
 	private StreetJunction buildNewStreetJunction(OsmNode osmNode) {
 		StreetJunction returnValue;
-		LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode.getId());	
+		LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
 		returnValue = new StreetJunction(osmNode, waysFromNode);
 		return returnValue;
 	}
 	
-	private LinkedList<RouteableEdge> getRouteableEdgesForNode(long id) {
+	private LinkedList<RouteableEdge> getRouteableEdgesForNode(Node n) {
 		LinkedList<RouteableEdge> waysFromNode = new LinkedList<RouteableEdge>();
-		List<Way> ways = this.getWaysForNode(id);
-		StreetJunction thatNode= new StreetJunction((OsmNode) this.getNode(id));
+		List<Way> ways = this.getWaysForNode(n.getId());
+		StreetJunction thatNode= new StreetJunction((OsmNode) n);
 		for(Way way : ways){
 			try{
 				waysFromNode.add(parseToRouteableEdge(DOWNTHEROAD, way, thatNode));
@@ -191,7 +190,7 @@ public class OsmApiWrapper implements DataProvider {
 
 	private RouteableEdge parseToRouteableEdge(int direction, Way way, StreetJunction startingNode) {
 		List<Long> nids = way.getNodeIds();
-		List<Node> nodes =  this.getNodes(nids);
+		List<Node> nodes =  this.getWayNodesComplete(way.getId());
 		for(Node node : nodes){
 			if(startingNode.getId() == node.getId()){
 				if(direction < 0){
@@ -269,5 +268,46 @@ public class OsmApiWrapper implements DataProvider {
 				return true;
 		}
 		return false;
+	}
+	
+	private List<Node> getWayCompleteFromBuffer(long id) {
+		return osmNodeListBuffer.getElementList(id);
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	private List<Node> getWayCompleteFromServer(long id) {
+		ListOsmElementHandler<Node>  mdh = new ListOsmElementHandler<Node>(Node.class);
+		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
+			try{
+				mddao.getWayComplete(id, mdh);
+				break;
+			}catch(OsmConnectionException e){}
+		osmNodeListBuffer.addElementList(id, mdh.get());
+		return mdh.get();
+	}
+	
+	/**
+	 * @param id
+	 * @return 
+	 */
+	private List<Way> getWaysOfNodeFromBuffer(long id) {
+		return osmWaysOfNodeBuffer.getElementList(id);
+	}
+
+	/**
+	 * @param id
+	 * @return 
+	 */
+	private List<Way> getWayForNodeFromServer(long id) {
+		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
+			try{
+				List<Way> returnValue= mddao.getWaysForNode(id);
+				osmWaysOfNodeBuffer.addElementList(id, returnValue);
+				return returnValue;
+			}catch(OsmConnectionException e){}
+		return null;
 	}
 }

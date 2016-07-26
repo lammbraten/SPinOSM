@@ -93,13 +93,13 @@ public class OsmHighwayValues {
 			case TRUNK:
 				return 120;
 			case PRIMARY:
-				return 70;
+				return 90;
 			case SECONDARY:
-				return 50;
+				return 80;
 			case TERTIARY:
 				return 50;
 			case RESIDENTIAL:
-				return 50;
+				return 45;
 			case MOTORWAY_LINK:
 				return 80;
 			case TRUNK_LINK:
