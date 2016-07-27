@@ -31,8 +31,8 @@ public class PlayingWithJgrapht {
 	private static long KOE_HA = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
 	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
 	
-	private static long start = CAMPUS_SUED;
-	private static long end = CAMPUS_WEST;
+	private static long start = EI_KOE;
+	private static long end = KOE_HA;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

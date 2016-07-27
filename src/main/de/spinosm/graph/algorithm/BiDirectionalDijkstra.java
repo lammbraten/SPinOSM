@@ -3,6 +3,7 @@ package de.spinosm.graph.algorithm;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,19 +32,33 @@ public class BiDirectionalDijkstra implements ShortestPath{
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
 		startVertex = start;
 		endVertex = end;
-
-		d1.getQ().add(graph.getNode(startVertex.getId()));
-		d1.getQ().first().setDistance(0);
 		
-		d2.getQ().add(graph.getNode(endVertex.getId()));
-		d2.getQ().first().setDistance(0);
+		d1.init(startVertex);
+		d2.init(endVertex);
 		
 		while(intersectionOf(d1.getS(),d2.getS()).isEmpty() && (!d1.getQ().isEmpty() || !d2.getQ().isEmpty())){
 			d1.checkNextVertex();
 			d2.checkNextVertex();
 		}
 			
-		return (List<RouteableNode>) intersectionOf(d1.getS(),d2.getS());
+		return buildShortestPath();
+	}
+
+	private List<RouteableNode> buildShortestPath() {
+		RouteableNode jointValue = intersectionOf(d1.getS(),d2.getS()).first();
+		List<RouteableNode> shortestSub1PathReverse = d2.buildShortestPathTo(jointValue);	
+		List<RouteableNode> shortestSub2Path = d2.buildShortestPathTo(jointValue);
+	    ListIterator<RouteableNode> listIterator = shortestSub1PathReverse.listIterator();
+		List<RouteableNode>  shortestPath = shortestSub2Path;
+		
+	    shortestPath.add(jointValue);
+	    //vorwärts
+	    while(listIterator.hasNext())
+	    	listIterator.next();
+	    //zurück
+		while(listIterator.hasPrevious())
+			shortestPath.add(listIterator.previous());	
+		return shortestPath;
 	}
 
 	@Override

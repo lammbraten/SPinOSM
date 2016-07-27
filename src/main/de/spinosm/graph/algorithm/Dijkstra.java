@@ -25,8 +25,8 @@ public class Dijkstra implements ShortestPath{
 	private TreeSet<RouteableNode> S;
 	private TreeSet<RouteableNode> Q;
 	private TreeMap<RouteableNode, RouteableNode> pi;
-	private static RouteableNode startVertex;
-	private static RouteableNode endVertex;	
+	private RouteableNode startVertex;
+	private RouteableNode endVertex;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
 		this.graph = streetgraph;
@@ -43,15 +43,12 @@ public class Dijkstra implements ShortestPath{
 
 	@Override
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
-		startVertex = start;
+		init(start);
 		endVertex = end;
-
-		Q.add(graph.getNode(startVertex.getId()));
-		Q.first().setDistance(0);
 			
 		while(!Q.isEmpty()){
-			if(Q.first().getId() == end.getId())
-				return buildLinkedList(pi);
+			if(Q.first().getId() == endVertex.getId())
+				return buildShortestPathTo(endVertex);
 			checkNextVertex();
 		}
 		return null;
@@ -99,7 +96,7 @@ public class Dijkstra implements ShortestPath{
 		}
 	}
 
-	private List<RouteableNode> buildLinkedList(TreeMap<RouteableNode, RouteableNode> pi) {
+	List<RouteableNode> buildShortestPathTo(RouteableNode endVertex) {
 		RouteableNode v = pi.get(endVertex);
 		LinkedList<RouteableNode> returnValue = new LinkedList<RouteableNode>();	
 		returnValue.add(v);
@@ -113,6 +110,12 @@ public class Dijkstra implements ShortestPath{
 		return returnValue;
 	}
 
+	
+	void init(RouteableNode start){
+		startVertex = start;
+		Q.add(graph.getNode(startVertex.getId()));
+		Q.first().setDistance(0);
+	}
 
 
 	private RouteableNode getVertexFrom(RouteableNode ref, TreeSet<RouteableNode> q) {
@@ -149,20 +152,20 @@ public class Dijkstra implements ShortestPath{
 		Q = q;
 	}
 
-	public static RouteableNode getStartVertex() {
+	public RouteableNode getStartVertex() {
 		return startVertex;
 	}
 
-	public static void setStartVertex(RouteableNode startVertex) {
-		Dijkstra.startVertex = startVertex;
+	public void setStartVertex(RouteableNode startVertex) {
+		this.startVertex = startVertex;
 	}
 
-	public static RouteableNode getEndVertex() {
+	public RouteableNode getEndVertex() {
 		return endVertex;
 	}
 
-	public static void setEndVertex(RouteableNode endVertex) {
-		Dijkstra.endVertex = endVertex;
+	public void setEndVertex(RouteableNode endVertex) {
+		this.endVertex = endVertex;
 	}
 	
 
