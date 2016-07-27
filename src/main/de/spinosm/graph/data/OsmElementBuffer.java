@@ -1,14 +1,16 @@
 package de.spinosm.graph.data;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 
 
 public class OsmElementBuffer <T> {
-	private TreeMap<Long, List<T>> buffer;
+	private HashMap<Long, List<T>> buffer;
 	
 	public OsmElementBuffer(){
-		buffer = new TreeMap<Long, List<T>>();
+		buffer = new HashMap<Long, List<T>>();
 	}
 	
 	public List<T> getElementList(long id) {

@@ -20,72 +20,83 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.*;
 import org.jgrapht.traverse.*;
 
-public class Dijkstra<V, E> implements ShortestPath{
+public class Dijkstra implements ShortestPath{
 	private StreetGraph graph; 
-	
-	private TreeSet<RouteableNode> calculatedNodes;
-	private TreeSet<RouteableNode> openNodes;
-
-
+	private TreeSet<RouteableNode> S;
+	private TreeSet<RouteableNode> Q;
+	private TreeMap<RouteableNode, RouteableNode> pi;
 	private static RouteableNode startVertex;
 	private static RouteableNode endVertex;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
 		this.graph = streetgraph;
+		S = new TreeSet<RouteableNode>(new IdComparator());
+		Q = new TreeSet<RouteableNode>();		
+		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
+	}
+	
+	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+		this.graph = streetgraph;
+		this.S = S;
+		this.Q = Q;
 	}
 
 	@Override
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
 		startVertex = start;
 		endVertex = end;
-		LinkedList<RouteableNode> S = new LinkedList<RouteableNode>();
-		TreeSet<RouteableNode> Q = new TreeSet<RouteableNode>(/*new DistanceComparator()*/);
+
 		Q.add(graph.getNode(startVertex.getId()));
 		Q.first().setDistance(0);
-		
-		TreeMap<RouteableNode, RouteableNode> pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
-		
+			
 		while(!Q.isEmpty()){
-			RouteableNode u = Q.first();
-			
-			System.out.println(u.getId() + ": " + u.getDistance());
-			
-			Q.remove(u);
-			S.add(u);
-			
-			if(!u.isEdgesLoaded())
-				u.setEdges(graph.getNode(u.getId()).getEdges());
-			
-			for(RouteableEdge e : u.getEdges()){
-				RouteableNode v = e.getOtherKnotThan(u);
-				
-				//System.out.println(v.getId() +" : " + end.getId());
-				if(v.getId() == end.getId()){
-					pi.put(v, u);
-					return buildLinkedList(pi);
-				}
-				
-				
-				if(!S.contains(v)){
-					if(Q.contains(v)){
-						//v = getVertexFrom(v, Q); Nicht nörig, da in StreetGraph schon richtig verlinkt wird.
-							
-						if(v.getDistance()  > (u.getDistance() + e.getWeight())){
-							Q.remove(v);
-							v.setDistance(u.getDistance() + e.getWeight());
-							Q.add(v);
-							pi.put(v, u);
+			if(Q.first().getId() == end.getId())
+				return buildLinkedList(pi);
+			checkNextVertex();
+		}
+		return null;
+	}
 
-						}
-					}else{
-						v.setDistance(u.getDistance() + e.getWeight());						
+	/**
+	 * @param pi
+	 * @param u
+	 */
+	void checkNextVertex() {
+		RouteableNode u = Q.first();
+		System.out.println(u.getId() + ": " + u.getDistance());
+		
+		Q.remove(u);
+		S.add(u);
+		
+		if(!u.isEdgesLoaded()){
+			RouteableNode loaded = graph.getNode(u.getId());
+			if(loaded != null)
+				u.setEdges(loaded.getEdges());
+		}
+		
+		for(RouteableEdge e : u.getEdges()){
+			RouteableNode v = e.getOtherKnotThan(u);
+			
+			if(!S.contains(v)){
+				if(Q.contains(v)){
+					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
+						
+					if(v.getDistance()  > (u.getDistance() + e.getWeight())){
+						Q.remove(v);
+						v.setDistance(u.getDistance() + e.getWeight());
 						Q.add(v);
 						pi.put(v, u);
+						System.out.println("--" + v.getId() + " now: " + v.getDistance());
+
 					}
+				}else{
+					v.setDistance(u.getDistance() + e.getWeight());						
+					Q.add(v);
+					pi.put(v, u);
+					System.out.println("-" + v.getId() + " yet: " + v.getDistance() );
 				}
 			}
 		}
-		return null;
 	}
 
 	private List<RouteableNode> buildLinkedList(TreeMap<RouteableNode, RouteableNode> pi) {
@@ -120,6 +131,38 @@ public class Dijkstra<V, E> implements ShortestPath{
 	@Override
 	public StreetGraph getGraph() {
 		return graph;
+	}
+
+	public TreeSet<RouteableNode> getS() {
+		return S;
+	}
+
+	public void setS(TreeSet<RouteableNode> s) {
+		S = s;
+	}
+
+	public TreeSet<RouteableNode> getQ() {
+		return Q;
+	}
+
+	public void setQ(TreeSet<RouteableNode> q) {
+		Q = q;
+	}
+
+	public static RouteableNode getStartVertex() {
+		return startVertex;
+	}
+
+	public static void setStartVertex(RouteableNode startVertex) {
+		Dijkstra.startVertex = startVertex;
+	}
+
+	public static RouteableNode getEndVertex() {
+		return endVertex;
+	}
+
+	public static void setEndVertex(RouteableNode endVertex) {
+		Dijkstra.endVertex = endVertex;
 	}
 	
 

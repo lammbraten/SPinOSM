@@ -131,9 +131,11 @@ public class OsmApiWrapper implements DataProvider {
 	public StreetJunction getStreetJunction(long id) {
 		StreetJunction returnValue;
 		OsmNode osmNode = (OsmNode) this.getNode(id);
-		if(osmNode == null)
+		if(osmNode == null){
 			throw new IllegalArgumentException("Node not existing in OSM");
-		returnValue = buildNewStreetJunction(osmNode);
+		}else{
+			returnValue = buildNewStreetJunction(osmNode);
+		}
 		return returnValue;
 	}
 
