@@ -15,6 +15,7 @@ import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
 import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -31,8 +32,8 @@ public class PlayingWithJgrapht {
 	private static long KOE_HA = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
 	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
 	
-	private static long start = EI_KOE;
-	private static long end = KOE_HA;
+	private static long start = CAMPUS_SUED;
+	private static long end = CAMPUS_WEST;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -58,6 +59,7 @@ public class PlayingWithJgrapht {
 //		dijkstra.getPath();
 		//List<RouteableNode> graphPath = new Dijkstra(streetgraph).getShortestPath(startJunction, endJunction);
 		List<RouteableNode> graphPath = new BiDirectionalDijkstra(streetgraph).getShortestPath(startJunction, endJunction);
+		//List<RouteableNode> graphPath = new AStar(streetgraph).getShortestPath(startJunction, endJunction);
 
 		for(RouteableNode n : graphPath)
 			System.out.println(n);

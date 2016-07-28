@@ -55,12 +55,35 @@ public class Common {
 	}
 	
 	/**
-	 * Calculates the Distance between two given Coordinates.
+	 * Pythagoras. Groﬂer Fehler, aber wesentlich schneller.
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
+	public static double calcDistance(LatLon node1 , LatLon node2){
+	    double lat1 = toRad(node1.getLatitude());
+	    double lat2 = toRad(node2.getLatitude());
+	    double lon1 = toRad(node1.getLongitude());
+	    double lon2 = toRad(node2.getLongitude());
+
+	    return EARTHRADIUS * pythagoras(lat1, lat2, lon1, lon2);
+	}
+	
+	private static double pythagoras(double lat1, double lat2, double lon1, double lon2) {
+		return Math.sqrt(
+				Math.pow((lat1-lat2),2) +
+				Math.pow((lon1-lon2),2)
+				);
+	}
+
+
+	/**
+	 * Calculates the Distance between two given Coordinates as the Crow flies. (de: Luftlinie)
 	 * @param node1
 	 * @param node2
 	 * @return distance in Kilometers
 	 */
-	public static double calcDistance(LatLon node1 , LatLon node2){
+	public static double asTheCrowFlies(LatLon node1 , LatLon node2){
 	    double lat1 = toRad(node1.getLatitude());
 	    double lat2 = toRad(node2.getLatitude());
 	    double lon1 = toRad(node1.getLongitude());

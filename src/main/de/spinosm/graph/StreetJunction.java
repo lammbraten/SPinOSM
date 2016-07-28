@@ -14,24 +14,25 @@ public class StreetJunction extends GraphNode {
 	public StreetJunction(OsmNode osmNode, LinkedList<RouteableEdge> edges){
 		super(osmNode.getId());
 		this.setEdges(edges);	
-		this.setPostion(osmNode.getPosition());
+		this.setPosition(osmNode.getPosition());
 	}
 	
 	public StreetJunction(StreetJunction streetJunction) {
 		super(streetJunction.getId(), streetJunction.getDistance());
-		this.setPostion(streetJunction.position);
+		this.setPosition(streetJunction.position);
 	}
 	
 	public StreetJunction(OsmNode osmNode){
 		super(osmNode.getId());		
-		this.setPostion(osmNode.getPosition());
+		this.setPosition(osmNode.getPosition());
 	}
 
-	public LatLon getPostion() {
+	@Override
+	public LatLon getPosition() {
 		return position;
 	}
 
-	public void setPostion(LatLon position) {
+	public void setPosition(LatLon position) {
 		this.position = position;
 	}
 	

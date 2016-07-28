@@ -62,15 +62,30 @@ public class CommonTest {
 	@Test
 	public void calcDistanceTest() {
 		double long_distance = 0.0;
-		/*for(int i = 0; i<10000000 ; i++) //Stresstest		
-			distance = Common.calcDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
-		System.out.println(distance);*/ 
+		for(int i = 0; i<10000000 ; i++) //Stresstest		
+			long_distance = Common.calcDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		System.out.println(long_distance);
 		long_distance = Common.calcDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
 		double middle_distance = Common.calcDistance(FISCHELN_RATHAUS , STADTBAD_FISCHELN);
 		double short_distance = Common.calcDistance(WEDELSTRASSE_19 , WEDELSTRASSE_17);
-		assertEquals(LONG_DISTANCE, long_distance, 0.1);
-		assertEquals(MIDDLE_DISTANCE, middle_distance, 0.001);
+		assertEquals(SHORT_DISTANCE, short_distance, 0.013);
+		assertEquals(MIDDLE_DISTANCE, middle_distance, 0.1);		
+		assertEquals(LONG_DISTANCE, long_distance, 3.33);		
+		testDistanceOnTartanbahn();
+	}
+	
+	@Test
+	public void astheCrowFliesTest() {
+		double long_distance = 0.0;
+		for(int i = 0; i<10000000 ; i++) //Stresstest		
+			long_distance = Common.asTheCrowFlies(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		System.out.println(long_distance);
+		long_distance = Common.asTheCrowFlies(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		double middle_distance = Common.asTheCrowFlies(FISCHELN_RATHAUS , STADTBAD_FISCHELN);
+		double short_distance = Common.asTheCrowFlies(WEDELSTRASSE_19 , WEDELSTRASSE_17);
 		assertEquals(SHORT_DISTANCE, short_distance, 0.0001);
+		assertEquals(MIDDLE_DISTANCE, middle_distance, 0.001);	
+		assertEquals(LONG_DISTANCE, long_distance, 0.1);	
 		testDistanceOnTartanbahn();
 	}
 
@@ -78,7 +93,7 @@ public class CommonTest {
 	private void testDistanceOnTartanbahn() {
 		double length = 0.0;
 		for(int i = 0; TARTANBAHN.length-1 > i; i++){
-			length += Common.calcDistance(TARTANBAHN[i], TARTANBAHN[i+1]);
+			length += Common.asTheCrowFlies(TARTANBAHN[i], TARTANBAHN[i+1]);
 		}
 		assertEquals(TARTANBAHN_DISTANCE, length, 0.001);
 	}

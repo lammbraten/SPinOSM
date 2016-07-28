@@ -1,26 +1,18 @@
 package de.spinosm.graph.algorithm;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
-import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.depr.ShortestPath;
-import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
-import org.jgrapht.*;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.*;
-import org.jgrapht.traverse.*;
-
-public class Dijkstra implements ShortestPath{
+public class AStar implements ShortestPath {
 	private StreetGraph graph; 
 	private TreeSet<RouteableNode> S;
 	private TreeSet<RouteableNode> Q;
@@ -28,14 +20,14 @@ public class Dijkstra implements ShortestPath{
 	private RouteableNode startVertex;
 	private RouteableNode endVertex;	
 	
-	public Dijkstra(StreetGraph streetgraph) {
+	public AStar(StreetGraph streetgraph){
 		this.graph = streetgraph;
 		S = new TreeSet<RouteableNode>(new IdComparator());
 		Q = new TreeSet<RouteableNode>();		
 		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
 	}
 	
-	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+	public AStar(StreetGraph streetgraph, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
 		this.graph = streetgraph;
 		this.S = S;
 		this.Q = Q;
@@ -43,8 +35,9 @@ public class Dijkstra implements ShortestPath{
 
 	@Override
 	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
+		endVertex = end;		
 		init(start);
-		endVertex = end;
+
 			
 		while(!Q.isEmpty()){
 			if(Q.first().getId() == endVertex.getId())
@@ -80,14 +73,14 @@ public class Dijkstra implements ShortestPath{
 						
 					if(v.getDistance()  > (u.getDistance() + e.getWeight())){
 						Q.remove(v);
-						v.setDistance(u.getDistance() + e.getWeight());
+						v.setDistance(u.getDistance() + e.getWeight()  + heuristicForVertex(v));
 						Q.add(v);
 						pi.put(v, u);
 						System.out.println("--" + v.getId() + " now: " + v.getDistance());
 
 					}
 				}else{
-					v.setDistance(u.getDistance() + e.getWeight());						
+					v.setDistance(u.getDistance() + e.getWeight() + heuristicForVertex(v));						
 					Q.add(v);
 					pi.put(v, u);
 					System.out.println("-" + v.getId() + " yet: " + v.getDistance() );
@@ -113,8 +106,18 @@ public class Dijkstra implements ShortestPath{
 	
 	void init(RouteableNode start){
 		startVertex = start;
-		startVertex.setDistance(0);
+		startVertex.setDistance(heuristicForVertex(startVertex));
 		Q.add(graph.getNode(startVertex.getId()));
+	}
+
+
+	private double heuristicForVertex(RouteableNode v) {			
+		return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition());
+	}
+
+	@Override
+	public StreetGraph getGraph() {
+		return this.graph;
 	}
 
 	@Override
@@ -122,45 +125,4 @@ public class Dijkstra implements ShortestPath{
 		this.graph = g;
 		
 	}
-
-	@Override
-	public StreetGraph getGraph() {
-		return graph;
-	}
-
-	public TreeSet<RouteableNode> getS() {
-		return S;
-	}
-
-	public void setS(TreeSet<RouteableNode> s) {
-		S = s;
-	}
-
-	public TreeSet<RouteableNode> getQ() {
-		return Q;
-	}
-
-	public void setQ(TreeSet<RouteableNode> q) {
-		Q = q;
-	}
-
-	public RouteableNode getStartVertex() {
-		return startVertex;
-	}
-
-	public void setStartVertex(RouteableNode startVertex) {
-		this.startVertex = startVertex;
-	}
-
-	public RouteableNode getEndVertex() {
-		return endVertex;
-	}
-
-	public void setEndVertex(RouteableNode endVertex) {
-		this.endVertex = endVertex;
-	}
-	
-
-
-
 }

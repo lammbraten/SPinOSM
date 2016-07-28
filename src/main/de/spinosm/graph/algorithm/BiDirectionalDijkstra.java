@@ -46,18 +46,21 @@ public class BiDirectionalDijkstra implements ShortestPath{
 
 	private List<RouteableNode> buildShortestPath() {
 		RouteableNode jointValue = intersectionOf(d1.getS(),d2.getS()).first();
-		List<RouteableNode> shortestSub1PathReverse = d2.buildShortestPathTo(jointValue);	
+		List<RouteableNode> shortestSub1PathReverse = d1.buildShortestPathTo(jointValue);	
 		List<RouteableNode> shortestSub2Path = d2.buildShortestPathTo(jointValue);
 	    ListIterator<RouteableNode> listIterator = shortestSub1PathReverse.listIterator();
-		List<RouteableNode>  shortestPath = shortestSub2Path;
+		List<RouteableNode>  shortestPath = new LinkedList<RouteableNode>();
 		
-	    shortestPath.add(jointValue);
+
 	    //vorwärts
 	    while(listIterator.hasNext())
 	    	listIterator.next();
 	    //zurück
 		while(listIterator.hasPrevious())
 			shortestPath.add(listIterator.previous());	
+		shortestPath.add(jointValue);		
+		shortestPath.addAll(shortestSub2Path);
+
 		return shortestPath;
 	}
 
