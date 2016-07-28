@@ -7,7 +7,7 @@ import de.westnordost.osmapi.map.data.Way;
 
 public class Common {
 	
-	public static int EARTHRADIUS = 6371;
+	public static int EARTHRADIUS = 6371000; //Mittlerer Radius in m
 	public static int EARTHDIAMETER = 2*EARTHRADIUS;
 	
 	public static boolean wayIsUseable(Way way, Vehicle vehicle) {
@@ -29,7 +29,7 @@ public class Common {
 	}
 	
 
-	public static int getSpeedLimits(Way way, Vehicle vehicle) {
+	public static double getSpeedLimits(Way way, Vehicle vehicle) {
 		if(way.getTags().containsKey("highway")){
 			switch(vehicle){
 			case CAR:
@@ -50,7 +50,7 @@ public class Common {
 	public static double calcCost(LinkedList<LatLon> nodes, Way way) {
 		double distance = 0.0;
 		for(int i = 0; i < nodes.size()-1; i++)
-				distance += calcDistance(nodes.get(i), nodes.get(i+1));				
+				distance += asTheCrowFlies(nodes.get(i), nodes.get(i+1));				
 		return distance / getSpeedLimits(way, Vehicle.CAR);
 	}
 	

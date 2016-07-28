@@ -221,7 +221,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 
 	@Override
 	public Set<RouteableNode> vertexSet() {
-		Set<RouteableNode> vertecis = super.vertexSet();
+		/*Set<RouteableNode> vertecis = super.vertexSet();
 		Set<RouteableNode> borderVertecisToLoad = new TreeSet<RouteableNode>();
 		for(RouteableNode vertex : vertecis)
 			if(vertex.isEdgesLoaded())
@@ -230,7 +230,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 		
 		for(RouteableNode vertex : borderVertecisToLoad)
 			if(!vertex.isEdgesLoaded())
-				this.getNode(vertex.getId());
+				this.getNode(vertex.getId());*/
 		
 		return super.vertexSet();
 	}

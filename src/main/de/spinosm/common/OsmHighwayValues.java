@@ -30,6 +30,7 @@ public class OsmHighwayValues {
 	private static final String CONSTRUCTION = "construction";
 	private static final String TRACK = "track";
 	
+	private static final double TOMS = 3.6;
 	
 	public static boolean isRouateableForCars(Way way) {
 		String value = way.getTags().get("highway");
@@ -82,40 +83,40 @@ public class OsmHighwayValues {
 	}
 
 
-	public static int getCarSpeedLimits(Way way) throws NumberFormatException {
+	public static double getCarSpeedLimits(Way way) throws NumberFormatException {
 		if(way.getTags().containsKey("maxspeed"))
-			return Integer.parseInt(way.getTags().get("maxspeed"));			
+			return Integer.parseInt(way.getTags().get("maxspeed")) /TOMS;			
 
 		String value = way.getTags().get("highway");
 		switch(value){
 			case MOTORWAY:
-				return 130;
+				return 130 /TOMS;
 			case TRUNK:
-				return 120;
+				return 120 /TOMS;
 			case PRIMARY:
-				return 90;
+				return 90 /TOMS;
 			case SECONDARY:
-				return 80;
+				return 80 /TOMS;
 			case TERTIARY:
-				return 50;
+				return 50 /TOMS;
 			case RESIDENTIAL:
-				return 45;
+				return 30 /TOMS;
 			case MOTORWAY_LINK:
-				return 80;
+				return 80 /TOMS;
 			case TRUNK_LINK:
-				return 70;
+				return 70 /TOMS;
 			case PRIMARY_LINK:
-				return 50;
+				return 50 /TOMS;
 			case SECONDARY_LINK:
-				return 40;
+				return 40 /TOMS;
 			case TERTIARY_LINK:
-				return 30;
+				return 30 /TOMS;
 			case LIVING_STREET:
-				return 6;
+				return 6 /TOMS;
 			case ROAD:
-				return 50;
+				return 50 /TOMS;
 			default:
-				return 50;
+				return 50 /TOMS;
 		}
 	}
 

@@ -3,6 +3,7 @@ package de.spinsom.graph;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -11,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
@@ -32,8 +34,8 @@ public class PlayingWithJgrapht {
 	private static long KOE_HA = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
 	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
 	
-	private static long start = CAMPUS_SUED;
-	private static long end = CAMPUS_WEST;
+	private static long start = KOE_HA;
+	private static long end = RA_GRO;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -58,11 +60,24 @@ public class PlayingWithJgrapht {
 		//List<StreetEdge> graphPath = DijkstraShortestPath.findPathBetween(streetgraph, startJunction, endJunction);
 //		dijkstra.getPath();
 		//List<RouteableNode> graphPath = new Dijkstra(streetgraph).getShortestPath(startJunction, endJunction);
-		List<RouteableNode> graphPath = new BiDirectionalDijkstra(streetgraph).getShortestPath(startJunction, endJunction);
+		BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
+		List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
 		//List<RouteableNode> graphPath = new AStar(streetgraph).getShortestPath(startJunction, endJunction);
 
 		for(RouteableNode n : graphPath)
 			System.out.println(n);
+		
+		
+		StreetGraph sg = bid.getGraph();
+		
+		for(RouteableNode rn : sg.vertexSet()){
+			System.out.println(rn);
+			for(RouteableEdge re :rn.getEdges()){
+				System.out.println("\t" + re);
+			}
+		}
+		System.out.println();
+		
 	}
 
 }

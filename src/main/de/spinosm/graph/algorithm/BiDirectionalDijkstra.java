@@ -66,13 +66,12 @@ public class BiDirectionalDijkstra implements ShortestPath{
 
 	@Override
 	public StreetGraph getGraph() {
-		// TODO Auto-generated method stub
-		return null;
+		return graph;
 	}
 
 	@Override
 	public void setGraph(StreetGraph g) {
-		// TODO Auto-generated method stub
+		this.graph = g;
 		
 	}
 
