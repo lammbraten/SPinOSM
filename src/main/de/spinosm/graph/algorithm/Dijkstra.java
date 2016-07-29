@@ -1,24 +1,14 @@
 package de.spinosm.graph.algorithm;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
-import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.depr.ShortestPath;
-import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
-
-import org.jgrapht.*;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.*;
-import org.jgrapht.traverse.*;
 
 public class Dijkstra implements ShortestPath{
 	private StreetGraph graph; 

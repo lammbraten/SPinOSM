@@ -1,6 +1,8 @@
 package de.spinosm.graph;
 
-public interface RouteableEdge {
+import java.io.Serializable;
+
+public interface RouteableEdge extends Cloneable, Serializable {
 	public double getWeight();
 	public void setWeight(double cost);
 	public RouteableNode getStart();

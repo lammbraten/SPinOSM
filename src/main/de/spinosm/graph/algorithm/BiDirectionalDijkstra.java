@@ -1,16 +1,12 @@
 package de.spinosm.graph.algorithm;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.TreeSet;
 
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.depr.ShortestPath;
-import de.spinosm.graph.pattern.IdComparator;
 
 public class BiDirectionalDijkstra implements ShortestPath{
 	private StreetGraph graph; 

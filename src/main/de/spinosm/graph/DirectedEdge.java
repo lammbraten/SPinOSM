@@ -1,9 +1,6 @@
 package de.spinosm.graph;
 
-import java.io.Serializable;
-
-public abstract class DirectedEdge implements RouteableEdge, Cloneable,
-Serializable{
+public abstract class DirectedEdge implements RouteableEdge{
 
 
 	private static final long serialVersionUID = -9135933798984497839L;
@@ -95,4 +92,20 @@ Serializable{
             throw new InternalError();
         }
     }
+
+    @Override
+	public boolean equals(Object other) {
+		if(other == null)
+			return false;
+		if(this == other)
+			return true;
+		if(other instanceof DirectedEdge){
+			DirectedEdge otherDirectedEdge = (DirectedEdge) other;
+			if(this.source == otherDirectedEdge.source &&
+					this.target == otherDirectedEdge.target)
+				return true;
+		}
+		return false;
+	}
+    
 }

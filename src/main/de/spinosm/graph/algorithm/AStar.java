@@ -9,7 +9,6 @@ import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.depr.ShortestPath;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class AStar implements ShortestPath {

@@ -86,7 +86,7 @@ public class PlayingWithApi {
 	public void testGetWayComplete() {
 		ArrayList<Node> nodeList = null;
 		for(int i = 0; i < 10; i++){
-			nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE);
+			//nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE);
 		}
 		for(Node node : nodeList)
 			System.out.println(node.getId());

@@ -73,10 +73,10 @@ public class OsmApiWrapper implements DataProvider {
 		return null;
 	}
 	
-	public List<Node> getWayNodesComplete(long id) {
+	public List<Node> getWayNodesComplete(long id, List<Long> nids) {
 		if(osmNodeListBuffer.contains(id))
 			return getWayCompleteFromBuffer(id);
-		return getWayCompleteFromServer(id);
+		return getWayCompleteFromServer(id, nids);
 	}
 	
 	public List<Way> getWays(Collection<Long> wayIds){
@@ -176,12 +176,7 @@ public class OsmApiWrapper implements DataProvider {
 		StreetJunction thatNode= new StreetJunction((OsmNode) n);
 		for(Way way : ways){
 			try{
-				waysFromNode.add(parseToRouteableEdge(DOWNTHEROAD, way, thatNode));
-			}catch(Exception e){
-				//System.out.println(e.getMessage());
-			}
-			try{
-				waysFromNode.add(parseToRouteableEdge(UPTHEROAD, way, thatNode));
+				waysFromNode.addAll(parseToRouteableEdge(way, thatNode));
 			}catch(Exception e){
 				//System.out.println(e.getMessage());
 			}
@@ -190,40 +185,52 @@ public class OsmApiWrapper implements DataProvider {
 
 	}
 
-	private RouteableEdge parseToRouteableEdge(int direction, Way way, StreetJunction startingNode) {
+	private List<RouteableEdge> parseToRouteableEdge(Way way, StreetJunction startingNode) {
+		List<RouteableEdge> edges = new LinkedList<RouteableEdge>();
 		List<Long> nids = way.getNodeIds();
-		List<Node> nodes =  this.getWayNodesComplete(way.getId());
+		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
 		for(Node node : nodes){
 			if(startingNode.getId() == node.getId()){
-				if(direction < 0){
-					LinkedList<Node> shapingNodes = new LinkedList<Node>();	
-					shapingNodes.add(node);
-					for(int i = nodes.indexOf(node)-1; i >= 0; i--){
-						shapingNodes.add(nodes.get(i));
-						if(isRouteableJunction(nodes.get(i))){
-							return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
-						}
-					}
-				}else if(direction > 0){
-					LinkedList<Node> shapingNodes = new LinkedList<Node>();	
-					shapingNodes.add(node);
-					for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
-						shapingNodes.add(nodes.get(i));
-						if(isRouteableJunction(nodes.get(i))){
-							return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
-						}
-					}
-				}else{
-					throw new IllegalStateException("direction should only be positive or negativ, not 0");
-				}
+				try {edges.add(shapeNewEdgeDownTheRoad(way, startingNode, nodes, node));
+				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
+				try {edges.add(shapeNewEdgeUpTheRoad(way, startingNode, nodes, node));
+				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
 			}
 		}
-		throw new IllegalArgumentException("Starting-Node is not in given way! \n"
-				+ "Direction: " + direction + "\n"
-				+ "way: " + way.getId() + "\n"
-				+ "StartingNode: " + startingNode + "\n"
-				+ "nids-size: " + nids.size() + "\n"
-				+ "--------------------------") ; 
+		return edges;
+	}
+
+	private RouteableEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
+		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
+		shapingNodes.add(node);
+		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
+			shapingNodes.add(nodes.get(i));
+			if(isRouteableJunction(nodes.get(i))){
+				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
+			}
+		}
+		throw new Exception("No junction found");
+	}
+
+	/**
+	 * @param way
+	 * @param startingNode
+	 * @param nodes
+	 * @param node
+	 * @param shapingNodes
+	 * @return 
+	 * @throws Exception 
+	 */
+	private StreetEdge shapeNewEdgeDownTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
+		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
+		shapingNodes.add(node);
+		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
+			shapingNodes.add(nodes.get(i));
+			if(isRouteableJunction(nodes.get(i))){
+				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
+			}
+		}
+		throw new Exception("No junction found");
 	}
 
 	/**
@@ -278,9 +285,10 @@ public class OsmApiWrapper implements DataProvider {
 
 	/**
 	 * @param id
+	 * @param nids 
 	 * @return
 	 */
-	private List<Node> getWayCompleteFromServer(long id) {
+	private List<Node> getWayCompleteFromServer(long id, List<Long> nids) {
 		ListOsmElementHandler<Node>  mdh = new ListOsmElementHandler<Node>(Node.class);
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
 			try{
@@ -288,7 +296,7 @@ public class OsmApiWrapper implements DataProvider {
 				break;
 			}catch(OsmConnectionException e){}
 		osmNodeListBuffer.addElementList(id, mdh.get());
-		return mdh.get();
+		return inWayOrder(mdh.get(), nids);
 	}
 	
 	/**
