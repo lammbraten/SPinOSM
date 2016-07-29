@@ -34,8 +34,8 @@ public class PlayingWithJgrapht {
 	private static long KOE_HA = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
 	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
 	
-	private static long start = KOE_HA;
-	private static long end = RA_GRO;
+	private static long start = RA_GRO;
+	private static long end = CAMPUS_WEST;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -60,15 +60,17 @@ public class PlayingWithJgrapht {
 		//List<StreetEdge> graphPath = DijkstraShortestPath.findPathBetween(streetgraph, startJunction, endJunction);
 //		dijkstra.getPath();
 		//List<RouteableNode> graphPath = new Dijkstra(streetgraph).getShortestPath(startJunction, endJunction);
-		BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
-		List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
-		//List<RouteableNode> graphPath = new AStar(streetgraph).getShortestPath(startJunction, endJunction);
-
+		//BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
+		//List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
+		//StreetGraph sg = bid.getGraph();		
+		AStar astar = new AStar(streetgraph);
+		List<RouteableNode> graphPath = astar.getShortestPath(startJunction, endJunction);
+		StreetGraph sg = astar.getGraph();	
 		for(RouteableNode n : graphPath)
 			System.out.println(n);
 		
 		
-		StreetGraph sg = bid.getGraph();
+
 		
 		for(RouteableNode rn : sg.vertexSet()){
 			System.out.println(rn);

@@ -2,8 +2,12 @@ package de.spinosm.graph.algorithm;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import org.jgrapht.util.FibonacciHeap;
+import org.jgrapht.util.FibonacciHeapNode;
 
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
@@ -13,7 +17,7 @@ import de.spinosm.graph.pattern.IdComparator;
 public class Dijkstra implements ShortestPath{
 	private StreetGraph graph; 
 	private TreeSet<RouteableNode> S;
-	private TreeSet<RouteableNode> Q;
+	private PriorityQueue<RouteableNode> Q;
 	private TreeMap<RouteableNode, RouteableNode> pi;
 	private RouteableNode startVertex;
 	private RouteableNode endVertex;	
@@ -21,11 +25,11 @@ public class Dijkstra implements ShortestPath{
 	public Dijkstra(StreetGraph streetgraph) {
 		this.graph = streetgraph;
 		S = new TreeSet<RouteableNode>(new IdComparator());
-		Q = new TreeSet<RouteableNode>();		
+		Q = new PriorityQueue<RouteableNode>();		
 		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
 	}
 	
-	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableNode> S, PriorityQueue<RouteableNode> Q) {
 		this.graph = streetgraph;
 		this.S = S;
 		this.Q = Q;
@@ -37,7 +41,7 @@ public class Dijkstra implements ShortestPath{
 		endVertex = end;
 			
 		while(!Q.isEmpty()){
-			if(Q.first().getId() == endVertex.getId())
+			if(Q.peek().getId() == endVertex.getId())
 				return buildShortestPathTo(endVertex);
 			checkNextVertex();
 		}
@@ -49,10 +53,9 @@ public class Dijkstra implements ShortestPath{
 	 * @param u
 	 */
 	void checkNextVertex() {
-		RouteableNode u = Q.first();
+		RouteableNode u = Q.poll();
 		System.out.println(u.getId() + ": " + u.getDistance());
 		
-		Q.remove(u);
 		S.add(u);
 		
 		if(!u.isEdgesLoaded()){
@@ -65,9 +68,7 @@ public class Dijkstra implements ShortestPath{
 			RouteableNode v = e.getOtherKnotThan(u);
 			
 			if(!S.contains(v)){
-				if(Q.contains(v)){
-					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
-						
+				if(Q.contains(v)){						
 					if(v.getDistance()  > (u.getDistance() + e.getWeight())){
 						Q.remove(v);
 						v.setDistance(u.getDistance() + e.getWeight());
@@ -126,11 +127,11 @@ public class Dijkstra implements ShortestPath{
 		S = s;
 	}
 
-	public TreeSet<RouteableNode> getQ() {
+	public PriorityQueue<RouteableNode> getQ() {
 		return Q;
 	}
 
-	public void setQ(TreeSet<RouteableNode> q) {
+	public void setQ(PriorityQueue<RouteableNode> q) {
 		Q = q;
 	}
 
