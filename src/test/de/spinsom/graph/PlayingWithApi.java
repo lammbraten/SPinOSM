@@ -1,13 +1,27 @@
 package de.spinsom.graph;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
+import org.xml.sax.SAXException;
 
+import de.spinosm.graph.data.DefaultSink;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.westnordost.osmapi.ApiResponseReader;
+import de.westnordost.osmapi.OsmConnection;
+import de.westnordost.osmapi.map.data.BoundingBox;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.Way;
 
@@ -101,5 +115,8 @@ public class PlayingWithApi {
 		for(Node node : nodeList)
 			System.out.println(node.getId());
 	}
+
+	
+
 	
 }

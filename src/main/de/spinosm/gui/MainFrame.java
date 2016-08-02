@@ -7,9 +7,12 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.jxmapviewer.JXMapKit;
 import org.jxmapviewer.JXMapViewer;
@@ -29,11 +35,35 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
+import org.xml.sax.SAXException;
+
+import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.algorithm.AStar;
+import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
+import de.spinosm.graph.algorithm.Dijkstra;
+import de.spinosm.graph.data.OsmApiWrapper;
+import de.westnordost.osmapi.ApiResponseReader;
+import de.westnordost.osmapi.OsmConnection;
+import de.westnordost.osmapi.map.data.BoundingBox;
 
 import javax.swing.JButton;
 
 public class MainFrame extends JFrame {
 
+	
+	private static long CAMPUS_SUED =  2524487607l; //Campus-S¸d
+	private static long CAMPUS_WEST = 417403147l; //Campus-West	
+	private static long EI_KOE = 45107617l; //Eichhornstraﬂe - Koenlnerstraﬂe
+	private static long KOE_HA = 116108105l;  // Kˆlnerstraﬂe - Hafelstraﬂe
+	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
+	
+	private static long start = RA_GRO;
+	private static long end = KOE_HA;
+	
 	private JPanel contentPane;
 	final static JXMapKit jXMapKit = new JXMapKit();
 
@@ -67,6 +97,11 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		
+		BoundingBox bounds = new BoundingBox(51.3042508, 6.5919314, 51.3051842, 6.5900314);
+		getMap(bounds, null);		
+		
+		
+		
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         jXMapKit.setTileFactory(tileFactory);
@@ -74,14 +109,26 @@ public class MainFrame extends JFrame {
         
         JXMapViewer map = jXMapKit.getMainMap();
         
-		GeoPosition frankfurt = new GeoPosition(50,  7, 0, 8, 41, 0);
-		GeoPosition wiesbaden = new GeoPosition(50,  5, 0, 8, 14, 0);
-		GeoPosition mainz     = new GeoPosition(50,  0, 0, 8, 16, 0);
-		GeoPosition darmstadt = new GeoPosition(49, 52, 0, 8, 39, 0);
-		GeoPosition offenbach = new GeoPosition(50,  6, 0, 8, 46, 0);
+        OsmApiWrapper osmapi = new OsmApiWrapper();
+        StreetGraph streetgraph = new StreetGraph(osmapi);
+        Dijkstra aStar = new Dijkstra(streetgraph);
+                
+		StreetJunction startJunction = osmapi.getStreetJunction(start);
+		StreetJunction endJunction = osmapi.getStreetJunction(end);
+		
+		streetgraph.addVertex(startJunction);
+		streetgraph.addVertex(endJunction);
+        
+        List<RouteableNode> route = aStar.getShortestPath(startJunction, endJunction);
+        List<GeoPosition> track = new LinkedList<GeoPosition>();
+        List<GeoPosition> graph = new LinkedList<GeoPosition>();
+        
+        for(RouteableNode routePoint : route)
+        	track.add(new GeoPosition(routePoint.getPosition().getLatitude(), routePoint.getPosition().getLongitude()));
 
-		// Create a track from the geo-positions
-		List<GeoPosition> track = Arrays.asList(frankfurt, wiesbaden, mainz, darmstadt, offenbach);
+        for(RouteableNode graphPoint : aStar.getGraph().vertexSet())
+        	graph.add(new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude()));
+
         
 		RoutePainter routePainter = new RoutePainter(track);
 
@@ -89,27 +136,51 @@ public class MainFrame extends JFrame {
 		map.zoomToBestFit(new HashSet<GeoPosition>(track), 0.7);
 
         jXMapKit.setZoom(11);
+        
+        
+		// Create waypoints from the geo-positions
+		Set<Waypoint> waypoints = new HashSet<Waypoint>();
+		
+		for(GeoPosition gp : track)
+			waypoints.add(new DefaultWaypoint(gp));
+
+		// Create a waypoint painter that takes all the waypoints
+		WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
+		waypointPainter.setWaypoints(waypoints);
+
+		
+		// Create waypoints from the geo-positions
+		Set<Waypoint> graphNodes = new HashSet<Waypoint>();
+		
+		for(GeoPosition gp : graph)
+			graphNodes.add(new DefaultWaypoint(gp));
+
+		// Create a waypoint painter that takes all the waypoints
+		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();
+		graphNodesPainter.setWaypoints(graphNodes);
+		
+		// Create a compound painter that uses both the route-painter and the waypoint-painter
+		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+		painters.add(routePainter);
+		painters.add(waypointPainter);
+		painters.add(graphNodesPainter);
+		
+		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+		map.setOverlayPainter(painter);
 
 
-        jXMapKit.getMainMap().addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) { 
-                // ignore
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e)
-            {
-
-
-
-                // convert to world bitmap
-        		
-
-
-                
-            }
-        });
 	}
 
+	static public void getMap(BoundingBox bounds, Sink sink){
+	    OsmConnection osm = new OsmConnection("https://openstreetmap.org/api/0.6/", "SPinOSM", null);
+		osm.makeRequest("map?bbox=" + bounds.getAsLeftBottomRightTopString(), 
+	        new ApiResponseReader<Void>() {
+	            public Void parse(InputStream in) throws ParserConfigurationException, SAXException, IOException  {
+	                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+	                parser.parse(in, new OsmHandler(sink, true));
+	                return null;
+	            }
+	        });
+	}
+	
 }

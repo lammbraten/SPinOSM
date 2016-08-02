@@ -6,10 +6,10 @@ import java.util.TreeMap;
 import java.util.WeakHashMap;
 
 
-public class OsmElementBuffer <T> {
+public class OsmElementCache <T> {
 	private HashMap<Long, List<T>> buffer;
 	
-	public OsmElementBuffer(){
+	public OsmElementCache(){
 		buffer = new HashMap<Long, List<T>>();
 	}
 	

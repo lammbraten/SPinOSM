@@ -84,39 +84,43 @@ public class OsmHighwayValues {
 
 
 	public static double getCarSpeedLimits(Way way) throws NumberFormatException {
+		return getCarSpeedLimitsInKMH(way) /TOMS;
+	}
+	
+	public static double getCarSpeedLimitsInKMH(Way way) throws NumberFormatException {
 		if(way.getTags().containsKey("maxspeed"))
-			return Integer.parseInt(way.getTags().get("maxspeed")) /TOMS;			
+			return Integer.parseInt(way.getTags().get("maxspeed"));			
 
 		String value = way.getTags().get("highway");
 		switch(value){
 			case MOTORWAY:
-				return 130 /TOMS;
+				return 130;
 			case TRUNK:
-				return 120 /TOMS;
+				return 120;
 			case PRIMARY:
-				return 90 /TOMS;
+				return 90;
 			case SECONDARY:
-				return 80 /TOMS;
+				return 80;
 			case TERTIARY:
-				return 50 /TOMS;
+				return 50;
 			case RESIDENTIAL:
-				return 30 /TOMS;
+				return 30;
 			case MOTORWAY_LINK:
-				return 80 /TOMS;
+				return 80;
 			case TRUNK_LINK:
-				return 70 /TOMS;
+				return 70;
 			case PRIMARY_LINK:
-				return 50 /TOMS;
+				return 50;
 			case SECONDARY_LINK:
-				return 40 /TOMS;
+				return 40;
 			case TERTIARY_LINK:
-				return 30 /TOMS;
+				return 30;
 			case LIVING_STREET:
-				return 6 /TOMS;
+				return 6;
 			case ROAD:
-				return 50 /TOMS;
+				return 50;
 			default:
-				return 50 /TOMS;
+				return 50;
 		}
 	}
 

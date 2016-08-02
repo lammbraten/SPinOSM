@@ -20,13 +20,15 @@ import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
 import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
 import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 
 public class OsmApiWrapper implements DataProvider {
 
 	private static final String SECURE_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
 	private static final String OSM_API_URL = "http://openstreetmap.org/api/0.6/";
-	private static final String OSM_TEST_API_URL = "http://api06.dev.openstreetmap.org/api/0.6/";
+	private static final String OSM_TEST_API_URL = "http://api06.dev.openstreetmap.org";
 	private static final String XAPI = "http://informationfreeway.org/api/0.6/";
+	private static final String OVERPASS_TURBO = "//overpass-api.de/api/";
 	private static final String USER_AGENT = "SPinOSM";
 	private static final int TIMEOUT = 10000; //10 secs
 	private static final int MAX_ATTEMPTS = 5;
@@ -37,15 +39,20 @@ public class OsmApiWrapper implements DataProvider {
 	private OsmConnection osm;
 	private MapDataDao mddao;
 	
-	private OsmElementBuffer<Node> osmNodeListBuffer;
-	private OsmElementBuffer<Way> osmWaysOfNodeBuffer;
+	private OsmElementCache<Node> osmNodeListBuffer;
+	private OsmElementCache<Way> osmWaysOfNodeBuffer;
 	
 	public OsmApiWrapper(){
-		this.osm = new OsmConnection(OSM_API_URL, USER_AGENT, OSM_AUTH, TIMEOUT);
+		OAuthConsumer auth = new DefaultOAuthConsumer("CuPCn3sRc8FDiepAoSkH4a9n7w2QuqVCykStfVPG", 
+				"D1nX6BF1NMAZtIq8ouGJJ7zGtSaTRDTz8QfZl5mo");
+		auth.setTokenWithSecret(
+				"2C4LiOQBOn96kXHyal7uzMJiqpCsiyDBvb8pomyX",
+				"1bFMIQpgmu5yjywt3kknopQpcRmwJ6snDDGF7kdr");
+		this.osm = new OsmConnection(OSM_API_URL, USER_AGENT, auth);
 		this.mddao = new MapDataDao(osm);
 
-		osmNodeListBuffer = new OsmElementBuffer<Node>();
-		osmWaysOfNodeBuffer = new OsmElementBuffer<Way>();
+		osmNodeListBuffer = new OsmElementCache<Node>();
+		osmWaysOfNodeBuffer = new OsmElementCache<Way>();
 	}
 	
 	public Node getNode(long id){
