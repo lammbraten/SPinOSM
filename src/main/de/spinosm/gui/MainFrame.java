@@ -48,6 +48,8 @@ import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
 import de.spinosm.graph.algorithm.Dijkstra;
+import de.spinosm.graph.algorithm.ShortestPath;
+import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.westnordost.osmapi.ApiResponseReader;
 import de.westnordost.osmapi.OsmConnection;
@@ -111,9 +113,10 @@ public class MainFrame extends JFrame {
         
         JXMapViewer map = jXMapKit.getMainMap();
         
-        OsmApiWrapper osmapi = new OsmApiWrapper();
+        //OsmApiWrapper osmapi = new OsmApiWrapper();
+        LocalProvider osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
         StreetGraph streetgraph = new StreetGraph(osmapi);
-        Dijkstra aStar = new Dijkstra(streetgraph);
+        ShortestPath aStar = new AStar(streetgraph);
                 
 		StreetJunction startJunction = osmapi.getStreetJunction(start);
 		StreetJunction endJunction = osmapi.getStreetJunction(end);

@@ -22,7 +22,7 @@ import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
-public class OsmApiWrapper implements DataProvider {
+public class OsmApiWrapper extends AbstractProvider {
 
 	private static final String SECURE_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
 	private static final String OSM_API_URL = "http://openstreetmap.org/api/0.6/";
@@ -80,6 +80,7 @@ public class OsmApiWrapper implements DataProvider {
 		return null;
 	}
 	
+	@Override
 	public List<Node> getWayNodesComplete(long id, List<Long> nids) {
 		if(osmNodeListBuffer.contains(id))
 			return getWayCompleteFromBuffer(id);
@@ -92,6 +93,7 @@ public class OsmApiWrapper implements DataProvider {
 		return null;
 	}
 	
+	@Override
 	public List<Way> getWaysForNode(long id){
 		if(osmWaysOfNodeBuffer.contains(id))
 			return getWaysOfNodeFromBuffer(id);
@@ -170,122 +172,6 @@ public class OsmApiWrapper implements DataProvider {
 		return null;
 	}
 	
-	private StreetJunction buildNewStreetJunction(OsmNode osmNode) {
-		StreetJunction returnValue;
-		LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
-		returnValue = new StreetJunction(osmNode, waysFromNode);
-		return returnValue;
-	}
-	
-	private LinkedList<RouteableEdge> getRouteableEdgesForNode(Node n) {
-		LinkedList<RouteableEdge> waysFromNode = new LinkedList<RouteableEdge>();
-		List<Way> ways = this.getWaysForNode(n.getId());
-		StreetJunction thatNode= new StreetJunction((OsmNode) n);
-		for(Way way : ways){
-			try{
-				waysFromNode.addAll(parseToRouteableEdge(way, thatNode));
-			}catch(Exception e){
-				//System.out.println(e.getMessage());
-			}
-		}
-		return waysFromNode;
-
-	}
-
-	private List<RouteableEdge> parseToRouteableEdge(Way way, StreetJunction startingNode) {
-		List<RouteableEdge> edges = new LinkedList<RouteableEdge>();
-		List<Long> nids = way.getNodeIds();
-		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
-		for(Node node : nodes){
-			if(startingNode.getId() == node.getId()){
-				try {edges.add(shapeNewEdgeDownTheRoad(way, startingNode, nodes, node));
-				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
-				try {edges.add(shapeNewEdgeUpTheRoad(way, startingNode, nodes, node));
-				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
-			}
-		}
-		return edges;
-	}
-
-	private RouteableEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
-		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
-		shapingNodes.add(node);
-		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
-			shapingNodes.add(nodes.get(i));
-			if(isRouteableJunction(nodes.get(i))){
-				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
-			}
-		}
-		throw new Exception("No junction found");
-	}
-
-	/**
-	 * @param way
-	 * @param startingNode
-	 * @param nodes
-	 * @param node
-	 * @param shapingNodes
-	 * @return 
-	 * @throws Exception 
-	 */
-	private StreetEdge shapeNewEdgeDownTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
-		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
-		shapingNodes.add(node);
-		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
-			shapingNodes.add(nodes.get(i));
-			if(isRouteableJunction(nodes.get(i))){
-				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
-			}
-		}
-		throw new Exception("No junction found");
-	}
-
-	/**
-	 * Had to write this because OSM-Delivers for request for multiply nodes the nodes not ordered
-	 * OSM does this even for GET way/<id\>/complete
-	 * @param nodes - The unordered array
-	 * @param nids - Nodes should be in this order
-	 * @return the ordered List of Nodes
-	 */
-	private List<Node> inWayOrder(List<Node> nodes, List<Long> nids) {
-		ArrayList<Node> orderedList = new ArrayList<Node>();
-		
-		for(long nid : nids)
-			for(Node node : nodes)
-				if(node.getId() == nid)
-					orderedList.add(node);				
-		
-		return orderedList;
-	}
-
-	private double calcCost(Way way, LinkedList<Node> shapingNodes) {
-		LinkedList<LatLon> nodes = new LinkedList<LatLon>();
-		for(Node node : shapingNodes)
-			nodes.add(node.getPosition());
-		return Common.calcCost(nodes, way);
-	}
-
-	public boolean isRouteableJunction(Node node) {
-		List<Way> waysOfNode = this.getWaysForNode(node.getId());
-		if(waysOfNode.size() >= 2)
-			return hasAnotherRoute(waysOfNode);
-		return false;
-	}
-
-	/**
-	 * @param waysOfNode
-	 */
-	private boolean hasAnotherRoute(List<Way> waysOfNode) {
-		int routeableWaysCounter = 0;	
-		for(Way way: waysOfNode){
-			if(Common.wayIsUseable(way, Vehicle.CAR))
-				routeableWaysCounter++;
-			if(routeableWaysCounter >= 2)
-				return true;
-		}
-		return false;
-	}
-	
 	private List<Node> getWayCompleteFromBuffer(long id) {
 		return osmNodeListBuffer.getElementList(id);
 	}
@@ -302,7 +188,7 @@ public class OsmApiWrapper implements DataProvider {
 				mddao.getWayComplete(id, mdh);
 				break;
 			}catch(OsmConnectionException e){}
-		osmNodeListBuffer.addElementList(id, mdh.get());
+		osmNodeListBuffer.addElementList(id, inWayOrder(mdh.get(), nids));
 		return inWayOrder(mdh.get(), nids);
 	}
 	

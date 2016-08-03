@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 import de.westnordost.osmapi.map.MapDataParser;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
 import de.westnordost.osmapi.map.data.Node;
+import de.westnordost.osmapi.map.data.OsmWay;
 import de.westnordost.osmapi.map.data.Way;
 
 public class OsmXmlFilerHandler{
@@ -36,5 +40,19 @@ public class OsmXmlFilerHandler{
 	public Node getNode(long key) {
 		return nodes.get(key);
 		
+	}
+
+	public List<Way> getWaysForNode(long id) {
+		LinkedList<Way> waysForNode = new LinkedList<Way>();
+		for(Way way : ways.values()){
+			OsmWay oway = (OsmWay) way;
+			if(oway.getNodeIds().contains(id))
+				waysForNode.add(way);
+		}
+		return waysForNode;
+	}
+
+	public Way getWay(long id) {
+		return ways.get(id);
 	}	
 }

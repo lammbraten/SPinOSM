@@ -29,5 +29,6 @@ public interface DataProvider {
 	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id);
 	public List<StreetEdge>getStreetEdges(Collection<Long> ids);
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id);
-
+	public List<Way> getWaysForNode(long id);
+	public List<Node> getWayNodesComplete(long id, List<Long> nids);
 }
