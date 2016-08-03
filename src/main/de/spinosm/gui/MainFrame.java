@@ -7,8 +7,13 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -173,14 +178,50 @@ public class MainFrame extends JFrame {
 
 	static public void getMap(BoundingBox bounds, Sink sink){
 	    OsmConnection osm = new OsmConnection("https://openstreetmap.org/api/0.6/", "SPinOSM", null);
-		osm.makeRequest("map?bbox=" + bounds.getAsLeftBottomRightTopString(), 
+	    
+	    try {
+	    	//ApiResponseReader<SAXParser> apireponse = new ApiResponseReader<SAXParser>();
+	    	BufferedReader in = new BufferedReader( new InputStreamReader(
+					 new FileInputStream ( "E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm"), "UTF8"));
+			//SAXParser test = SAXParserFactory.newInstance().newSAXParser();
+			//test.parse(in, new OsmHandler(sink, true));
+			
+			int readLines=0; int wroteLines=0;
+			String  line;
+			while ((line = in.readLine()) != null )
+			{ // file header
+				readLines++;
+//				1: <?xml version='1.0' encoding='UTF-8'?>
+//				2: <osm version='0.5' generator='JOSM'>
+				if (line.matches( "<osm.*generator=" + "[\"']" + ".*" + "[\"']" + ">"))
+//					TODO: search & replace with regEx
+					//writer.write( "<osm version='0.5' generator='osmLinkCompiler'>" + lineFeed );
+//					writer.write( line + lineFeed );
+				System.out.println( line  );
+				else
+					System.out.println( line  );
+				wroteLines++;
+				if (line.matches( "<osm.*>"))
+					break; // start of osm
+			}
+		
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		/*osm.makeRequest("map?bbox=" + bounds.getAsLeftBottomRightTopString(), 
 	        new ApiResponseReader<Void>() {
 	            public Void parse(InputStream in) throws ParserConfigurationException, SAXException, IOException  {
 	                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 	                parser.parse(in, new OsmHandler(sink, true));
 	                return null;
 	            }
-	        });
+	        });*/
 	}
 	
 }
