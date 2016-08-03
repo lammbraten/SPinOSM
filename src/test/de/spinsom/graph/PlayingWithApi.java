@@ -13,11 +13,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
 import org.xml.sax.SAXException;
 
-import de.spinosm.graph.data.DefaultSink;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.westnordost.osmapi.ApiResponseReader;
 import de.westnordost.osmapi.OsmConnection;

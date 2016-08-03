@@ -40,8 +40,6 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
 import org.xml.sax.SAXException;
 
 import de.spinosm.graph.RouteableNode;
@@ -102,8 +100,7 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		
-		BoundingBox bounds = new BoundingBox(51.3042508, 6.5919314, 51.3051842, 6.5900314);
-		getMap(bounds, null);		
+		BoundingBox bounds = new BoundingBox(51.3042508, 6.5919314, 51.3051842, 6.5900314);	
 		
 		
 		
@@ -176,52 +173,5 @@ public class MainFrame extends JFrame {
 
 	}
 
-	static public void getMap(BoundingBox bounds, Sink sink){
-	    OsmConnection osm = new OsmConnection("https://openstreetmap.org/api/0.6/", "SPinOSM", null);
-	    
-	    try {
-	    	//ApiResponseReader<SAXParser> apireponse = new ApiResponseReader<SAXParser>();
-	    	BufferedReader in = new BufferedReader( new InputStreamReader(
-					 new FileInputStream ( "E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm"), "UTF8"));
-			//SAXParser test = SAXParserFactory.newInstance().newSAXParser();
-			//test.parse(in, new OsmHandler(sink, true));
-			
-			int readLines=0; int wroteLines=0;
-			String  line;
-			while ((line = in.readLine()) != null )
-			{ // file header
-				readLines++;
-//				1: <?xml version='1.0' encoding='UTF-8'?>
-//				2: <osm version='0.5' generator='JOSM'>
-				if (line.matches( "<osm.*generator=" + "[\"']" + ".*" + "[\"']" + ">"))
-//					TODO: search & replace with regEx
-					//writer.write( "<osm version='0.5' generator='osmLinkCompiler'>" + lineFeed );
-//					writer.write( line + lineFeed );
-				System.out.println( line  );
-				else
-					System.out.println( line  );
-				wroteLines++;
-				if (line.matches( "<osm.*>"))
-					break; // start of osm
-			}
-		
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-		/*osm.makeRequest("map?bbox=" + bounds.getAsLeftBottomRightTopString(), 
-	        new ApiResponseReader<Void>() {
-	            public Void parse(InputStream in) throws ParserConfigurationException, SAXException, IOException  {
-	                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-	                parser.parse(in, new OsmHandler(sink, true));
-	                return null;
-	            }
-	        });*/
-	}
 	
 }

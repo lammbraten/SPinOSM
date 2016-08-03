@@ -6,21 +6,22 @@ import java.util.List;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
+import de.westnordost.osmapi.map.data.OsmNode;
 
 public class LocalProvider implements DataProvider{
 
 	File xmlFile;
-	OsmXmlElementParser osmxmlelements;
+	OsmXmlFilerHandler osmxmlelements;
 	
 	public LocalProvider(String filePath){
 		this.xmlFile = new File(filePath);
-		osmxmlelements = new OsmXmlElementParser(xmlFile);
+		osmxmlelements = new OsmXmlFilerHandler(xmlFile);
 	}
 	
 	@Override
 	public StreetJunction getStreetJunction(long id) {
-		osmxmlelements.getNode();
-		return null;
+		OsmNode n = (OsmNode) osmxmlelements.getNode(id);
+		return 	new StreetJunction(n , null);
 	}
 
 	@Override

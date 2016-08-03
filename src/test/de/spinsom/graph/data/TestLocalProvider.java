@@ -23,7 +23,7 @@ public class TestLocalProvider {
 
 	@Test
 	public void test() {
-		lp.getStreetJunction(0l);
+		System.out.println(lp.getStreetJunction(116108105l).getId());
 	}
 
 }
