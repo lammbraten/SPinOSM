@@ -1,5 +1,6 @@
 package de.spinsom.graph;
 
+import java.io.IOException;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -11,6 +12,7 @@ import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.gui.GraphMapViewer;
 
 
 public class PlayingWithJgrapht {
@@ -69,7 +71,14 @@ public class PlayingWithJgrapht {
 				System.out.println("\t" + re);
 			}
 		}
-		System.out.println();
+		
+		GraphMapViewer gmv = new GraphMapViewer(sg);	
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

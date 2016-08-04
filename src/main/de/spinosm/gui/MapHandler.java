@@ -17,6 +17,8 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
+import de.spinosm.gui.drawing.RoutePainter;
+
 public class MapHandler {
 	TileFactoryInfo info;
 	DefaultTileFactory tileFactory;

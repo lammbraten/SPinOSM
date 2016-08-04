@@ -26,6 +26,7 @@ import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
 public class MainFrame extends JFrame {

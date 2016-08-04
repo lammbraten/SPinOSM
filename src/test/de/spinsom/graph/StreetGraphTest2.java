@@ -2,6 +2,7 @@ package de.spinsom.graph;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.TreeSet;
 
 import org.junit.AfterClass;
@@ -120,13 +121,20 @@ public class StreetGraphTest2 {
 		//streetGraph.setStreetJunctions(new TreeSet<StreetJunction>());
 		
 		streetGraph = new StreetGraph(osmapiwrapper);
-		GraphMapViewer gmv = new GraphMapViewer(streetGraph);
+
 		for(StreetJunction sj : EXISTING_NODE_ARRAY){
 			streetGraph.getNode(sj.getId());
 		}
+		GraphMapViewer gmv = new GraphMapViewer(streetGraph);		
 		for(RouteableNode sj : streetGraph.getStreetJunctions()){
 			System.out.println(sj.getId());
 			System.out.println("\t" +sj.getEdges());
+		}
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

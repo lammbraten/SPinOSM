@@ -20,9 +20,12 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
+import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.gui.drawing.ArrowPainter;
+import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
 public class GraphMapViewer {
@@ -83,10 +86,23 @@ public class GraphMapViewer {
 		// Create a compound painter that uses both the route-painter and the waypoint-painter
 		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
 		painters.add(graphNodesPainter);
+	
+		for(RouteableNode node : sg.vertexSet()){
+	        for(RouteableEdge routeEdge : node.getEdges()){  	
+	        	GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
+	        	GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	        	
+				ArrowPainter routePainter = new ArrowPainter(start, end);	
+		        painters.add(routePainter);	        	
+	        }
+		}
 		
 		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 		map.setOverlayPainter(painter);
 
 
+	}
+
+	private GeoPosition routeableNodeToGeoPosiotion(RouteableNode node) {
+		return new GeoPosition(node.getPosition().getLatitude(), node.getPosition().getLongitude());
 	}
 }
