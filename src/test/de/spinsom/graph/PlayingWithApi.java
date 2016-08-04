@@ -1,24 +1,13 @@
 package de.spinsom.graph;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.xml.sax.SAXException;
-
 import de.spinosm.graph.data.OsmApiWrapper;
-import de.westnordost.osmapi.ApiResponseReader;
-import de.westnordost.osmapi.OsmConnection;
-import de.westnordost.osmapi.map.data.BoundingBox;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.Way;
 
@@ -29,7 +18,7 @@ public class PlayingWithApi {
 	private static long HAFELSTRASSE = 144455735l;
 	private static long BIRMESSTRASSE = 27850800l;
 	
-	private static List<Long> KOELNER_NODES = new ArrayList();
+	private static List<Long> KOELNER_NODES = new ArrayList<Long>();
 	
 	private static long[] KOELNER_NODE_ARRAY = {116108105l,
 			1847223183l,
@@ -95,12 +84,12 @@ public class PlayingWithApi {
 
 	@Test
 	public void testGetWayComplete() {
-		ArrayList<Node> nodeList = null;
+		/*ArrayList<Node> nodeList = null;
 		for(int i = 0; i < 10; i++){
-			//nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE);
+			nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE);
 		}
 		for(Node node : nodeList)
-			System.out.println(node.getId());
+			System.out.println(node.getId());*/
 	}
 	
 	@Test

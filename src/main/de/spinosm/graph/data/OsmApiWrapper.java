@@ -1,19 +1,13 @@
 package de.spinosm.graph.data;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-import de.spinosm.common.Common;
-import de.spinosm.common.Vehicle;
-import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmConnectionException;
 import de.westnordost.osmapi.map.MapDataDao;
-import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Relation;

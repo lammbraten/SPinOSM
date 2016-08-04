@@ -1,25 +1,15 @@
 package de.spinsom.graph;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
-import java.util.Set;
-
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.DijkstraShortestPath;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
-import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
-import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
-import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.data.OsmApiWrapper;
 
 
@@ -35,7 +25,7 @@ public class PlayingWithJgrapht {
 	private static long RA_GRO = 1579971496l;  // Raderfeld - Gropperstraﬂe
 	
 	private static long start = RA_GRO;
-	private static long end = CAMPUS_WEST;
+	private static long end = EI_KOE;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -49,6 +39,7 @@ public class PlayingWithJgrapht {
 
 	@Test
 	public void test() {
+		System.out.print("Hi");
 		StreetJunction startJunction = osmapi.getStreetJunction(start);
 		StreetJunction endJunction = osmapi.getStreetJunction(end);
 		

@@ -1,21 +1,7 @@
 package de.spinosm.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,12 +9,6 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
-import javax.swing.border.EmptyBorder;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.jxmapviewer.JXMapKit;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -40,25 +20,21 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-import org.xml.sax.SAXException;
-
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
-import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
-import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.LocalProvider;
-import de.spinosm.graph.data.OsmApiWrapper;
-import de.westnordost.osmapi.ApiResponseReader;
-import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.map.data.BoundingBox;
-
-import javax.swing.JButton;
 
 public class MainFrame extends JFrame {
 
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2823547452898441096L;
 	
 	private static long CAMPUS_SUED =  2524487607l; //Campus-Süd
 	private static long CAMPUS_WEST = 417403147l; //Campus-West	
@@ -104,7 +80,7 @@ public class MainFrame extends JFrame {
 		
 		BoundingBox bounds = new BoundingBox(51.3042508, 6.5919314, 51.3051842, 6.5900314);	
 		
-		
+		System.out.println("Hallo neuer Code");
 		
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);

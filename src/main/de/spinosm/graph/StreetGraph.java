@@ -144,8 +144,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	public boolean containsVertex(RouteableNode vertex) {
 		if(super.containsVertex(vertex))
 			return true;
-		/*if(dataprovider.getStreetJunction(vertex.getId()) != null)
-			return true;*/
 		return false;
 	}
 
@@ -221,17 +219,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 
 	@Override
 	public Set<RouteableNode> vertexSet() {
-		/*Set<RouteableNode> vertecis = super.vertexSet();
-		Set<RouteableNode> borderVertecisToLoad = new TreeSet<RouteableNode>();
-		for(RouteableNode vertex : vertecis)
-			if(vertex.isEdgesLoaded())
-				for(RouteableEdge e : vertex.getEdges())
-					borderVertecisToLoad.add(e.getEnd());
-		
-		for(RouteableNode vertex : borderVertecisToLoad)
-			if(!vertex.isEdgesLoaded())
-				this.getNode(vertex.getId());*/
-		
 		return super.vertexSet();
 	}
 

@@ -2,8 +2,6 @@ package de.spinosm.graph.data;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
 
 
 public class OsmElementCache <T> {

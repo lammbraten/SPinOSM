@@ -5,9 +5,7 @@ import java.util.List;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
-import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.map.data.Node;
-import de.westnordost.osmapi.map.data.Relation;
 import de.westnordost.osmapi.map.data.Way;
 
 public interface DataProvider {

@@ -6,9 +6,6 @@ import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.jgrapht.util.FibonacciHeap;
-import org.jgrapht.util.FibonacciHeapNode;
-
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;

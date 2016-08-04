@@ -10,12 +10,10 @@ import de.spinosm.common.Vehicle;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
-import de.westnordost.osmapi.common.errors.OsmConnectionException;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Way;
-import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
 
 abstract class AbstractProvider implements DataProvider {
 

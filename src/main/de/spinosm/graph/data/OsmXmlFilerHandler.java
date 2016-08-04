@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
-
 import de.westnordost.osmapi.map.MapDataParser;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
 import de.westnordost.osmapi.map.data.Node;
