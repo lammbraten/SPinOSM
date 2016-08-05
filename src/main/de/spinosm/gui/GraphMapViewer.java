@@ -31,7 +31,7 @@ import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.gui.drawing.ArrowPainter;
-import de.spinosm.gui.drawing.PointPainter;
+import de.spinosm.gui.drawing.GenericWaypointRenderer;
 import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
@@ -81,18 +81,16 @@ public class GraphMapViewer implements Observer{
 
 		
 		// Create waypoints from the geo-positions
-		Set<Point> graphNodes = new HashSet<Point>();
+		Set<Waypoint> graphNodes = new HashSet<Waypoint>();
 		
 		for(GeoPosition gp : graph){
-			Point p = new Point();
-			p.setLocation(gp.getLatitude(), gp.getLongitude());
-			graphNodes.add(p);
-			//graphNodes.add(new DefaultWaypoint(gp));
+			graphNodes.add(new DefaultWaypoint(gp));
 		}
 
 		// Create a waypoint painter that takes all the waypoints
-		PointPainter<Point> graphNodesPainter = new PointPainter<Point>();
-		graphNodesPainter.setPoints(graphNodes);
+		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();
+		graphNodesPainter.setWaypoints(graphNodes);
+		graphNodesPainter.setRenderer(new GenericWaypointRenderer());
 
 		// Create a compound painter that uses both the route-painter and the waypoint-painter
 		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();

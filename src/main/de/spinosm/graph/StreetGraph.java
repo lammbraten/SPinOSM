@@ -1,6 +1,7 @@
 package de.spinosm.graph;
 
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,12 +11,12 @@ import de.spinosm.graph.data.DataProvider;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, StreetEdge>{
+public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, StreetEdge> implements Serializable{
 
 
 	private static final long serialVersionUID = -67998995199008728L;
 	
-	private DataProvider dataprovider;
+	transient private DataProvider dataprovider;
 	//private TreeSet<StreetJunction> nodes;
 	
 	public StreetGraph(DataProvider dataprovider){
@@ -40,7 +41,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 		}
 	}
 	
-	public Set<RouteableNode> getStreetJunctions() {
+	public Set<StreetJunction> getStreetJunctions() {
 		return super.vertexSet();	
 	}
 	
@@ -86,8 +87,8 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	
 	private void linkWithAlredyKnownNodes(StreetJunction newNode){
 		for(RouteableEdge edge : newNode.getEdges()){
-			RouteableNode other = edge.getOtherKnotThan(newNode);
-			if(super.containsVertex(other))
+			StreetJunction other = (StreetJunction) edge.getOtherKnotThan(newNode);
+			if(super.containsVertex( other))
 					linkEdgeWithAlreedyKnownNode(edge, other);
 				
 		}
@@ -102,17 +103,17 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	}
 
 	@Override
-	public StreetEdge addEdge(RouteableNode sourceVertex, RouteableNode targetVertex) {
+	public StreetEdge addEdge(StreetJunction sourceVertex, StreetJunction targetVertex) {
 		return super.addEdge(sourceVertex, targetVertex);
 	}
 
 	@Override
-	public boolean addEdge(RouteableNode sourceVertex, RouteableNode targetVertex, StreetEdge e) {
+	public boolean addEdge(StreetJunction sourceVertex, StreetJunction targetVertex, StreetEdge e) {
 		return super.addEdge(sourceVertex, targetVertex, e);
 	}
 
 	@Override
-	public boolean addVertex(RouteableNode v) {
+	public boolean addVertex(StreetJunction v) {
 		return super.addVertex(v);
 	}
 
@@ -129,7 +130,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	}
 
 	@Override
-	public boolean containsEdge(RouteableNode sourceVertex, RouteableNode targetVertex) {
+	public boolean containsEdge(StreetJunction sourceVertex, StreetJunction targetVertex) {
 		try {
 			if(super.containsEdge(sourceVertex, targetVertex))
 				return true;
@@ -141,85 +142,12 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableNode, Stre
 	}
 
 	@Override
-	public boolean containsVertex(RouteableNode vertex) {
+	public boolean containsVertex(StreetJunction vertex) {
 		if(super.containsVertex(vertex))
 			return true;
 		return false;
 	}
 
-	@Override
-	public Set<StreetEdge> edgeSet() {
-		return super.edgeSet();
-	}
 
-	@Override
-	public Set<StreetEdge> edgesOf(RouteableNode vertex) {
-		return super.edgesOf(vertex);
-	}
-
-	@Override
-	public Set<StreetEdge> getAllEdges(RouteableNode sourceVertex, RouteableNode targetVertex) {
-		return super.getAllEdges(sourceVertex, targetVertex);
-	}
-
-	@Override
-	public StreetEdge getEdge(RouteableNode sourceVertex, RouteableNode targetVertex) {
-		return super.getEdge(sourceVertex, targetVertex);
-	}
-
-	@Override
-	public EdgeFactory<RouteableNode, StreetEdge> getEdgeFactory() {
-		return super.getEdgeFactory();
-	}
-
-	@Override
-	public RouteableNode getEdgeSource(StreetEdge e) {
-		return super.getEdgeSource(e);
-	}
-
-	@Override
-	public RouteableNode getEdgeTarget(StreetEdge e) {
-		return super.getEdgeTarget(e);
-	}
-
-	@Override
-	public double getEdgeWeight(StreetEdge e) {
-		return super.getEdgeWeight(e);
-	}
-
-	@Override
-	public boolean removeAllEdges(Collection<? extends StreetEdge> edges) {
-		return super.removeAllEdges(edges);
-	}
-
-	@Override
-	public Set<StreetEdge> removeAllEdges(RouteableNode sourceVertex, RouteableNode targetVertex) {
-		return super.removeAllEdges(sourceVertex, targetVertex);
-	}
-
-	@Override
-	public boolean removeAllVertices(Collection<? extends RouteableNode> vertices) {
-		return super.removeAllVertices(vertices);
-	}
-
-	@Override
-	public boolean removeEdge(StreetEdge e) {
-		return super.removeEdge(e);
-	}
-
-	@Override
-	public StreetEdge removeEdge(RouteableNode sourceVertex, RouteableNode targetVertex) {
-		return super.removeEdge(sourceVertex, targetVertex);
-	}
-
-	@Override
-	public boolean removeVertex(RouteableNode v) {
-		return super.removeVertex(v);
-	}
-
-	@Override
-	public Set<RouteableNode> vertexSet() {
-		return super.vertexSet();
-	}
 
 }

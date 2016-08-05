@@ -1,40 +1,44 @@
 package de.spinosm.graph;
 
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.OsmNode;
 
-public class StreetJunction extends GraphNode {
+public class StreetJunction extends GraphNode implements Serializable {
 
-	private LatLon position; //needed for Heuristic
+	private static final long serialVersionUID = -6564943151645680174L;
 	private boolean edgesLoaded = false;
 
+	
+	public StreetJunction(){
+		super(0l, null);
+	}
+	
 	public StreetJunction(OsmNode osmNode, LinkedList<RouteableEdge> edges){
-		super(osmNode.getId());
+		super(osmNode.getId(), osmNode.getPosition());
 		this.setEdges(edges);	
-		this.setPosition(osmNode.getPosition());
 	}
 	
 	public StreetJunction(StreetJunction streetJunction) {
-		super(streetJunction.getId(), streetJunction.getDistance());
-		this.setPosition(streetJunction.position);
+		super(streetJunction.getId(), streetJunction.getPosition(), streetJunction.getDistance());
 	}
 	
 	public StreetJunction(OsmNode osmNode){
-		super(osmNode.getId());		
-		this.setPosition(osmNode.getPosition());
+		super(osmNode.getId() , osmNode.getPosition());		
 	}
-
+	
+	
+/*
 	@Override
-	public LatLon getPosition() {
+	public SerializableLatLon getPosition() {
 		return position;
 	}
 
 	public void setPosition(LatLon position) {
-		this.position = position;
-	}
+		this.position = new SerializableLatLon(position);
+	}*/
 	
 	@Override
 	public boolean equals(Object other) {

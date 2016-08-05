@@ -1,5 +1,6 @@
 package de.spinosm.graph.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import de.westnordost.osmapi.map.handler.ListOsmElementHandler;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
-public class OsmApiWrapper extends AbstractProvider {
+public class OsmApiWrapper extends AbstractProvider{
 
 	private static final String SECURE_OSM_API_URL = "https://api.openstreetmap.org/api/0.6/";
 	private static final String OSM_API_URL = "http://openstreetmap.org/api/0.6/";

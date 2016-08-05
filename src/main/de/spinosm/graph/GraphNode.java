@@ -2,23 +2,30 @@ package de.spinosm.graph;
 
 import java.util.LinkedList;
 
+import de.westnordost.osmapi.map.data.LatLon;
+
 
 
 public abstract class GraphNode implements RouteableNode {
 
+
+	private static final long serialVersionUID = 1307414385237284029L;
 	private LinkedList<RouteableEdge> edges;
 	private long id;
 	private double distance;
+	private SerializableLatLon position; //needed for Heuristic
 	
 	
-	public GraphNode(long id, double distance){
+	public GraphNode(long id, LatLon latLon, double distance){
 		this.setId(id);
 		this.setDistance(distance);
+		this.position = new SerializableLatLon(latLon);
 	}
 	
-	public GraphNode(long id){
+	public GraphNode(long id, LatLon latLon){
 		this.setId(id);
 		this.setDistance(Integer.MAX_VALUE);
+		this.position = new SerializableLatLon(latLon);
 	}
 	
 	public long getId() {
@@ -29,6 +36,15 @@ public abstract class GraphNode implements RouteableNode {
 		this.id = l;
 	}
 
+	@Override
+	public SerializableLatLon getPosition() {
+		return position;
+	}
+
+	public void setPosition(LatLon position) {
+		this.position = new SerializableLatLon(position);
+	}
+	
 	@Override
 	public double getDistance() {
 		return distance;

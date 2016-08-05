@@ -1,11 +1,12 @@
 package de.spinosm.graph;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import de.westnordost.osmapi.map.data.LatLon;
 
-public interface RouteableNode extends Iterator<RouteableNode> ,  Comparable<RouteableNode>{
+public interface RouteableNode extends Iterator<RouteableNode> ,  Comparable<RouteableNode>, Serializable{
 	public LinkedList<RouteableEdge> getEdges();
 	public void setEdges(LinkedList<RouteableEdge> edges);
 	//public RouteableEdge getCheapestEdge();

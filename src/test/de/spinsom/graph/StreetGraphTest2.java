@@ -2,7 +2,11 @@ package de.spinsom.graph;
 
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.TreeSet;
 
 import org.junit.AfterClass;
@@ -84,6 +88,7 @@ public class StreetGraphTest2 {
 
 	
 	@Test
+	@Ignore
 	public void testGetSetStreetJunctions() {
 		//Test for NullPointerExption
 		streetGraph = new StreetGraph(osmapiwrapper);
@@ -117,6 +122,7 @@ public class StreetGraphTest2 {
 		}catch (Exception e) {fail("Wrong Exeption"+e);}
 	}
 	@Test()
+	@Ignore
 	public void testGraphBuilding() {
 		//streetGraph.setStreetJunctions(new TreeSet<StreetJunction>());
 		
@@ -130,6 +136,49 @@ public class StreetGraphTest2 {
 			System.out.println(sj.getId());
 			System.out.println("\t" +sj.getEdges());
 		}
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test()
+	public void testSerialization(){
+		streetGraph = new StreetGraph(osmapiwrapper);
+
+		for(StreetJunction sj : EXISTING_NODE_ARRAY){
+			streetGraph.getNode(sj.getId());
+		}
+		
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( "C:\\Users\\lammbraten\\Dropbox\\Bachelorarbeit\\05_Tests\\TestGrap.sg" ) );
+			oos.writeObject(streetGraph );
+			oos.close();			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream( new FileInputStream( "C:\\Users\\lammbraten\\Dropbox\\Bachelorarbeit\\05_Tests\\TestGrap.sg" ) );
+			StreetGraph streetGraph2 = (StreetGraph) ois.readObject();
+			ois.close();
+			for(RouteableNode sj : streetGraph.getStreetJunctions()){
+				System.out.println(sj.getId());
+				System.out.println("\t" +sj.getEdges());
+			}
+			new GraphMapViewer(streetGraph2);					
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	
 		try {
 			System.in.read();
 		} catch (IOException e) {
