@@ -1,9 +1,13 @@
 package de.spinosm.gui;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -28,7 +32,7 @@ import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
-public class GraphMapViewer {
+public class GraphMapViewer implements Observer{
 
 	StreetGraph sg;
 	final static JXMapKit jXMapKit = new JXMapKit();
@@ -82,16 +86,17 @@ public class GraphMapViewer {
 		// Create a waypoint painter that takes all the waypoints
 		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();
 		graphNodesPainter.setWaypoints(graphNodes);
-		
+
 		// Create a compound painter that uses both the route-painter and the waypoint-painter
 		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
 		painters.add(graphNodesPainter);
 	
 		for(RouteableNode node : sg.vertexSet()){
+			Color edgeColorForThisVertex = generateRandomColor();
 	        for(RouteableEdge routeEdge : node.getEdges()){  	
 	        	GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
 	        	GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	        	
-				ArrowPainter routePainter = new ArrowPainter(start, end);	
+				ArrowPainter routePainter = new ArrowPainter(start, end, edgeColorForThisVertex);	
 		        painters.add(routePainter);	        	
 	        }
 		}
@@ -102,7 +107,18 @@ public class GraphMapViewer {
 
 	}
 
+	private Color generateRandomColor() {
+		Random genrator = new Random();
+		return new Color(genrator.nextInt(255), genrator.nextInt(255), genrator.nextInt(255));
+	}
+
 	private GeoPosition routeableNodeToGeoPosiotion(RouteableNode node) {
 		return new GeoPosition(node.getPosition().getLatitude(), node.getPosition().getLongitude());
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }

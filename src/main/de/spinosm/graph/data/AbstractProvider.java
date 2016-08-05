@@ -75,13 +75,46 @@ abstract class AbstractProvider implements DataProvider {
 		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
 		for(Node node : nodes){
 			if(startingNode.getId() == node.getId()){
-				try {edges.add(shapeNewEdgeDownTheRoad(way, startingNode, nodes, node));
-				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
-				try {edges.add(shapeNewEdgeUpTheRoad(way, startingNode, nodes, node));
+				try {
+					if(isUseableDownTheRoad(way))
+						edges.add(shapeNewEdgeDownTheRoad(way, startingNode, nodes, node));
+				} 
+				catch (Exception e) {/*System.out.println(e.getMessage());*/}
+				try {
+					if(isUseableUpTheRoad(way))
+						edges.add(shapeNewEdgeUpTheRoad(way, startingNode, nodes, node));
 				} catch (Exception e) {/*System.out.println(e.getMessage());*/}
 			}
 		}
 		return edges;
+	}
+
+	private boolean isUseableUpTheRoad(Way way) {
+		if(way.getTags().containsKey("oneway")){
+			String val = way.getTags().get("oneway");
+			if(val.equals("yes"))
+				return true;
+			else if(val.equals("1"))
+				return true;
+			else if(val.equals("true"))
+				return true;
+			else 
+				return false;
+		}
+		return true;
+	}
+
+	private boolean isUseableDownTheRoad(Way way) {
+		if(way.getTags().containsKey("oneway")){
+			String val = way.getTags().get("oneway");
+			if(val.equals("-1"))
+				return true;
+			else if(val.equals("reverse"))
+				return true;
+			else 
+				return false;
+		}
+		return true;
 	}
 
 	protected RouteableEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {

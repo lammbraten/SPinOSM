@@ -5,8 +5,9 @@ import java.awt.geom.AffineTransform;
 
 public class LineArrow implements Arrow {
 
-    private final int ARR_SIZE = 4;
-	
+    private final int ARROW_SIZE = 6;
+    private final int SHIFT = 3;
+    
 	private float x1;
 	private float y1;
 	double dx;
@@ -37,12 +38,12 @@ public class LineArrow implements Arrow {
 	}
     
 	private void drawArrow(Graphics2D g) {
-		g.drawLine(0, 0, len, 0);
-        drarArrowHead(g);
+		g.drawLine(0, SHIFT, len, SHIFT);
+        drawArrowHead(g);
 	}
 
-	private void drarArrowHead(Graphics2D g) {
-		g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+	private void drawArrowHead(Graphics2D g) {
+		g.fillPolygon(new int[] {len, len-ARROW_SIZE, len-ARROW_SIZE, len}, new int[] {SHIFT, SHIFT-ARROW_SIZE, SHIFT+ARROW_SIZE, SHIFT}, 4);
 	}
 
 	public float getX1() {

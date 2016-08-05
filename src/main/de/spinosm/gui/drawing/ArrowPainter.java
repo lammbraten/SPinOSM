@@ -17,9 +17,10 @@ public class ArrowPainter implements Painter<JXMapViewer>{
 	private GeoPosition startCoordinate;
 	private GeoPosition endCoordinate;
 	
-	public ArrowPainter(GeoPosition startPoint, GeoPosition endPoint) {
+	public ArrowPainter(GeoPosition startPoint, GeoPosition endPoint, Color color) {
 		this.startCoordinate = startPoint;
 		this.endCoordinate = endPoint;
+		this.color = color;
 	}
 
 	void drawArrow ( Graphics2D g, JXMapViewer map){

@@ -111,7 +111,7 @@ public class AStar implements ShortestPath {
 
 
 	private double heuristicForVertex(RouteableNode v) {			
-		return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) / 25 ; //Angenommene Durchschnittsgeschwindigkeit
+		return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) / 75 ; //Angenommene Durchschnittsgeschwindigkeit
 	}
 
 	@Override
