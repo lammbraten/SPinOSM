@@ -39,7 +39,7 @@ public class DepthFirstSearchTest {
 
 	@Test
 	public void testDFS() {
-		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA ,1000l);
+		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA ,10l);
 		
 		for(RouteableNode rn : streetgraph.vertexSet()){
 			System.out.println(rn);

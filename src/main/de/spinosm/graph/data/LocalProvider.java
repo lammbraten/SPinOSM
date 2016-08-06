@@ -13,8 +13,8 @@ import de.westnordost.osmapi.map.data.Way;
 
 public class LocalProvider extends AbstractProvider{
 
-	File xmlFile;
-	OsmXmlFilerHandler osmxmlelements;
+	private File xmlFile;
+	private OsmXmlFilerHandler osmxmlelements;
 	
 	public LocalProvider(String filePath){
 		this.xmlFile = new File(filePath);

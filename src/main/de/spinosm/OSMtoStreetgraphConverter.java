@@ -1,0 +1,105 @@
+package de.spinosm;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.algorithm.DepthFirstSearch;
+import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.gui.GraphMapViewer;
+
+public class OSMtoStreetgraphConverter {
+	private static Matcher matcher;
+	private static String inFile;
+	private static String outFile;
+	private static LocalProvider dataprovider;
+	private static StreetGraph streetgraph;
+	private static long nid;
+
+	public static void main(String[] args) {
+
+		if (parseArguments(args)){ 
+			System.out.println( "starting at " + new Date());
+			generateOSMFileReader();
+			new DepthFirstSearch(streetgraph, nid, 1000l);
+			System.out.println( "  ending at " + new Date() );
+			System.out.println("Write Streetgraph to File:");
+			writeStreetgraph();
+			
+			System.out.println("Read Streetgraph from File:");
+			readStreetgraph();
+		}
+		else{
+			System.out.println("Wrong arguments.");
+			System.out.println("-rx InFilePath -wx OutFilePath -nid SomeNodeIdInTheFile");
+		}
+	}
+
+	private static void readStreetgraph() {
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(outFile));
+			StreetGraph streetGraph2 = (StreetGraph) ois.readObject();
+			ois.close();
+			for(RouteableNode sj : streetGraph2.getStreetJunctions()){
+				System.out.println(sj.getId());
+				System.out.println("\t" +sj.getEdges());
+			}
+			new GraphMapViewer(streetGraph2);					
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void writeStreetgraph() {
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outFile) );
+			oos.writeObject(streetgraph);
+			oos.close();			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void generateOSMFileReader() {
+		dataprovider = new LocalProvider(inFile);
+		streetgraph = new StreetGraph(dataprovider);
+	}
+
+	private static boolean parseArguments(String[] args) {
+		if (args.length < 6)
+			return false; // no nid!
+		
+		if (!args[0].equals("-rx"))   
+			return false;
+		Pattern   tmpPattern = Pattern.compile( "(.+)\\.osm" );
+		matcher = tmpPattern.matcher( args[1] );
+		if (matcher.find())
+			inFile  = matcher.group(0);
+		System.out.println( "    read: " + inFile );
+		
+		if ( !args[2].equals("-wx"))   
+			return false;
+		tmpPattern = Pattern.compile( "(.+)\\.bin" );
+		matcher = tmpPattern.matcher(args[3]);
+		
+		if (matcher.find()) outFile = matcher.group(0);
+		System.out.println( "   write: " + outFile );
+		
+		if ( !args[4].equals("-nid"))   
+			return false;
+		nid = Long.parseLong(args[5]);
+				
+		return true;
+	}
+}

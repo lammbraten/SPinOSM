@@ -7,29 +7,27 @@ import de.spinosm.graph.StreetGraph;
 public class DepthFirstSearch {
 
 	private long maxDepth;
-	private int depth;
 	private StreetGraph g;
 	
 	public DepthFirstSearch(StreetGraph g, long id, long maxDepth){
 		this.g = g;
-		this.depth = 0;
+		int depth = 0;
 		setMaxDepth(maxDepth);
 	
 		RouteableNode s = g.getNode(id);
-		searchDepthFirst(s);
+		searchDepthFirst(s, depth);
 	}
 
 
-	private void searchDepthFirst(RouteableNode u){
+	private void searchDepthFirst(RouteableNode u, int depth){
 		u = mark(u);
 		
-		if(maxDepth == depth)
+		if(maxDepth <= depth)
 			return;
-		depth++;
 		
 		for(RouteableEdge e : u.getEdges())
 			if(!e.getEnd().isEdgesLoaded())
-				searchDepthFirst(e.getEnd());
+				searchDepthFirst(e.getEnd(), depth+1);
 	}
 	
 	private RouteableNode mark(RouteableNode u){
