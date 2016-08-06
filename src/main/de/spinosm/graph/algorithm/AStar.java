@@ -18,15 +18,19 @@ public class AStar implements ShortestPath {
 	private TreeMap<RouteableNode, RouteableNode> pi;
 	private RouteableNode startVertex;
 	private RouteableNode endVertex;	
+	private Heuristic heuristic;	
 	
-	public AStar(StreetGraph streetgraph){
+	
+	public AStar(StreetGraph streetgraph, Heuristic heuristic){
 		this.graph = streetgraph;
+		this.heuristic = heuristic;
 		S = new TreeSet<RouteableNode>(new IdComparator());
 		Q = new TreeSet<RouteableNode>();		
 		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
 	}
 	
-	public AStar(StreetGraph streetgraph, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+	public AStar(StreetGraph streetgraph, Heuristic heuristic, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+		this.heuristic = heuristic;
 		this.graph = streetgraph;
 		this.S = S;
 		this.Q = Q;
@@ -70,7 +74,7 @@ public class AStar implements ShortestPath {
 				if(Q.contains(v)){
 					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
 						
-					if(v.getDistance()  > (u.getDistance() + e.getWeight() + heuristicForVertex(v))){
+					if(v.getDistance()  > (u.getDistance() + e.getWeight() /*+ heuristicForVertex(v)*/)){
 						Q.remove(v);
 						v.setDistance(u.getDistance() + e.getWeight()  + heuristicForVertex(v));
 						Q.add(v);
@@ -104,14 +108,20 @@ public class AStar implements ShortestPath {
 
 	
 	void init(RouteableNode start){
+		if(heuristic == null)
+			heuristic = new DefaultHeuristic(endVertex);	
+		else
+			heuristic.setReferenceVertex(endVertex);
 		startVertex = start;
 		startVertex.setDistance(heuristicForVertex(startVertex));
 		Q.add(graph.getNode(startVertex.getId()));
+
 	}
 
 
 	private double heuristicForVertex(RouteableNode v) {			
-		return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) / (75 *5) ; //(Angenommene Durchschnittsgeschwindigkeit * Gewichtung) 
+		//return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) /(50 * 2) ; //(Angenommene Durchschnittsgeschwindigkeit * Gewichtung) 
+		return this.heuristic.heuristicForVertex(v);
 	}
 
 	@Override

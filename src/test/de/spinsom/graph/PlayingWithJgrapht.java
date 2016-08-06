@@ -11,6 +11,8 @@ import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
+import de.spinosm.graph.algorithm.DefaultHeuristic;
+import de.spinosm.graph.algorithm.Heuristic;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -59,11 +61,10 @@ public class PlayingWithJgrapht {
 		//BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
 		//List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
 		//StreetGraph sg = bid.getGraph();		
-		AStar astar = new AStar(streetgraph);
+		AStar astar = new AStar(streetgraph, null);
 		List<RouteableNode> graphPath = astar.getShortestPath(startJunction, endJunction);
 		StreetGraph sg = astar.getGraph();	
-		for(RouteableNode n : graphPath)
-			System.out.println(n);
+
 		
 		
 
@@ -74,7 +75,10 @@ public class PlayingWithJgrapht {
 				System.out.println("\t" + re);
 			}
 		}
-		
+		System.out.println("------------");
+		for(RouteableNode n : graphPath)
+			System.out.println(n.getId() + ": " + n.getDistance());
+		System.out.println("------------");		
 		GraphMapViewer gmv = new GraphMapViewer(sg, graphPath);	
 		try {
 			System.in.read();

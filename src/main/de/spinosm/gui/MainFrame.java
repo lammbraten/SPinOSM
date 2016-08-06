@@ -93,7 +93,7 @@ public class MainFrame extends JFrame {
         //OsmApiWrapper osmapi = new OsmApiWrapper();
         LocalProvider osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
         StreetGraph streetgraph = new StreetGraph(osmapi);
-        ShortestPath aStar = new AStar(streetgraph);
+        ShortestPath aStar = new AStar(streetgraph, null);
                 
 		StreetJunction startJunction = osmapi.getStreetJunction(start);
 		StreetJunction endJunction = osmapi.getStreetJunction(end);
