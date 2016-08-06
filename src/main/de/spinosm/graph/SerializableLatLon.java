@@ -15,7 +15,6 @@ public class SerializableLatLon extends SomeLatLon implements  Serializable{
 		this.lon = super.getLongitude();
 	}
 	
-	
 	@Override
 	public double getLatitude() {
 		return lat;

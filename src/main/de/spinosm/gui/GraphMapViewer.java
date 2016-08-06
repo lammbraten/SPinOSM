@@ -3,6 +3,7 @@ package de.spinosm.gui;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,79 +38,127 @@ import de.westnordost.osmapi.map.data.BoundingBox;
 
 public class GraphMapViewer implements Observer{
 
-	StreetGraph sg;
-	final static JXMapKit jXMapKit = new JXMapKit();
+	private StreetGraph sg;
+	private List<RouteableNode> route;
+	final static JXMapKit mapView = new JXMapKit();
+	private List<Painter<JXMapViewer>> painters;
 	
 	public GraphMapViewer(StreetGraph g) {
+		this(g, null);
+	}
+	
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public GraphMapViewer(StreetGraph g, List<RouteableNode> route) {
 		this.sg = g;
+		this.route = route;
+		this.painters = new ArrayList<Painter<JXMapViewer>>();
+		
 		
 		showMap();
 		
-        JFrame frame = new JFrame("JXMapviewer2 Example 6");
-        frame.getContentPane().add(jXMapKit);
-        frame.setSize(800, 600);
+        JFrame frame = new JFrame("SPinOSM");
+        frame.getContentPane().add(mapView);
+        frame.setSize(1024, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-		
 	}
 	
 	public void showMap(){
-		BoundingBox bounds = new BoundingBox(51.3042508, 6.5919314, 51.3051842, 6.5900314);	
-		
-		
-		
-        TileFactoryInfo info = new OSMTileFactoryInfo();
-        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        jXMapKit.setTileFactory(tileFactory);
+		JXMapViewer map = initMap();   
+		prepareVerteciesForPainting();
+		prepareNodeEdgesForPainting();
+		prepareShortestPathForPainting();	 	
+		paintOnMap(map);
+	}
 
-        
-        JXMapViewer map = jXMapKit.getMainMap();
-        
-        //OsmApiWrapper osmapi = new OsmApiWrapper();
-        LocalProvider osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
-        List<GeoPosition> graph = new LinkedList<GeoPosition>();
-        
-       
-        for(RouteableNode graphPoint : sg.vertexSet())
-        	graph.add(new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude()));
-
-        
-
-        jXMapKit.setZoom(11);
-        
-        
-
-		
-		// Create waypoints from the geo-positions
-		Set<Waypoint> graphNodes = new HashSet<Waypoint>();
-		
-		for(GeoPosition gp : graph){
-			graphNodes.add(new DefaultWaypoint(gp));
-		}
-
-		// Create a waypoint painter that takes all the waypoints
-		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();
-		graphNodesPainter.setWaypoints(graphNodes);
-		graphNodesPainter.setRenderer(new GenericWaypointRenderer());
-
-		// Create a compound painter that uses both the route-painter and the waypoint-painter
-		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
-		painters.add(graphNodesPainter);
-	
-		for(RouteableNode node : sg.vertexSet()){
-			Color edgeColorForThisVertex = generateRandomColor();
-	        for(RouteableEdge routeEdge : node.getEdges()){  	
-	        	GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
-	        	GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	        	
-				ArrowPainter routePainter = new ArrowPainter(start, end, edgeColorForThisVertex);	
-		        painters.add(routePainter);	        	
-	        }
-		}
-		
+	/**
+	 * @param map
+	 */
+	private void paintOnMap(JXMapViewer map) {
 		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 		map.setOverlayPainter(painter);
+	}
 
+	/**
+	 * @return
+	 */
+	private JXMapViewer initMap() {
+		TileFactoryInfo info = new OSMTileFactoryInfo();
+		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+		mapView.setTileFactory(tileFactory);
+		JXMapViewer map = mapView.getMainMap();
+		mapView.setZoom(11);
+		return map;
+	}
 
+	/**
+	 * 
+	 */
+	private void prepareShortestPathForPainting() {
+		List<GeoPosition> track = new LinkedList<GeoPosition>();
+		if(route != null){
+			for(RouteableNode routePoint : route)
+				track.add(routeableNodeToGeoPosiotion(routePoint));
+		}
+		RoutePainter routePainter = new RoutePainter(track);
+		painters.add(routePainter);
+	}
+
+	/**
+	 * 
+	 */
+	private void prepareNodeEdgesForPainting() {
+		for(RouteableNode node : sg.vertexSet()){
+			Color edgeColorForThisVertex = generateRandomColor();
+			for(RouteableEdge routeEdge : node.getEdges()){
+				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void prepareVerteciesForPainting() {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromGraphVertecies();
+		addVertecieWaypointsToPainters(vertecieWaypoints);
+	}
+
+	/**
+	 * @param vertecieWaypoints
+	 */
+	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints) {
+		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();	
+		graphNodesPainter.setWaypoints(vertecieWaypoints);
+		graphNodesPainter.setRenderer(new GenericWaypointRenderer());
+		painters.add(graphNodesPainter);
+	}
+
+	/**
+	 * @param vertecies
+	 */
+	private Set<Waypoint> generateWaypointsFromGraphVertecies() {
+		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
+		for(RouteableNode graphPoint : sg.vertexSet()){
+			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
+			vertecieWaypoints.add(new DefaultWaypoint(gp));
+		}
+		return vertecieWaypoints;
+	}
+
+	/**
+	 * @param edgeColorForThisVertex
+	 * @param routeEdge
+	 */
+	private void addEdgeToPainters(Color edgeColorForThisVertex, RouteableEdge routeEdge) {
+		GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
+		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
+		double label = routeEdge.getWeight();
+		String formattedLabel = String.format("%.4f", label);
+		ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
+		painters.add(arrowPainter);
 	}
 
 	private Color generateRandomColor() {

@@ -103,9 +103,7 @@ public abstract class GraphNode implements RouteableNode {
 			return true;
 		if(other instanceof GraphNode){
 			GraphNode otherGraphNode = (GraphNode) other;
-			if(this.id == otherGraphNode.id /*&&
-					this.edges.equals(otherGraphNode.edges) &&
-					this.distance == otherGraphNode.distance*/)
+			if(this.id == otherGraphNode.id)
 				return true;
 		}
 		return false;
