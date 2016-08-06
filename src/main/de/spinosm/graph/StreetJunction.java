@@ -10,7 +10,7 @@ public class StreetJunction extends GraphNode implements Serializable {
 
 	private static final long serialVersionUID = -6564943151645680174L;
 	private boolean edgesLoaded = false;
-
+	
 	
 	public StreetJunction(){
 		super(0l, null);
