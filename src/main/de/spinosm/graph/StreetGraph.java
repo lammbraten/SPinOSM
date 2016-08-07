@@ -3,15 +3,18 @@ package de.spinosm.graph;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
+import de.spinosm.graph.data.DefaultDataProvider;
 
 import org.jgrapht.EdgeFactory;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, StreetEdge> implements Serializable{
+public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, StreetEdge> implements Serializable, WeightedGraph<StreetJunction, StreetEdge>{
 
 
 	private static final long serialVersionUID = -67998995199008728L;
@@ -21,6 +24,10 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	
 	public StreetGraph(DataProvider dataprovider){
 		super(StreetEdge.class);
+		if(dataprovider == null)
+			this.dataprovider = new DefaultDataProvider();
+		else
+			this.dataprovider = dataprovider;
 		this.dataprovider = dataprovider;
 	}
 	
@@ -30,7 +37,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		for(StreetJunction v : nodes)
 			super.addVertex(v);
 	}
-	
+
 	public void setStreetJunctions(TreeSet<StreetJunction> junctions) {
 		if(junctions != null){
 			super.removeAllVertices(junctions);
@@ -131,8 +138,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 
 	@Override
 	public boolean containsEdge(StreetJunction sourceVertex, StreetJunction targetVertex) {
-		try {
-			if(super.containsEdge(sourceVertex, targetVertex))
+		try {if (super.containsEdge(sourceVertex, targetVertex))
 				return true;
 			throw new Exception("Not implemented yet!");
 		} catch (Exception e) {
@@ -146,6 +152,10 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		if(super.containsVertex(vertex))
 			return true;
 		return false;
+	}
+	
+	public StreetGraph getGraph(){
+		return this;
 	}
 
 

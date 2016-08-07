@@ -88,8 +88,12 @@ public class OsmHighwayValues {
 	}
 	
 	public static double getCarSpeedLimitsInKMH(Way way) throws NumberFormatException {
-		if(way.getTags().containsKey("maxspeed"))
-			return Integer.parseInt(way.getTags().get("maxspeed"));			
+		if(way.getTags().containsKey("maxspeed")){
+			try {
+				return Integer.parseInt(way.getTags().get("maxspeed"));
+			} catch (Exception e) {}				
+		}
+		
 
 		String value = way.getTags().get("highway");
 		switch(value){
