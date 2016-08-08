@@ -5,11 +5,11 @@ public abstract class DirectedEdge implements RouteableEdge{
 
 	private static final long serialVersionUID = -9135933798984497839L;
 	
-	private RouteableNode source;
-	private RouteableNode target;
+	private StreetJunction source;
+	private StreetJunction target;
 	private double weight;
 	
-	DirectedEdge(RouteableNode start, RouteableNode end, double weight){
+	DirectedEdge(StreetJunction start, StreetJunction end, double weight){
 		this.source = start;
 		this.target = end;
 		this.weight = weight;
@@ -25,29 +25,24 @@ public abstract class DirectedEdge implements RouteableEdge{
 		this.weight = weight;
 	}
 	
-	@Override
-	public RouteableNode getStart() {
+	public StreetJunction getStart() {
 		return source;
 	}
 	
-	@Override
-	public void setStart(RouteableNode start) {
-		this.source = (GraphNode) start;		
+	public void setStart(StreetJunction start) {
+		this.source = start;		
 	}
 
-	@Override
-	public RouteableNode getEnd() {
+	public StreetJunction getEnd() {
 		return target;
 	}
 	
-	@Override
-	public void setEnd(RouteableNode end) {
-		this.target = (GraphNode) end;
+	public void setEnd(StreetJunction end) {
+		this.target = end;
 		
 	}
 	
-	@Override
-	public RouteableNode getOtherKnotThan(RouteableNode that) {
+	public StreetJunction getOtherKnotThan(StreetJunction that) {
 		if(isStartKnot(that))
 			return target;
 		else if(isEndKnot(that))
@@ -56,8 +51,7 @@ public abstract class DirectedEdge implements RouteableEdge{
 			throw new IllegalArgumentException("The Knot " + that + " isn't in this Graph");
 	}
 	
-	@Override
-	public void replace(RouteableNode oldNode, RouteableNode newNode){
+	public void replace(StreetJunction oldNode, StreetJunction newNode){
 		if(isStartKnot(oldNode))
 			this.setStart(newNode);
 		else if(isEndKnot(oldNode))

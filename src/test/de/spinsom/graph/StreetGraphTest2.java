@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
@@ -33,17 +34,17 @@ public class StreetGraphTest2 {
 	private static final OsmNode EXISTING_NODE7 = new OsmNode(415866943l , 2, 51.3078953, 6.5848224, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
 	private static final StreetJunction[] EXISTING_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1, null),
-			new StreetJunction(EXISTING_NODE2, null),
-			new StreetJunction(EXISTING_NODE3, null),
-			new StreetJunction(EXISTING_NODE4, null),
-			new StreetJunction(EXISTING_NODE5, null),
-			new StreetJunction(EXISTING_NODE6, null),
-			new StreetJunction(EXISTING_NODE7, null)
+			new StreetJunction(EXISTING_NODE1),
+			new StreetJunction(EXISTING_NODE2),
+			new StreetJunction(EXISTING_NODE3),
+			new StreetJunction(EXISTING_NODE4),
+			new StreetJunction(EXISTING_NODE5),
+			new StreetJunction(EXISTING_NODE6),
+			new StreetJunction(EXISTING_NODE7)
 	};
 	private static final StreetJunction[] INITIAL_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1, null),
-			new StreetJunction(EXISTING_NODE3, null)
+			new StreetJunction(EXISTING_NODE1),
+			new StreetJunction(EXISTING_NODE3)
 	};
 	private static final StreetJunction[] NO_NODES_BUFFERED = {
 	};
@@ -132,10 +133,7 @@ public class StreetGraphTest2 {
 			streetGraph.getNode(sj.getId());
 		}
 		GraphMapViewer gmv = new GraphMapViewer(streetGraph);		
-		for(RouteableNode sj : streetGraph.getStreetJunctions()){
-			System.out.println(sj.getId());
-			System.out.println("\t" +sj.getEdges());
-		}
+		Common.writeStreetGraph(streetGraph);
 		try {
 			System.in.read();
 		} catch (IOException e) {
@@ -166,10 +164,7 @@ public class StreetGraphTest2 {
 			ois = new ObjectInputStream( new FileInputStream( "C:\\Users\\lammbraten\\Dropbox\\Bachelorarbeit\\05_Tests\\TestGrap.sg" ) );
 			StreetGraph streetGraph2 = (StreetGraph) ois.readObject();
 			ois.close();
-			for(RouteableNode sj : streetGraph.getStreetJunctions()){
-				System.out.println(sj.getId());
-				System.out.println("\t" +sj.getEdges());
-			}
+			Common.writeStreetGraph(streetGraph);
 			new GraphMapViewer(streetGraph2);					
 		} catch (IOException e) {
 			e.printStackTrace();

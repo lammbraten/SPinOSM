@@ -2,15 +2,13 @@ package de.spinosm.graph;
 
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.DefaultDataProvider;
 
-import org.jgrapht.EdgeFactory;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -53,16 +51,15 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	}
 	
 
-	public RouteableNode getNode(long id){
-		RouteableNode returnValue = checkBufferedNodesForId(id);
+	public StreetJunction getNode(long id){
+		StreetJunction returnValue = checkBufferedNodesForId(id);
 		if(returnValue != null)
 			return returnValue;
 		
 		return getStreetJunctionFromDataProvider(id);
 	}
 
-	/**
-	 * @param id
+	 /** @param id
 	 * @return
 	 */
 	private StreetJunction getStreetJunctionFromDataProvider(long id) {
@@ -79,8 +76,8 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	/**
 	 * @param id
 	 */
-	private RouteableNode checkBufferedNodesForId(long id) {
-		for(RouteableNode n : super.vertexSet())
+	private StreetJunction checkBufferedNodesForId(long id) {
+		for(StreetJunction n : super.vertexSet())
 			if(n.getId() == id && n.isEdgesLoaded())
 				return n;
 		return null;
@@ -93,7 +90,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	}
 	
 	private void linkWithAlredyKnownNodes(StreetJunction newNode){
-		for(RouteableEdge edge : newNode.getEdges()){
+		for(StreetEdge edge : super.edgesOf(newNode)){
 			StreetJunction other = (StreetJunction) edge.getOtherKnotThan(newNode);
 			if(super.containsVertex( other))
 					linkEdgeWithAlreedyKnownNode(edge, other);
@@ -101,8 +98,8 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		}
 	}
 
-	private void linkEdgeWithAlreedyKnownNode(RouteableEdge edge, RouteableNode toReplace){
-		for(RouteableNode node : super.vertexSet()){
+	private void linkEdgeWithAlreedyKnownNode(StreetEdge edge, StreetJunction toReplace){
+		for(StreetJunction node : super.vertexSet()){
 			if(node.hasSameId(toReplace)){
 				edge.replace(toReplace, node);
 			}
@@ -158,6 +155,28 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		return this;
 	}
 
+	public Set<StreetEdge> getEdgesForNode(StreetJunction sj) {
+		Set<StreetEdge>  returnValue = checkBufferedEdgeForId(sj);
+		if(returnValue != null)
+			return returnValue;
+		else
+			return loadEdgesFormDataprovider(sj);
+	}
+
+	private Set<StreetEdge> loadEdgesFormDataprovider(StreetJunction sj) {
+		sj.setEdgesLoaded(true);
+		return dataprovider.getStreetEdgesForNode(sj);
+	}
+
+	private Set<StreetEdge> checkBufferedEdgeForId(StreetJunction sj) {
+		return super.edgesOf(sj);
+	}
+
+	public void addEdge(StreetEdge e) {
+		super.addEdge(e.getStart(), e.getEnd());
+		StreetEdge se = super.getEdge(e.getStart(), e.getStart());
+		se.setWeight(e.getWeight());
+	}
 
 
 }

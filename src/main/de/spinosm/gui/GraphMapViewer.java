@@ -29,7 +29,9 @@ import org.jxmapviewer.viewer.WaypointPainter;
 
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.GenericWaypointRenderer;
@@ -39,7 +41,7 @@ import de.westnordost.osmapi.map.data.BoundingBox;
 public class GraphMapViewer implements Observer{
 
 	private StreetGraph sg;
-	private List<RouteableNode> route;
+	private List<StreetJunction> route;
 	final static JXMapKit mapView = new JXMapKit();
 	private List<Painter<JXMapViewer>> painters;
 	
@@ -50,9 +52,9 @@ public class GraphMapViewer implements Observer{
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public GraphMapViewer(StreetGraph g, List<RouteableNode> route) {
+	public GraphMapViewer(StreetGraph g, List<StreetJunction> graphPath) {
 		this.sg = g;
-		this.route = route;
+		this.route = graphPath;
 		this.painters = new ArrayList<Painter<JXMapViewer>>();
 		
 		
@@ -110,9 +112,9 @@ public class GraphMapViewer implements Observer{
 	 * 
 	 */
 	private void prepareNodeEdgesForPainting() {
-		for(RouteableNode node : sg.vertexSet()){
+		for(StreetJunction node : sg.vertexSet()){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(RouteableEdge routeEdge : node.getEdges()){
+			for(StreetEdge routeEdge : sg.edgesOf(node)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}
@@ -152,7 +154,7 @@ public class GraphMapViewer implements Observer{
 	 * @param edgeColorForThisVertex
 	 * @param routeEdge
 	 */
-	private void addEdgeToPainters(Color edgeColorForThisVertex, RouteableEdge routeEdge) {
+	private void addEdgeToPainters(Color edgeColorForThisVertex, StreetEdge routeEdge) {
 		GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
 		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
 		double label = routeEdge.getWeight();

@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
@@ -62,19 +63,14 @@ public class PlayingWithJgrapht {
 		//List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
 		//StreetGraph sg = bid.getGraph();		
 		AStar astar = new AStar(streetgraph, null);
-		List<RouteableNode> graphPath = astar.getShortestPath(startJunction, endJunction);
+		List<StreetJunction> graphPath = astar.getShortestPath(startJunction, endJunction);
 		StreetGraph sg = astar.getGraph();	
 
 		
 		
 
 		
-		for(RouteableNode rn : sg.vertexSet()){
-			System.out.println(rn);
-			for(RouteableEdge re :rn.getEdges()){
-				System.out.println("\t" + re);
-			}
-		}
+		Common.writeStreetGraph(streetgraph);
 		System.out.println("------------");
 		for(RouteableNode n : graphPath)
 			System.out.println(n.getId() + ": " + n.getDistance());

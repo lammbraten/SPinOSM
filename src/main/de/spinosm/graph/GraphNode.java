@@ -10,7 +10,7 @@ public abstract class GraphNode implements RouteableNode {
 
 
 	private static final long serialVersionUID = 1307414385237284029L;
-	private LinkedList<RouteableEdge> edges;
+//	private LinkedList<RouteableEdge> edges;
 	private long id;
 	private double distance;
 	private SerializableLatLon position; //needed for Heuristic
@@ -57,6 +57,7 @@ public abstract class GraphNode implements RouteableNode {
 		this.distance = distance;
 	}
 
+	/*
 	@Override
 	public boolean hasNext() {
 		if(!edges.isEmpty())
@@ -93,7 +94,7 @@ public abstract class GraphNode implements RouteableNode {
 	@Override
 	public void getOutDegree() {
 		this.edges.size();
-	}
+	}*/
 	
 	@Override
 	public boolean equals(Object other) {

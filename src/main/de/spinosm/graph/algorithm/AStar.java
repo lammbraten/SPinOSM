@@ -7,29 +7,30 @@ import java.util.TreeSet;
 
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class AStar implements ShortestPath {
 	private StreetGraph graph; 
-	private TreeSet<RouteableNode> S;
-	private TreeSet<RouteableNode> Q;
-	private TreeMap<RouteableNode, RouteableNode> pi;
-	private RouteableNode startVertex;
-	private RouteableNode endVertex;	
+	private TreeSet<StreetJunction> S;
+	private TreeSet<StreetJunction> Q;
+	private TreeMap<StreetJunction, StreetJunction> pi;
+	private StreetJunction startVertex;
+	private StreetJunction endVertex;	
 	private Heuristic heuristic;	
 	
 	
 	public AStar(StreetGraph streetgraph, Heuristic heuristic){
 		this.graph = streetgraph;
 		this.heuristic = heuristic;
-		S = new TreeSet<RouteableNode>(new IdComparator());
-		Q = new TreeSet<RouteableNode>();		
-		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
+		S = new TreeSet<StreetJunction>(new IdComparator());
+		Q = new TreeSet<StreetJunction>();		
+		pi = new TreeMap<StreetJunction, StreetJunction>(new IdComparator());
 	}
 	
-	public AStar(StreetGraph streetgraph, Heuristic heuristic, TreeSet<RouteableNode> S, TreeSet<RouteableNode> Q) {
+	public AStar(StreetGraph streetgraph, Heuristic heuristic, TreeSet<StreetJunction> S, TreeSet<StreetJunction> Q) {
 		this.heuristic = heuristic;
 		this.graph = streetgraph;
 		this.S = S;
@@ -37,7 +38,7 @@ public class AStar implements ShortestPath {
 	}
 
 	@Override
-	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
+	public List<StreetJunction> getShortestPath(StreetJunction start, StreetJunction end) {
 		endVertex = end;		
 		init(start);
 
@@ -55,20 +56,18 @@ public class AStar implements ShortestPath {
 	 * @param u
 	 */
 	void checkNextVertex() {
-		RouteableNode u = Q.first();
+		StreetJunction u = Q.first();
 		System.out.println(u.getId() + ": " + u.getDistance());
 		
 		Q.remove(u);
 		S.add(u);
 		
-		if(!u.isEdgesLoaded()){
-			RouteableNode loaded = graph.getNode(u.getId());
-			if(loaded != null)
-				u.setEdges(loaded.getEdges());
-		}
+		if(!u.isEdgesLoaded())
+			for(StreetEdge e : 	graph.getEdgesForNode(u))
+				graph.addEdge(e);				
 		
-		for(RouteableEdge e : u.getEdges()){
-			RouteableNode v = e.getOtherKnotThan(u);
+		for(StreetEdge e : graph.getEdgesForNode(u)){
+			StreetJunction v = e.getOtherKnotThan(u);
 			
 			if(!S.contains(v)){
 				if(Q.contains(v)){
@@ -92,9 +91,9 @@ public class AStar implements ShortestPath {
 		}
 	}
 
-	List<RouteableNode> buildShortestPathTo(RouteableNode endVertex) {
-		RouteableNode v = pi.get(endVertex);
-		LinkedList<RouteableNode> returnValue = new LinkedList<RouteableNode>();	
+	List<StreetJunction> buildShortestPathTo(StreetJunction endVertex) {
+		StreetJunction v = pi.get(endVertex);
+		LinkedList<StreetJunction> returnValue = new LinkedList<StreetJunction>();	
 		returnValue.add(v);
 		//System.out.println(pi);
 		while(v.getId() != startVertex.getId()){
@@ -107,7 +106,7 @@ public class AStar implements ShortestPath {
 	}
 
 	
-	void init(RouteableNode start){
+	void init(StreetJunction start){
 		if(heuristic == null)
 			heuristic = new DefaultHeuristic(endVertex);	
 		else
@@ -119,7 +118,7 @@ public class AStar implements ShortestPath {
 	}
 
 
-	private double heuristicForVertex(RouteableNode v) {			
+	private double heuristicForVertex(StreetJunction v) {			
 		//return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) /(50 * 2) ; //(Angenommene Durchschnittsgeschwindigkeit * Gewichtung) 
 		return this.heuristic.heuristicForVertex(v);
 	}

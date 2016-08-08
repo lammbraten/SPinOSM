@@ -7,33 +7,34 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class Dijkstra implements ShortestPath{
 	private StreetGraph graph; 
-	private TreeSet<RouteableNode> S;
-	private PriorityQueue<RouteableNode> Q;
-	private TreeMap<RouteableNode, RouteableNode> pi;
-	private RouteableNode startVertex;
-	private RouteableNode endVertex;	
+	private TreeSet<StreetJunction> S;
+	private PriorityQueue<StreetJunction> Q;
+	private TreeMap<StreetJunction, StreetJunction> pi;
+	private StreetJunction startVertex;
+	private StreetJunction endVertex;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
 		this.graph = streetgraph;
-		S = new TreeSet<RouteableNode>(new IdComparator());
-		Q = new PriorityQueue<RouteableNode>();		
-		pi = new TreeMap<RouteableNode, RouteableNode>(new IdComparator());
+		S = new TreeSet<StreetJunction>(new IdComparator());
+		Q = new PriorityQueue<StreetJunction>();		
+		pi = new TreeMap<StreetJunction, StreetJunction>(new IdComparator());
 	}
 	
-	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableNode> S, PriorityQueue<RouteableNode> Q) {
+	public Dijkstra(StreetGraph streetgraph, TreeSet<StreetJunction> S, PriorityQueue<StreetJunction> Q) {
 		this.graph = streetgraph;
 		this.S = S;
 		this.Q = Q;
 	}
 
 	@Override
-	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
+	public List<StreetJunction> getShortestPath(StreetJunction start, StreetJunction end) {
 		init(start);
 		endVertex = end;
 			
@@ -50,19 +51,17 @@ public class Dijkstra implements ShortestPath{
 	 * @param u
 	 */
 	void checkNextVertex() {
-		RouteableNode u = Q.poll();
+		StreetJunction u = Q.poll();
 		System.out.println(u.getId() + ": " + u.getDistance());
 		
 		S.add(u);
 		
-		if(!u.isEdgesLoaded()){
-			RouteableNode loaded = graph.getNode(u.getId());
-			if(loaded != null)
-				u.setEdges(loaded.getEdges());
-		}
+		if(!u.isEdgesLoaded())
+			for(StreetEdge e : 	graph.getEdgesForNode(u))
+				graph.addEdge(e);				
 		
-		for(RouteableEdge e : u.getEdges()){
-			RouteableNode v = e.getOtherKnotThan(u);
+		for(StreetEdge e : graph.getEdgesForNode(u)){
+			StreetJunction v = e.getOtherKnotThan(u);
 			
 			if(!S.contains(v)){
 				if(Q.contains(v)){						
@@ -84,9 +83,9 @@ public class Dijkstra implements ShortestPath{
 		}
 	}
 
-	List<RouteableNode> buildShortestPathTo(RouteableNode endVertex) {
-		RouteableNode v = pi.get(endVertex);
-		LinkedList<RouteableNode> returnValue = new LinkedList<RouteableNode>();	
+	List<StreetJunction> buildShortestPathTo(StreetJunction endVertex) {
+		StreetJunction v = pi.get(endVertex);
+		LinkedList<StreetJunction> returnValue = new LinkedList<StreetJunction>();	
 		returnValue.add(v);
 		//System.out.println(pi);
 		while(v.getId() != startVertex.getId()){
@@ -99,7 +98,7 @@ public class Dijkstra implements ShortestPath{
 	}
 
 	
-	void init(RouteableNode start){
+	void init(StreetJunction start){
 		startVertex = start;
 		startVertex.setDistance(0);
 		Q.add(graph.getNode(startVertex.getId()));
@@ -116,35 +115,35 @@ public class Dijkstra implements ShortestPath{
 		return graph;
 	}
 
-	public TreeSet<RouteableNode> getS() {
+	public TreeSet<StreetJunction> getS() {
 		return S;
 	}
 
-	public void setS(TreeSet<RouteableNode> s) {
+	public void setS(TreeSet<StreetJunction> s) {
 		S = s;
 	}
 
-	public PriorityQueue<RouteableNode> getQ() {
+	public PriorityQueue<StreetJunction> getQ() {
 		return Q;
 	}
 
-	public void setQ(PriorityQueue<RouteableNode> q) {
+	public void setQ(PriorityQueue<StreetJunction> q) {
 		Q = q;
 	}
 
-	public RouteableNode getStartVertex() {
+	public StreetJunction getStartVertex() {
 		return startVertex;
 	}
 
-	public void setStartVertex(RouteableNode startVertex) {
+	public void setStartVertex(StreetJunction startVertex) {
 		this.startVertex = startVertex;
 	}
 
-	public RouteableNode getEndVertex() {
+	public StreetJunction getEndVertex() {
 		return endVertex;
 	}
 
-	public void setEndVertex(RouteableNode endVertex) {
+	public void setEndVertex(StreetJunction endVertex) {
 		this.endVertex = endVertex;
 	}
 	

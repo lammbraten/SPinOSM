@@ -1,8 +1,9 @@
 package de.spinosm.graph.algorithm;
 
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 
 public class DepthFirstSearch {
 
@@ -14,29 +15,27 @@ public class DepthFirstSearch {
 		int depth = 0;
 		setMaxDepth(maxDepth);
 	
-		RouteableNode s = g.getNode(id);
+		StreetJunction s = g.getNode(id);
 		searchDepthFirst(s, depth);
 	}
 
 
-	private void searchDepthFirst(RouteableNode u, int depth){
+	private void searchDepthFirst(StreetJunction u, int depth){
 		u = mark(u);
 		
 		if(maxDepth <= depth)
 			return;
 		
-		for(RouteableEdge e : u.getEdges())
+		for(StreetEdge e : g.getEdgesForNode(u))
 			if(!e.getEnd().isEdgesLoaded())
 				searchDepthFirst(e.getEnd(), depth+1);
 	}
 	
-	private RouteableNode mark(RouteableNode u){
+	private StreetJunction mark(StreetJunction u){
 		//EdgesLoaded is like is Visible
-		if(!u.isEdgesLoaded()){ 
-			RouteableNode loaded = g.getNode(u.getId());
-			if(loaded != null)
-				u.setEdges(loaded.getEdges());
-		}
+		if(!u.isEdgesLoaded())
+			for(StreetEdge e : 	g.getEdgesForNode(u))
+				g.addEdge(e);				
 		return u;
 	}
 	

@@ -1,7 +1,7 @@
 package de.spinosm.graph.data;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
@@ -26,11 +26,6 @@ public class DefaultDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<StreetEdge> getStreetEdges(Collection<Long> ids) {
-		return null;
-	}
-
-	@Override
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
 		return null;
 	}
@@ -45,4 +40,9 @@ public class DefaultDataProvider implements DataProvider {
 		return null;
 	}
 
+	@Override
+	public Set<StreetEdge> getStreetEdgesForNode(StreetJunction sj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

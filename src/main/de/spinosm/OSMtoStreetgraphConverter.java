@@ -43,7 +43,7 @@ public class OSMtoStreetgraphConverter {
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
 			generateOSMFileReader();
-			new DepthFirstSearch(streetgraph, nid, 200l);
+			new DepthFirstSearch(streetgraph, nid, 1000l);
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
@@ -85,9 +85,9 @@ public class OSMtoStreetgraphConverter {
 				e.printStackTrace();
 			}
 		}
-		for(RouteableNode sj : previous.vertexSet()){
+		for(StreetJunction sj : destination.vertexSet()){
 			System.out.println(sj.getId());
-			System.out.println("\t" +sj.getEdges());
+			System.out.println("\t" +destination.edgesOf(sj));
 		}		
 
 	}
@@ -98,8 +98,8 @@ public class OSMtoStreetgraphConverter {
 		LinkedHashSet<StreetEdge> esubset = new LinkedHashSet<StreetEdge>();
 		for(StreetJunction sj : streetgraph.vertexSet()){
 			vsubset.add(sj);
-			esubset.addAll((Collection<? extends StreetEdge>) sj.getEdges());
-			if(vsubset.size() > 200){
+			esubset.addAll((Collection<? extends StreetEdge>) streetgraph.incomingEdgesOf(sj));
+			if(vsubset.size() > 100){
 				subgraphs.add(new DirectedWeightedSubgraph<StreetJunction, StreetEdge>(streetgraph.getGraph(), vsubset, esubset));
 				vsubset = new LinkedHashSet<StreetJunction>();
 				esubset = new LinkedHashSet<StreetEdge>();
@@ -110,7 +110,8 @@ public class OSMtoStreetgraphConverter {
 			int fileCounter = 0;
 			for(DirectedWeightedSubgraph<StreetJunction, StreetEdge> sg : subgraphs){
 				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outFile+fileCounter+".bin") );
-				oos.writeObject(sg.getBase());
+				DirectedGraph<StreetJunction, StreetEdge> toWrite = sg.getBase();
+				oos.writeObject(toWrite);
 				oos.close();			
 				fileCounter++;
 			}

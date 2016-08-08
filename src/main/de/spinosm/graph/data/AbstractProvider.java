@@ -1,13 +1,13 @@
 package de.spinosm.graph.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import de.spinosm.common.Common;
 import de.spinosm.common.Vehicle;
-import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.map.data.LatLon;
@@ -35,32 +35,19 @@ abstract class AbstractProvider implements DataProvider {
 		return null;
 	}
 
-	@Override
-	public List<StreetEdge> getStreetEdges(Collection<Long> ids) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	protected StreetJunction buildNewStreetJunction(OsmNode osmNode) {
 		StreetJunction returnValue;
-		LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
-		returnValue = new StreetJunction(osmNode, waysFromNode);
+		//LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
+		returnValue = new StreetJunction(osmNode);
 		return returnValue;
 	}
 	
-	protected LinkedList<RouteableEdge> getRouteableEdgesForNode(Node n) {
-		LinkedList<RouteableEdge> waysFromNode = new LinkedList<RouteableEdge>();
-		List<Way> ways = this.getWaysForNode(n.getId());
-		StreetJunction thatNode= new StreetJunction((OsmNode) n);
+	protected Set<StreetEdge> getRouteableEdgesForNode(StreetJunction sj) {
+		Set<StreetEdge> waysFromNode = new HashSet<StreetEdge>();
+		List<Way> ways = this.getWaysForNode(sj.getId());
 		for(Way way : ways){
 			try{
-				waysFromNode.addAll(parseToRouteableEdge(way, thatNode));
+				waysFromNode.addAll(parseToRouteableEdge(way, sj));
 			}catch(Exception e){
 				//System.out.println(e.getMessage());
 			}
@@ -69,8 +56,8 @@ abstract class AbstractProvider implements DataProvider {
 
 	}
 
-	protected List<RouteableEdge> parseToRouteableEdge(Way way, StreetJunction startingNode) {
-		List<RouteableEdge> edges = new LinkedList<RouteableEdge>();
+	protected List<StreetEdge> parseToRouteableEdge(Way way, StreetJunction startingNode) {
+		List<StreetEdge> edges = new LinkedList<StreetEdge>();
 		List<Long> nids = way.getNodeIds();
 		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
 		for(Node node : nodes){
@@ -117,7 +104,7 @@ abstract class AbstractProvider implements DataProvider {
 		return true;
 	}
 
-	protected RouteableEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
+	protected StreetEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){

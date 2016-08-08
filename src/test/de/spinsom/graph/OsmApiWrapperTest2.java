@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -40,16 +41,12 @@ public class OsmApiWrapperTest2 {
 	public void testGetStreetJunction() {
 		StreetJunction sj = osmapiwrapper.getStreetJunction(HAF_KOE);
 		System.out.println(sj.toString());
-		for(RouteableEdge e : sj.getEdges())
-			System.out.println("\t" + e.toString());
 		/*sj = osmapiwrapper.getStreetJunction(RA_GRO);
 		System.out.println(sj.toString());
 		for(RouteableEdge e : sj.getEdges())
 			System.out.println("\t" + e.toString());*/
 		sj = osmapiwrapper.getStreetJunction(HAF_HAF);
 		System.out.println(sj.toString());
-		for(RouteableEdge e : sj.getEdges())
-			System.out.println("\t" + e.toString());
 	}
 
 

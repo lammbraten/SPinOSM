@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
@@ -41,12 +42,7 @@ public class DepthFirstSearchTest {
 	public void testDFS() {
 		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA ,10l);
 		
-		for(RouteableNode rn : streetgraph.vertexSet()){
-			System.out.println(rn);
-			for(RouteableEdge re :rn.getEdges()){
-				System.out.println("\t" + re);
-			}
-		}
+		Common.writeStreetGraph(streetgraph);
 
 		GraphMapViewer gmv = new GraphMapViewer(streetgraph);	
 		try {

@@ -101,7 +101,7 @@ public class MainFrame extends JFrame {
 		streetgraph.addVertex(startJunction);
 		streetgraph.addVertex(endJunction);
         
-        List<RouteableNode> route = aStar.getShortestPath(startJunction, endJunction);
+        List<StreetJunction> route = aStar.getShortestPath(startJunction, endJunction);
         List<GeoPosition> track = new LinkedList<GeoPosition>();
         List<GeoPosition> graph = new LinkedList<GeoPosition>();
         

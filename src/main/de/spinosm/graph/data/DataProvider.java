@@ -2,6 +2,7 @@ package de.spinosm.graph.data;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
@@ -25,7 +26,7 @@ public interface DataProvider {
 	public StreetJunction getStreetJunction(long id);
 	public StreetEdge getStreetEdge(long id);
 	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id);
-	public List<StreetEdge>getStreetEdges(Collection<Long> ids);
+	public Set<StreetEdge>getStreetEdgesForNode(StreetJunction sj);
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id);
 	public List<Way> getWaysForNode(long id);
 	public List<Node> getWayNodesComplete(long id, List<Long> nids);

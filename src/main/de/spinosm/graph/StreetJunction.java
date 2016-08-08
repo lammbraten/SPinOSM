@@ -16,10 +16,11 @@ public class StreetJunction extends GraphNode implements Serializable {
 		super(0l, null);
 	}
 	
+	/*
 	public StreetJunction(OsmNode osmNode, LinkedList<RouteableEdge> edges){
 		super(osmNode.getId(), osmNode.getPosition());
 		this.setEdges(edges);	
-	}
+	}*/
 	
 	public StreetJunction(StreetJunction streetJunction) {
 		super(streetJunction.getId(), streetJunction.getPosition(), streetJunction.getDistance());
@@ -28,18 +29,7 @@ public class StreetJunction extends GraphNode implements Serializable {
 	public StreetJunction(OsmNode osmNode){
 		super(osmNode.getId() , osmNode.getPosition());		
 	}
-	
-	
-/*
-	@Override
-	public SerializableLatLon getPosition() {
-		return position;
-	}
-
-	public void setPosition(LatLon position) {
-		this.position = new SerializableLatLon(position);
-	}*/
-	
+		
 	@Override
 	public boolean equals(Object other) {
 		if(super.equals(other))
@@ -48,20 +38,21 @@ public class StreetJunction extends GraphNode implements Serializable {
 		return false;
 	}
 	
+	/*
 	@Override
 	public void setEdges(LinkedList<RouteableEdge> edges) {
 		if(edges != null){
 			super.setEdges(edges);	
 			this.setEdgesLoaded(true);			
 		}
-	}
+	}*/
 
 	@Override
 	public boolean isEdgesLoaded() {
 		return edgesLoaded;
 	}
 
-	private void setEdgesLoaded(boolean edgesLoaded) {
+	public void setEdgesLoaded(boolean edgesLoaded) {
 		this.edgesLoaded = edgesLoaded;
 	}
 }

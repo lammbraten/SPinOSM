@@ -2,6 +2,11 @@ package de.spinosm.common;
 
 import java.util.LinkedList;
 
+import de.spinosm.graph.RouteableEdge;
+import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.StreetEdge;
+import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Way;
 
@@ -114,5 +119,14 @@ public class Common {
 	
 	private static double toRad(double karth){
 		return karth * Math.PI / 180;
+	}
+	
+	public static void writeStreetGraph(StreetGraph sg){
+		for(StreetJunction sj : sg.vertexSet()){
+			System.out.println(sj);
+			for(StreetEdge se :sg.edgesOf(sj)){
+				System.out.println("\t" + se);
+			}
+		}
 	}
 }

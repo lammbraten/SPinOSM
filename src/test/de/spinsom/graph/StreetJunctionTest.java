@@ -27,8 +27,8 @@ public class StreetJunctionTest {
 
 	
 	private static final StreetJunction[] INITIAL_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1, null),
-			new StreetJunction(EXISTING_NODE3, null)
+			new StreetJunction(EXISTING_NODE1),
+			new StreetJunction(EXISTING_NODE3)
 	};
 
 	static OsmApiWrapper osmapiwrapper;

@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.TreeSet;
 
-import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
+import de.spinosm.graph.StreetJunction;
 
 public class BiDirectionalDijkstra implements ShortestPath{
 	private StreetGraph graph; 
 	private Dijkstra d1;
 	private Dijkstra d2;
-	private static RouteableNode startVertex;
-	private static RouteableNode endVertex;	
+	private static StreetJunction startVertex;
+	private static StreetJunction endVertex;	
 	
 	
 	public BiDirectionalDijkstra(StreetGraph streetgraph) {
@@ -25,7 +25,7 @@ public class BiDirectionalDijkstra implements ShortestPath{
 	}
 
 	@Override
-	public List<RouteableNode> getShortestPath(RouteableNode start, RouteableNode end) {
+	public List<StreetJunction> getShortestPath(StreetJunction start, StreetJunction end) {
 		startVertex = start;
 		endVertex = end;
 		
@@ -40,12 +40,12 @@ public class BiDirectionalDijkstra implements ShortestPath{
 		return buildShortestPath();
 	}
 
-	private List<RouteableNode> buildShortestPath() {
-		RouteableNode jointValue = intersectionOf(d1.getS(),d2.getS()).first();
-		List<RouteableNode> shortestSub1PathReverse = d1.buildShortestPathTo(jointValue);	
-		List<RouteableNode> shortestSub2Path = d2.buildShortestPathTo(jointValue);
-	    ListIterator<RouteableNode> listIterator = shortestSub1PathReverse.listIterator();
-		List<RouteableNode>  shortestPath = new LinkedList<RouteableNode>();
+	private List<StreetJunction> buildShortestPath() {
+		StreetJunction jointValue = intersectionOf(d1.getS(),d2.getS()).first();
+		List<StreetJunction> shortestSub1PathReverse = d1.buildShortestPathTo(jointValue);	
+		List<StreetJunction> shortestSub2Path = d2.buildShortestPathTo(jointValue);
+	    ListIterator<StreetJunction> listIterator = shortestSub1PathReverse.listIterator();
+		List<StreetJunction>  shortestPath = new LinkedList<StreetJunction>();
 		
 
 	    //vorwärts
@@ -71,8 +71,8 @@ public class BiDirectionalDijkstra implements ShortestPath{
 		
 	}
 
-	private TreeSet<RouteableNode> intersectionOf(TreeSet<RouteableNode> treeSet, TreeSet<RouteableNode> treeSet2){
-		TreeSet<RouteableNode> intersection = new TreeSet<RouteableNode>(treeSet);
+	private TreeSet<StreetJunction> intersectionOf(TreeSet<StreetJunction> treeSet, TreeSet<StreetJunction> treeSet2){
+		TreeSet<StreetJunction> intersection = new TreeSet<StreetJunction>(treeSet);
 		intersection.retainAll(treeSet2);
 		return intersection;
 	}

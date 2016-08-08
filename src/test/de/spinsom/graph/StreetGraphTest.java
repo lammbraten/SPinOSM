@@ -28,13 +28,13 @@ public class StreetGraphTest {
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(1861698092l, 2, 50.8978525, 7.0351034, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
 	private static final StreetJunction[] ALL_NODES_BUFFERED = {
-			new StreetJunction(EXISTING_NODE1, null),
-			new StreetJunction(EXISTING_NODE2, null),
-			new StreetJunction(EXISTING_NODE3, null)
+			new StreetJunction(EXISTING_NODE1),
+			new StreetJunction(EXISTING_NODE2),
+			new StreetJunction(EXISTING_NODE3)
 	};
 	private static final StreetJunction[] SOME_NODES_BUFFERED = {
-			new StreetJunction(EXISTING_NODE1, null),
-			new StreetJunction(EXISTING_NODE3, null)
+			new StreetJunction(EXISTING_NODE1),
+			new StreetJunction(EXISTING_NODE3)
 	};
 	private static final StreetJunction[] NO_NODES_BUFFERED = {
 	};
