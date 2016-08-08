@@ -55,4 +55,9 @@ public class StreetJunction extends GraphNode implements Serializable {
 	public void setEdgesLoaded(boolean edgesLoaded) {
 		this.edgesLoaded = edgesLoaded;
 	}
+	
+    @Override 
+    public int hashCode(){
+		return Long.hashCode(getId());
+    }
 }

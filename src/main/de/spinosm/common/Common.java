@@ -124,7 +124,7 @@ public class Common {
 	public static void writeStreetGraph(StreetGraph sg){
 		for(StreetJunction sj : sg.vertexSet()){
 			System.out.println(sj);
-			for(StreetEdge se :sg.edgesOf(sj)){
+			for(StreetEdge se :sg.getEdgesForNode(sj, false)){
 				System.out.println("\t" + se);
 			}
 		}

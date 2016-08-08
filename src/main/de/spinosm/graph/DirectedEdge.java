@@ -102,4 +102,9 @@ public abstract class DirectedEdge implements RouteableEdge{
 		return false;
 	}
     
+    @Override 
+    public int hashCode(){
+		return Long.hashCode(source.getId()) + Long.hashCode(target.getId());
+    }
+    
 }

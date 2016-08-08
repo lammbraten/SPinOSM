@@ -114,7 +114,7 @@ public class GraphMapViewer implements Observer{
 	private void prepareNodeEdgesForPainting() {
 		for(StreetJunction node : sg.vertexSet()){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(StreetEdge routeEdge : sg.edgesOf(node)){
+			for(StreetEdge routeEdge : sg.getEdgesForNode(node, false)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}

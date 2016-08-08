@@ -2,6 +2,7 @@ package de.spinosm.graph;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,7 +22,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	//private TreeSet<StreetJunction> nodes;
 	
 	public StreetGraph(DataProvider dataprovider){
-		super(StreetEdge.class);
+		super(new StreetEdgeFactory());
 		if(dataprovider == null)
 			this.dataprovider = new DefaultDataProvider();
 		else
@@ -30,7 +31,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	}
 	
 	public StreetGraph(DataProvider dataprovider, TreeSet<StreetJunction> nodes){
-		super(StreetEdge.class);
+		super(new StreetEdgeFactory());
 		this.dataprovider = dataprovider;;
 		for(StreetJunction v : nodes)
 			super.addVertex(v);
@@ -85,12 +86,12 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	
 	private void integrateNewNodeToGraph(StreetJunction newNode){
 		//Prüfe ob benachbarte knoten schon im graph. wenn ja verlinke sie
-		linkWithAlredyKnownNodes(newNode);
+//		linkWithAlredyKnownNodes(newNode);
 		super.addVertex(newNode);
 	}
 	
 	private void linkWithAlredyKnownNodes(StreetJunction newNode){
-		for(StreetEdge edge : super.edgesOf(newNode)){
+		for(StreetEdge edge : getEdgesForNode(newNode)){
 			StreetJunction other = (StreetJunction) edge.getOtherKnotThan(newNode);
 			if(super.containsVertex( other))
 					linkEdgeWithAlreedyKnownNode(edge, other);
@@ -116,11 +117,8 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		return super.addEdge(sourceVertex, targetVertex, e);
 	}
 
-	@Override
-	public boolean addVertex(StreetJunction v) {
-		return super.addVertex(v);
-	}
 
+	/*
 	@Override
 	public boolean containsEdge(StreetEdge e) {
 		try {
@@ -135,14 +133,15 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 
 	@Override
 	public boolean containsEdge(StreetJunction sourceVertex, StreetJunction targetVertex) {
-		try {if (super.containsEdge(sourceVertex, targetVertex))
+		try {
+			if (super.containsEdge(sourceVertex, targetVertex))
 				return true;
 			throw new Exception("Not implemented yet!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 
 	@Override
 	public boolean containsVertex(StreetJunction vertex) {
@@ -156,27 +155,62 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	}
 
 	public Set<StreetEdge> getEdgesForNode(StreetJunction sj) {
-		Set<StreetEdge>  returnValue = checkBufferedEdgeForId(sj);
-		if(returnValue != null)
+		Set<StreetEdge>  returnValue = checkBufferedOutgoingEdgeForId(sj);
+		if(!returnValue.isEmpty())
 			return returnValue;
 		else
 			return loadEdgesFormDataprovider(sj);
 	}
+	
 
-	private Set<StreetEdge> loadEdgesFormDataprovider(StreetJunction sj) {
-		sj.setEdgesLoaded(true);
-		return dataprovider.getStreetEdgesForNode(sj);
+	public Set<StreetEdge> getEdgesForNode(StreetJunction sj, boolean download) {
+		if(download)
+			return getEdgesForNode(sj);
+		return checkBufferedOutgoingEdgeForId(sj);
 	}
 
-	private Set<StreetEdge> checkBufferedEdgeForId(StreetJunction sj) {
-		return super.edgesOf(sj);
+
+	private Set<StreetEdge> loadEdgesFormDataprovider(StreetJunction sj) {
+		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForNode(sj);
+		for(StreetEdge e: edges)
+			addEdge(e);
+		sj.setEdgesLoaded(true);		
+		return edges;
+	}
+
+	private Set<StreetEdge> checkBufferedOutgoingEdgeForId(StreetJunction sj) {
+		Set<StreetEdge> edges = new HashSet<StreetEdge>();
+		try {
+			edges = super.edgesOf(sj);
+		} catch (Exception e) {}
+		return outgoingEdgesOf(sj, edges);
+		
+	}
+
+	private Set<StreetEdge> outgoingEdgesOf(StreetJunction sj, Set<StreetEdge> edges) {
+		Set<StreetEdge> outgoingEdges = new HashSet<StreetEdge>();
+		for(StreetEdge e: edges)
+			if(e.getStart().getId() == sj.getId())
+				outgoingEdges.add(e);
+		return outgoingEdges;
 	}
 
 	public void addEdge(StreetEdge e) {
-		super.addEdge(e.getStart(), e.getEnd());
-		StreetEdge se = super.getEdge(e.getStart(), e.getStart());
-		se.setWeight(e.getWeight());
+		super.addVertex(e.getEnd());
+		StreetEdge se = addEdge(e.getStart(), e.getEnd());
+		//StreetEdge se = getEdge(e.getStart(), e.getStart());
+		if(se != null)
+			se.setWeight(e.getWeight());
 	}
 
+	@Override
+	public Set<StreetEdge> edgesOf(StreetJunction v){
+		try {
+			throw new Exception("Don't use me. use getEdgesForNode(sj)");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

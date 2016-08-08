@@ -32,7 +32,7 @@ public class DepthFirstSearch {
 	}
 	
 	private StreetJunction mark(StreetJunction u){
-		//EdgesLoaded is like is Visible
+		//EdgesLoaded is like isVisible
 		if(!u.isEdgesLoaded())
 			for(StreetEdge e : 	g.getEdgesForNode(u))
 				g.addEdge(e);				
