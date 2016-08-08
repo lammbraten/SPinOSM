@@ -109,7 +109,11 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 
 	@Override
 	public StreetEdge addEdge(StreetJunction sourceVertex, StreetJunction targetVertex) {
-		return super.addEdge(sourceVertex, targetVertex);
+		try {
+			return super.addEdge(sourceVertex, targetVertex);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -203,6 +207,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 			se.setWeight(e.getWeight());
 	}
 
+	@SuppressWarnings("Deprecated")
 	@Override
 	public Set<StreetEdge> edgesOf(StreetJunction v){
 		try {

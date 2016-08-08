@@ -41,7 +41,7 @@ public class DepthFirstSearchTest {
 	@Test
 	public void testDFS() {
 		streetgraph.getNode(KOE_HA);
-		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA ,10l);
+		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA , 1000);
 		
 		Common.writeStreetGraph(streetgraph);
 

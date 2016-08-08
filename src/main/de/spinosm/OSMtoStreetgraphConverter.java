@@ -21,6 +21,7 @@ import org.jgrapht.graph.GraphUnion;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.graph.Subgraph;
 
+import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetEdge;
@@ -85,10 +86,7 @@ public class OSMtoStreetgraphConverter {
 				e.printStackTrace();
 			}
 		}
-		for(StreetJunction sj : destination.vertexSet()){
-			System.out.println(sj.getId());
-			System.out.println("\t" +destination.edgesOf(sj));
-		}		
+
 
 	}
 

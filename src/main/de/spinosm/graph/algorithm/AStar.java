@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import de.spinosm.common.Common;
-import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
@@ -113,6 +111,7 @@ public class AStar implements ShortestPath {
 			heuristic.setReferenceVertex(endVertex);
 		startVertex = start;
 		startVertex.setDistance(heuristicForVertex(startVertex));
+		graph.getEdgesForNode(startVertex);
 		Q.add(graph.getNode(startVertex.getId()));
 
 	}
