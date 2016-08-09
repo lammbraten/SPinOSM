@@ -101,6 +101,7 @@ public class Dijkstra implements ShortestPath{
 	void init(StreetJunction start){
 		startVertex = start;
 		startVertex.setDistance(0);
+		graph.getEdgesForNode(startVertex);
 		Q.add(graph.getNode(startVertex.getId()));
 	}
 

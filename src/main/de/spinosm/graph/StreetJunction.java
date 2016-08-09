@@ -2,8 +2,6 @@ package de.spinosm.graph;
 
 
 import java.io.Serializable;
-import java.util.LinkedList;
-
 import de.westnordost.osmapi.map.data.OsmNode;
 
 public class StreetJunction extends GraphNode implements Serializable {

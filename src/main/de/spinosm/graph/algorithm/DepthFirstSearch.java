@@ -44,9 +44,8 @@ public class DepthFirstSearch {
 	
 	private void searchDephtFirst(){
 		while(!Q.isEmpty()){
-			if(Q.peek().getId() == endVertex.getId())
-				return buildShortestPathTo(endVertex);
-			checkNextVertex();
+			StreetJunction sj = Q.peek();
+			//checkNextVertex();
 		}
 	}
 	

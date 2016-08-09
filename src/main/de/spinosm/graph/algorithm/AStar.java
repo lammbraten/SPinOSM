@@ -71,7 +71,7 @@ public class AStar implements ShortestPath {
 				if(Q.contains(v)){
 					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
 						
-					if(v.getDistance()  > (u.getDistance() + e.getWeight() /*+ heuristicForVertex(v)*/)){
+					if(v.getDistance()  > (u.getDistance() + e.getWeight() + heuristicForVertex(v))){
 						Q.remove(v);
 						v.setDistance(u.getDistance() + e.getWeight()  + heuristicForVertex(v));
 						Q.add(v);
