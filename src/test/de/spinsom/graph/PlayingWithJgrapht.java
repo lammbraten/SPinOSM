@@ -68,7 +68,7 @@ public class PlayingWithJgrapht {
 		//BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
 		//List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
 		//StreetGraph sg = bid.getGraph();		
-		ShortestPath sp = new BiDirectionalDijkstra(streetgraph);
+		ShortestPath sp = new Dijkstra(streetgraph);
 		List<StreetJunction> graphPath = sp.getShortestPath(startJunction, endJunction);
 		StreetGraph sg = sp.getGraph();	
 

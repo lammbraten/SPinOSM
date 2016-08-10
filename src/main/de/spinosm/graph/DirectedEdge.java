@@ -10,6 +10,8 @@ public abstract class DirectedEdge implements RouteableEdge{
 	private double weight;
 	
 	DirectedEdge(StreetJunction start, StreetJunction end, double weight){
+		if(start.equals(end))
+			return;
 		this.source = start;
 		this.target = end;
 		this.weight = weight;

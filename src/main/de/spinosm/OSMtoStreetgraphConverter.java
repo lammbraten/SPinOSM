@@ -44,7 +44,7 @@ public class OSMtoStreetgraphConverter {
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
 			generateOSMFileReader();
-			new DepthFirstSearch(streetgraph, nid, 1000l);
+			new DepthFirstSearch(streetgraph, nid, -1);
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
@@ -61,37 +61,28 @@ public class OSMtoStreetgraphConverter {
 	}
 
 	private static void readStreetgraph() {
-		
-		File outFileFolder = new File(new File(outFile+"0.bin").getParent());		
-		DirectedGraph<StreetJunction, StreetEdge> previous = null;
-		GraphUnion<StreetJunction, StreetEdge, DirectedGraph<StreetJunction, StreetEdge>> gu = null;		
-		DirectedGraph<StreetJunction, StreetEdge>destination = null;				
-		for(File file : outFileFolder.listFiles()){
-			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-				DirectedGraph<StreetJunction, StreetEdge> active = (DirectedGraph<StreetJunction, StreetEdge>) ois.readObject();
-				ois.close();
-				if(destination != null){
-					//gu = new GraphUnion<StreetJunction, StreetEdge, DirectedWeightedSubgraph<StreetJunction, StreetEdge>>(previous, active);
-					Graphs.addGraph(destination, active);					
-				}else{
-					destination = active;
-				}
-
-
-				//new GraphMapViewer(streetGraph2);					
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outFile+".bin"));
+			StreetGraph active = (StreetGraph) ois.readObject();
+			ois.close();
+			new GraphMapViewer(active);					
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
-
-
 	}
 
 	private static void writeStreetgraph() {
-		LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>> subgraphs = new LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>>();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outFile+".bin") );
+			oos.writeObject(streetgraph);
+			oos.close();				
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		/*LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>> subgraphs = new LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>>();
 		LinkedHashSet<StreetJunction> vsubset = new LinkedHashSet<StreetJunction>();
 		LinkedHashSet<StreetEdge> esubset = new LinkedHashSet<StreetEdge>();
 		for(StreetJunction sj : streetgraph.vertexSet()){
@@ -116,7 +107,7 @@ public class OSMtoStreetgraphConverter {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	private static void generateOSMFileReader() {
