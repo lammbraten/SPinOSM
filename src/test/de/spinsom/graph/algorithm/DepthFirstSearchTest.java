@@ -17,6 +17,8 @@ import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 
 public class DepthFirstSearchTest {
@@ -30,7 +32,8 @@ public class DepthFirstSearchTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//osmapi = new OsmApiWrapper();
-        osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
+		WeightFunction wf = new DefaultCostFunction();
+        osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm", wf);
 		streetgraph = new StreetGraph(osmapi);
 	}
 

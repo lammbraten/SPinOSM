@@ -13,13 +13,15 @@ import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
-import de.spinosm.graph.algorithm.DefaultHeuristic;
 import de.spinosm.graph.algorithm.Dijkstra;
-import de.spinosm.graph.algorithm.Heuristic;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.DefaultHeuristic;
+import de.spinosm.graph.weights.Heuristic;
+import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 
 
@@ -37,14 +39,16 @@ public class PlayingWithJgrapht {
 	private static long SCH_GU = 120044927l; //Kleve
 	private static long KREEFLD = 1556233014l; //KREFELD
 	private static long DORTMUND = 342488679l; //DORTMUND
+	private static long PADERBORN = 6566103l; 
 	
-	private static long start = KREEFLD;
-	private static long end = DORTMUND;
+	private static long start = DORTMUND;
+	private static long end = PADERBORN;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//osmapi = new OsmApiWrapper();
-        osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm");
+		WeightFunction wf = new DefaultCostFunction();
+        osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
 		streetgraph = new StreetGraph(osmapi);
 	}
 

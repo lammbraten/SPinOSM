@@ -26,6 +26,8 @@ import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
@@ -91,7 +93,8 @@ public class MainFrame extends JFrame {
         JXMapViewer map = jXMapKit.getMainMap();
         
         //OsmApiWrapper osmapi = new OsmApiWrapper();
-        LocalProvider osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
+        WeightFunction wf = new DefaultCostFunction();
+        LocalProvider osmapi = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm", wf);
         StreetGraph streetgraph = new StreetGraph(osmapi);
         ShortestPath aStar = new AStar(streetgraph, null);
                 

@@ -9,17 +9,21 @@ import java.util.TreeSet;
 
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.DefaultDataProvider;
+import de.spinosm.graph.weights.WeightFunction;
+import de.spinosm.graph.weights.DefaultCostFunction;
 
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, StreetEdge> implements Serializable, WeightedGraph<StreetJunction, StreetEdge>{
 
-
 	private static final long serialVersionUID = -67998995199008728L;
-	
 	transient private DataProvider dataprovider;
-	//private TreeSet<StreetJunction> nodes;
+
+	
+	/*public StreetGraph(DataProvider dataprovider){
+		this(dataprovider, null);
+	}*/
 	
 	public StreetGraph(DataProvider dataprovider){
 		super(new StreetEdgeFactory());
@@ -27,15 +31,14 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 			this.dataprovider = new DefaultDataProvider();
 		else
 			this.dataprovider = dataprovider;
-		this.dataprovider = dataprovider;
 	}
 	
-	public StreetGraph(DataProvider dataprovider, TreeSet<StreetJunction> nodes){
+	/*public StreetGraph(DataProvider dataprovider, TreeSet<StreetJunction> nodes){
 		super(new StreetEdgeFactory());
 		this.dataprovider = dataprovider;;
 		for(StreetJunction v : nodes)
 			super.addVertex(v);
-	}
+	}*/
 
 	public void setStreetJunctions(TreeSet<StreetJunction> junctions) {
 		if(junctions != null){

@@ -10,31 +10,16 @@ import de.spinosm.common.Common;
 import de.spinosm.common.Vehicle;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Way;
 
 abstract class AbstractProvider implements DataProvider {
-
-	@Override
-	public StreetJunction getStreetJunction(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public StreetEdge getStreetEdge(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	protected WeightFunction weightFunction;
+	
 	protected StreetJunction buildNewStreetJunction(OsmNode osmNode) {
 		StreetJunction returnValue;
 		//LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
@@ -159,7 +144,7 @@ abstract class AbstractProvider implements DataProvider {
 		LinkedList<LatLon> nodes = new LinkedList<LatLon>();
 		for(Node node : shapingNodes)
 			nodes.add(node.getPosition());
-		return Common.calcCost(nodes, way);
+		return weightFunction.calcCosts(nodes, way);
 	}
 
 	protected boolean isRouteableJunction(Node node) {

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
 import de.westnordost.osmapi.map.data.Way;
@@ -17,9 +18,10 @@ public class LocalProvider extends AbstractProvider{
 	private File xmlFile;
 	private OsmXmlFilerHandler osmxmlelements;
 	
-	public LocalProvider(String filePath){
+	public LocalProvider(String filePath, WeightFunction weightFunction){
 		this.xmlFile = new File(filePath);
 		osmxmlelements = new OsmXmlFilerHandler(xmlFile);
+		this.weightFunction = weightFunction;
 	}
 	
 	@Override

@@ -29,6 +29,8 @@ import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 
 public class OSMtoStreetgraphConverter {
@@ -111,7 +113,8 @@ public class OSMtoStreetgraphConverter {
 	}
 
 	private static void generateOSMFileReader() {
-		dataprovider = new LocalProvider(inFile);
+		WeightFunction wf = new DefaultCostFunction();
+		dataprovider = new LocalProvider(inFile, wf);
 		streetgraph = new StreetGraph(dataprovider);
 	}
 

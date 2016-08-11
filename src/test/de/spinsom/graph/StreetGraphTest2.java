@@ -20,6 +20,8 @@ import de.spinosm.graph.RouteableNode;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 import de.westnordost.osmapi.map.data.OsmNode;
 
@@ -64,12 +66,13 @@ public class StreetGraphTest2 {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		osmapiwrapper = new OsmApiWrapper();
+		WeightFunction wf = new DefaultCostFunction();
+		osmapiwrapper = new OsmApiWrapper(wf);
 		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
 		for(StreetJunction sj : INITIAL_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
-		streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
+		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
 	}
 	
 	@Before
@@ -78,7 +81,7 @@ public class StreetGraphTest2 {
 		for(StreetJunction sj : INITIAL_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
-		streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
+		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
 	}
 
 

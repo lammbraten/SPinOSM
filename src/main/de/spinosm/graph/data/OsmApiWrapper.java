@@ -7,6 +7,7 @@ import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmConnectionException;
 import de.westnordost.osmapi.map.MapDataDao;
@@ -38,7 +39,7 @@ public class OsmApiWrapper extends AbstractProvider{
 	private OsmElementCache<Node> osmNodeListBuffer;
 	private OsmElementCache<Way> osmWaysOfNodeBuffer;
 	
-	public OsmApiWrapper(){
+	public OsmApiWrapper(WeightFunction weightFunction){
 		OAuthConsumer auth = new DefaultOAuthConsumer("CuPCn3sRc8FDiepAoSkH4a9n7w2QuqVCykStfVPG", 
 				"D1nX6BF1NMAZtIq8ouGJJ7zGtSaTRDTz8QfZl5mo");
 		auth.setTokenWithSecret(
@@ -49,6 +50,8 @@ public class OsmApiWrapper extends AbstractProvider{
 
 		osmNodeListBuffer = new OsmElementCache<Node>();
 		osmWaysOfNodeBuffer = new OsmElementCache<Way>();
+		
+		this.weightFunction = weightFunction;
 	}
 	
 	public Node getNode(long id){

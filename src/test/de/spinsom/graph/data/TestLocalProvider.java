@@ -5,6 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 
 public class TestLocalProvider {
 
@@ -12,7 +14,8 @@ public class TestLocalProvider {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		lp = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm");
+		WeightFunction wf = new DefaultCostFunction();
+		lp = new LocalProvider("E:\\OSM-Files\\OSM.compiler\\deliveries\\dues-RB_hw.clean.norel.osm", wf);
 	}
 
 	@AfterClass

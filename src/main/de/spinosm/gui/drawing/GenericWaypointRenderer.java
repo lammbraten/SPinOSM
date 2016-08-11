@@ -22,7 +22,7 @@ public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 		int x = (int)point.getX();
 		int y = (int)point.getY();
 		
-	    g.setColor(Color.RED);
+	    g.setColor(new Color(0, 143, 255));
 	    g.fillOval(x-r, y-r, d, d);
 
 		g.dispose();

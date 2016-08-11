@@ -16,6 +16,8 @@ import org.junit.runners.Parameterized.Parameters;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.OsmNode;
 
 @RunWith(Parameterized.class)
@@ -63,13 +65,14 @@ public class StreetGraphTest {
 		for(StreetJunction sj : buffer){
 			bufferedTreeSet.add(sj);
 		}
-		streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);		
+		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);		
 		this.testSet = testSet;
 	}
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		osmapiwrapper = new OsmApiWrapper();
+		WeightFunction wf = new DefaultCostFunction();
+		osmapiwrapper = new OsmApiWrapper(wf);
 	}
 
 	@AfterClass

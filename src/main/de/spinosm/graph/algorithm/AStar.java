@@ -9,6 +9,8 @@ import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.pattern.IdComparator;
+import de.spinosm.graph.weights.DefaultHeuristic;
+import de.spinosm.graph.weights.Heuristic;
 
 public class AStar implements ShortestPath {
 	private StreetGraph graph; 
@@ -71,9 +73,9 @@ public class AStar implements ShortestPath {
 				if(Q.contains(v)){
 					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
 						
-					if(v.getDistance()  > (u.getDistance() + e.getWeight() + heuristicForVertex(v))){
+					if(v.getDistance()  > (u.getDistance() + e.getWeight()  + heuristicForVertex(u))){
 						Q.remove(v);
-						v.setDistance(u.getDistance() + e.getWeight()  + heuristicForVertex(v));
+						v.setDistance(u.getDistance() + e.getWeight()   + heuristicForVertex(v));
 						Q.add(v);
 						pi.put(v, u);
 						System.out.println("--" + v.getId() + " now: " + v.getDistance());

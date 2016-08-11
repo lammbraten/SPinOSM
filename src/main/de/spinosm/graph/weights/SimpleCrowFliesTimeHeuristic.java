@@ -1,4 +1,4 @@
-package de.spinosm.graph.algorithm;
+package de.spinosm.graph.weights;
 
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableNode;

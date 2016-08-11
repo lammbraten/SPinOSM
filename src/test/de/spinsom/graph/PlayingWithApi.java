@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.Way;
 
@@ -29,8 +31,8 @@ public class PlayingWithApi {
 			3580697599l,
 			283390258l,
 			415866943l};
-	
-	private static OsmApiWrapper osmapi = new OsmApiWrapper();
+	private static WeightFunction wf = new DefaultCostFunction();
+	private static OsmApiWrapper osmapi = new OsmApiWrapper(wf);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

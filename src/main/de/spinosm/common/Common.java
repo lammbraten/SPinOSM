@@ -33,49 +33,7 @@ public class Common {
 		return false;
 	}
 	
-
-	public static double getSpeedLimits(Way way, Vehicle vehicle) {
-		if(way.getTags().containsKey("highway")){
-			switch(vehicle){
-			case CAR:
-				return OsmHighwayValues.getCarSpeedLimits(way);	
-			case TRUCK:
-				return OsmHighwayValues.getTruckSpeedLimits(way);
-			case PEDESTRIAN:
-				return OsmHighwayValues.getPedestrianSpeeds(way);
-			case BICYCLE:
-				return OsmHighwayValues.getBycicleSpeeds(way);
-			default:
-				throw new IllegalArgumentException("Vehicle unknown!");
-			}
-		}
-		throw new IllegalArgumentException("Not a Highway!");
-	}
-
-	public static double calcCost(LinkedList<LatLon> nodes, Way way) {
-		double distance = 0.0;
-		for(int i = 0; i < nodes.size()-1; i++)
-				distance += calcDistance(nodes.get(i), nodes.get(i+1));		
-		double speed = getSpeedLimits(way, Vehicle.CAR);
-		return distance / speed;
-	}
-	
-	/**
-	 * Pythagoras. Großer Fehler, aber wesentlich schneller.
-	 * @param node1
-	 * @param node2
-	 * @return
-	 */
-	public static double calcDistance(LatLon node1 , LatLon node2){
-	    double lat1 = toRad(node1.getLatitude());
-	    double lat2 = toRad(node2.getLatitude());
-	    double lon1 = toRad(node1.getLongitude());
-	    double lon2 = toRad(node2.getLongitude());
-
-	    return EARTHRADIUS * pythagoras(lat1, lat2, lon1, lon2);
-	}
-	
-	private static double pythagoras(double lat1, double lat2, double lon1, double lon2) {
+	public static double pythagoras(double lat1, double lat2, double lon1, double lon2) {
 		return Math.sqrt(
 				Math.pow((lat1-lat2),2) +
 				Math.pow((lon1-lon2),2)
@@ -117,7 +75,7 @@ public class Common {
 	    		));
 	}
 	
-	private static double toRad(double karth){
+	public static double toRad(double karth){
 		return karth * Math.PI / 180;
 	}
 	

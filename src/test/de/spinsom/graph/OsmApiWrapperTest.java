@@ -17,6 +17,8 @@ import org.junit.runners.Parameterized.Parameters;
 
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;
+import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.WeightFunction;
 
 @RunWith(Parameterized.class)
 public class OsmApiWrapperTest {
@@ -64,7 +66,8 @@ public class OsmApiWrapperTest {
  	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		osmapiwrapper = new OsmApiWrapper();
+		WeightFunction wf = new DefaultCostFunction();
+		osmapiwrapper = new OsmApiWrapper(wf);
 	}
 
 	@AfterClass

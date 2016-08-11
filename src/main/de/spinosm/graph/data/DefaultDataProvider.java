@@ -42,7 +42,6 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public Set<StreetEdge> getStreetEdgesForNode(StreetJunction sj) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
