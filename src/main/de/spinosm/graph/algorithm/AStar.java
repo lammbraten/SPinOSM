@@ -63,10 +63,10 @@ public class AStar implements ShortestPath {
 		S.add(u);
 		
 		if(!u.isEdgesLoaded())
-			for(StreetEdge e : 	graph.getEdgesForNode(u))
+			for(StreetEdge e : 	graph.getEdgesForNode(u, StreetGraph.DEFAULT_DIRECTION))
 				graph.addEdge(e);				
 		
-		for(StreetEdge e : graph.getEdgesForNode(u)){
+		for(StreetEdge e : graph.getEdgesForNode(u, StreetGraph.DEFAULT_DIRECTION)){
 			StreetJunction v = e.getOtherKnotThan(u);
 			
 			if(!S.contains(v)){
@@ -113,7 +113,7 @@ public class AStar implements ShortestPath {
 			heuristic.setReferenceVertex(endVertex);
 		startVertex = start;
 		startVertex.setDistance(heuristicForVertex(startVertex));
-		graph.getEdgesForNode(startVertex);
+		graph.getEdgesForNode(startVertex, StreetGraph.DEFAULT_DIRECTION);
 		Q.add(graph.getNode(startVertex.getId()));
 
 	}
