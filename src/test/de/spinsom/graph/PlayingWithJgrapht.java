@@ -1,8 +1,6 @@
 package de.spinsom.graph;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,10 +14,8 @@ import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
 import de.spinosm.graph.algorithm.Dijkstra;
-import de.spinosm.graph.algorithm.ObservableShortestPath;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.DataProvider;
-import de.spinosm.graph.data.DefaultDataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
@@ -27,7 +23,6 @@ import de.spinosm.graph.weights.DefaultHeuristic;
 import de.spinosm.graph.weights.Heuristic;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
-import de.spinosm.gui.ShortestPathObserver;
 
 
 public class PlayingWithJgrapht {
@@ -46,19 +41,15 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = CAMPUS_WEST;
-	private static long end = EI_KOE;
+	private static long start = DORTMUND;
+	private static long end = PADERBORN;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//osmapi = new OsmApiWrapper();
 		WeightFunction wf = new DefaultCostFunction();
-        //osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
-		//streetgraph = new StreetGraph(osmapi);
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\dues-RB.streets2.streetgraph.bin"));
-		streetgraph = (StreetGraph) ois.readObject();
-		streetgraph.setDataprovider(new DefaultDataProvider());
-		ois.close();
+        osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
+		streetgraph = new StreetGraph(osmapi);
 	}
 
 	@AfterClass
@@ -67,13 +58,11 @@ public class PlayingWithJgrapht {
 
 	@Test
 	public void test() {
-		//StreetJunction startJunction = osmapi.getStreetJunction(start);
-		//StreetJunction endJunction = osmapi.getStreetJunction(end);
-		StreetJunction startJunction = streetgraph.getNode(start);
-		StreetJunction endJunction = streetgraph.getNode(end);
+		StreetJunction startJunction = osmapi.getStreetJunction(start);
+		StreetJunction endJunction = osmapi.getStreetJunction(end);
 		
-		//streetgraph.addVertex(startJunction);
-		//streetgraph.addVertex(endJunction);
+		streetgraph.addVertex(startJunction);
+		streetgraph.addVertex(endJunction);
 		
 		//DijkstraShortestPath<RouteableNode, StreetEdge> dijkstra = new DijkstraShortestPath<RouteableNode, StreetEdge>(streetgraph, startJunction, endJunction);
 		
@@ -82,21 +71,12 @@ public class PlayingWithJgrapht {
 		//List<RouteableNode> graphPath = new Dijkstra(streetgraph).getShortestPath(startJunction, endJunction);
 		//BiDirectionalDijkstra bid = new BiDirectionalDijkstra(streetgraph);
 		//List<RouteableNode> graphPath = bid.getShortestPath(startJunction, endJunction);
-		//StreetGraph sg = bid.getGraph();	
-
-		//Thread gmvt = new Thread(gmv);
-		//gmvt.start();
-		ShortestPathObserver spo = new ShortestPathObserver();
-		//spo.start();
-		ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
-		//sp.addObserver(spo);
-		//sp.addObserver(gmv);
-
-		
+		//StreetGraph sg = bid.getGraph();		
+		ShortestPath sp = new Dijkstra(streetgraph);
 		List<StreetJunction> graphPath = sp.getShortestPath(startJunction, endJunction);
 		StreetGraph sg = sp.getGraph();	
 
-		GraphMapViewer gmv = new GraphMapViewer(sg, graphPath);	
+		
 		
 
 		
@@ -105,7 +85,7 @@ public class PlayingWithJgrapht {
 		for(RouteableNode n : graphPath)
 			System.out.println(n.getId() + ": " + n.getDistance());
 		System.out.println("------------");		
-		//GraphMapViewer gmv = new GraphMapViewer(sg, graphPath);	
+		GraphMapViewer gmv = new GraphMapViewer(sg, graphPath);	
 		try {
 			System.in.read();
 		} catch (IOException e) {

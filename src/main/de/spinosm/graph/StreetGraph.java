@@ -19,7 +19,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 
 	private static final long serialVersionUID = -67998995199008728L;
 	transient private DataProvider dataprovider;
-	public static int DEFAULT_DIRECTION = 1;
 
 	
 	/*public StreetGraph(DataProvider dataprovider){
@@ -95,7 +94,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 	}
 	
 	private void linkWithAlredyKnownNodes(StreetJunction newNode){
-		for(StreetEdge edge : getEdgesForNode(newNode, DEFAULT_DIRECTION)){
+		for(StreetEdge edge : getEdgesForNode(newNode)){
 			StreetJunction other = (StreetJunction) edge.getOtherKnotThan(newNode);
 			if(super.containsVertex( other))
 					linkEdgeWithAlreedyKnownNode(edge, other);
@@ -162,21 +161,19 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		return this;
 	}
 
-	public Set<StreetEdge> getEdgesForNode(StreetJunction sj, int direction) {
-		Set<StreetEdge>  returnValue = checkBufferedEdgeForId(sj, direction);
+	public Set<StreetEdge> getEdgesForNode(StreetJunction sj) {
+		Set<StreetEdge>  returnValue = checkBufferedOutgoingEdgeForId(sj);
 		if(!returnValue.isEmpty())
 			return returnValue;
-		else{
-			loadEdgesFormDataprovider(sj);
-			return checkBufferedEdgeForId(sj, direction); //Had to that because, Loading From dataprovider with direction makes no sense
-		}
+		else
+			return loadEdgesFormDataprovider(sj);
 	}
 	
 
-	public Set<StreetEdge> getEdgesForNode(StreetJunction sj, int direction, boolean download) {
+	public Set<StreetEdge> getEdgesForNode(StreetJunction sj, boolean download) {
 		if(download)
-			return getEdgesForNode(sj, direction);
-		return checkBufferedEdgeForId(sj, direction);
+			return getEdgesForNode(sj);
+		return checkBufferedOutgoingEdgeForId(sj);
 	}
 
 
@@ -188,24 +185,13 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 		return edges;
 	}
 
-	private Set<StreetEdge> checkBufferedEdgeForId(StreetJunction sj, int direction) {
+	private Set<StreetEdge> checkBufferedOutgoingEdgeForId(StreetJunction sj) {
 		Set<StreetEdge> edges = new HashSet<StreetEdge>();
 		try {
 			edges = super.edgesOf(sj);
 		} catch (Exception e) {}
-		if(direction > 0)
-			return outgoingEdgesOf(sj, edges);
-		else
-			return incomingEdgesOf(sj, edges);
+		return outgoingEdgesOf(sj, edges);
 		
-	}
-
-	private Set<StreetEdge> incomingEdgesOf(StreetJunction sj, Set<StreetEdge> edges) {
-		Set<StreetEdge> incomingEdges = new HashSet<StreetEdge>();
-		for(StreetEdge e: edges)
-			if(e.getEnd().getId() == sj.getId())
-				incomingEdges.add(e);
-		return incomingEdges;
 	}
 
 	private Set<StreetEdge> outgoingEdgesOf(StreetJunction sj, Set<StreetEdge> edges) {
@@ -233,14 +219,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetJunction, Str
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public DataProvider getDataprovider() {
-		return dataprovider;
-	}
-
-	public void setDataprovider(DataProvider dataprovider) {
-		this.dataprovider = dataprovider;
 	}
 
 }
