@@ -1,17 +1,19 @@
 package de.spinosm.graph.data;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.Way;
 
 public class DefaultDataProvider implements DataProvider {
 
 	@Override
-	public StreetJunction getStreetJunction(long id) {
+	public StreetVertex getStreetJunction(long id) {
 		return null;
 	}
 
@@ -21,13 +23,13 @@ public class DefaultDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id) {
+	public List<StreetVertex> getStreetJunctionsForStreetEdge(long id) {
 		return null;
 	}
 
 	@Override
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
-		return null;
+		return new LinkedList<StreetEdge>();
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class DefaultDataProvider implements DataProvider {
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForNode(StreetJunction sj) {
-		return null;
+	public Set<StreetEdge> getStreetEdgesForNode(StreetVertex sj) {
+		return new HashSet<StreetEdge>();
 	}
 }

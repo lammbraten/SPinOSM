@@ -23,15 +23,16 @@ import org.jgrapht.graph.Subgraph;
 
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
+import de.spinosm.gui.ShortestPathObserver;
 
 public class OSMtoStreetgraphConverter {
 	private static Matcher matcher;
@@ -46,7 +47,10 @@ public class OSMtoStreetgraphConverter {
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
 			generateOSMFileReader();
-			new DepthFirstSearch(streetgraph, nid, -1);
+			//ShortestPathObserver spo = new ShortestPathObserver();			
+			new DepthFirstSearch(streetgraph, nid, 5000000);
+
+			
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
@@ -67,12 +71,9 @@ public class OSMtoStreetgraphConverter {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outFile+".bin"));
 			StreetGraph active = (StreetGraph) ois.readObject();
 			ois.close();
-			new GraphMapViewer(active);					
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+			Thread gmvt = new Thread(new GraphMapViewer(active));
+			gmvt.start();
+		} catch (IOException|ClassNotFoundException e) {e.printStackTrace();}
 	}
 
 	private static void writeStreetgraph() {
@@ -83,33 +84,6 @@ public class OSMtoStreetgraphConverter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		/*LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>> subgraphs = new LinkedHashSet<DirectedWeightedSubgraph<StreetJunction, StreetEdge>>();
-		LinkedHashSet<StreetJunction> vsubset = new LinkedHashSet<StreetJunction>();
-		LinkedHashSet<StreetEdge> esubset = new LinkedHashSet<StreetEdge>();
-		for(StreetJunction sj : streetgraph.vertexSet()){
-			vsubset.add(sj);
-			esubset.addAll((Collection<? extends StreetEdge>) streetgraph.incomingEdgesOf(sj));
-			if(vsubset.size() > 100){
-				subgraphs.add(new DirectedWeightedSubgraph<StreetJunction, StreetEdge>(streetgraph.getGraph(), vsubset, esubset));
-				vsubset = new LinkedHashSet<StreetJunction>();
-				esubset = new LinkedHashSet<StreetEdge>();
-			}
-		}		
-		
-		try {
-			int fileCounter = 0;
-			for(DirectedWeightedSubgraph<StreetJunction, StreetEdge> sg : subgraphs){
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(outFile+fileCounter+".bin") );
-				DirectedGraph<StreetJunction, StreetEdge> toWrite = sg.getBase();
-				oos.writeObject(toWrite);
-				oos.close();			
-				fileCounter++;
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	private static void generateOSMFileReader() {

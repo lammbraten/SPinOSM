@@ -9,7 +9,7 @@ import java.util.Set;
 import de.spinosm.common.Common;
 import de.spinosm.common.Vehicle;
 import de.spinosm.graph.StreetEdge;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Node;
@@ -20,14 +20,13 @@ abstract class AbstractProvider implements DataProvider {
 	
 	protected WeightFunction weightFunction;
 	
-	protected StreetJunction buildNewStreetJunction(OsmNode osmNode) {
-		StreetJunction returnValue;
-		//LinkedList<RouteableEdge> waysFromNode = getRouteableEdgesForNode(osmNode);	
-		returnValue = new StreetJunction(osmNode);
+	protected StreetVertex buildNewStreetVertex(OsmNode osmNode) {
+		StreetVertex returnValue;	
+		returnValue = new StreetVertex(osmNode);
 		return returnValue;
 	}
 	
-	protected Set<StreetEdge> getRouteableEdgesForNode(StreetJunction sj) {
+	protected Set<StreetEdge> getRouteableEdgesForVertex(StreetVertex sj) {
 		Set<StreetEdge> waysFromNode = new HashSet<StreetEdge>();
 		List<Way> ways = this.getWaysForNode(sj.getId());
 		for(Way way : ways){
@@ -41,7 +40,7 @@ abstract class AbstractProvider implements DataProvider {
 
 	}
 
-	protected List<StreetEdge> parseToRouteableEdge(Way way, StreetJunction startingNode) {
+	protected List<StreetEdge> parseToRouteableEdge(Way way, StreetVertex startingNode) {
 		List<StreetEdge> edges = new LinkedList<StreetEdge>();
 		List<Long> nids = way.getNodeIds();
 		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
@@ -89,34 +88,25 @@ abstract class AbstractProvider implements DataProvider {
 		return true;
 	}
 
-	protected StreetEdge shapeNewEdgeUpTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
+	protected StreetEdge shapeNewEdgeUpTheRoad(Way way, StreetVertex startingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
 			shapingNodes.add(nodes.get(i));
 			if(isRouteableJunction(nodes.get(i))){
-				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
+				return new StreetEdge(startingNode, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 			}
 		}
 		throw new Exception("No junction found");
 	}
 
-	/**
-	 * @param way
-	 * @param startingNode
-	 * @param nodes
-	 * @param node
-	 * @param shapingNodes
-	 * @return 
-	 * @throws Exception 
-	 */
-	protected StreetEdge shapeNewEdgeDownTheRoad(Way way, StreetJunction startingNode, List<Node> nodes, Node node) throws Exception {
+	protected StreetEdge shapeNewEdgeDownTheRoad(Way way, StreetVertex startingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
 			shapingNodes.add(nodes.get(i));
 			if(isRouteableJunction(nodes.get(i))){
-				return new StreetEdge(startingNode, new StreetJunction((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
+				return new StreetEdge(startingNode, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 			}
 		}
 		throw new Exception("No junction found");

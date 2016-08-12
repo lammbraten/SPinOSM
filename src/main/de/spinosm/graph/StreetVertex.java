@@ -4,27 +4,20 @@ package de.spinosm.graph;
 import java.io.Serializable;
 import de.westnordost.osmapi.map.data.OsmNode;
 
-public class StreetJunction extends GraphNode implements Serializable {
+public class StreetVertex extends GraphVertex implements Serializable {
 
 	private static final long serialVersionUID = -6564943151645680174L;
 	private boolean edgesLoaded = false;
 	
-	
-	public StreetJunction(){
+	public StreetVertex(){
 		super(0l, null);
 	}
 	
-	/*
-	public StreetJunction(OsmNode osmNode, LinkedList<RouteableEdge> edges){
-		super(osmNode.getId(), osmNode.getPosition());
-		this.setEdges(edges);	
-	}*/
-	
-	public StreetJunction(StreetJunction streetJunction) {
+	public StreetVertex(StreetVertex streetJunction) {
 		super(streetJunction.getId(), streetJunction.getPosition(), streetJunction.getDistance());
 	}
 	
-	public StreetJunction(OsmNode osmNode){
+	public StreetVertex(OsmNode osmNode){
 		super(osmNode.getId() , osmNode.getPosition());		
 	}
 		
@@ -35,15 +28,6 @@ public class StreetJunction extends GraphNode implements Serializable {
 				return true;
 		return false;
 	}
-	
-	/*
-	@Override
-	public void setEdges(LinkedList<RouteableEdge> edges) {
-		if(edges != null){
-			super.setEdges(edges);	
-			this.setEdgesLoaded(true);			
-		}
-	}*/
 
 	@Override
 	public boolean isEdgesLoaded() {

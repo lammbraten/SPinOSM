@@ -1,8 +1,8 @@
 package de.spinosm.graph.weights;
 
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 
 public interface Heuristic {
-	public double heuristicForVertex(RouteableNode v);
-	public void setReferenceVertex(RouteableNode v);
+	public double heuristicForVertex(RouteableVertex v);
+	public void setReferenceVertex(RouteableVertex v);
 }

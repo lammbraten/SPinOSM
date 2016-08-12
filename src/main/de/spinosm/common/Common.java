@@ -3,10 +3,10 @@ package de.spinosm.common;
 import java.util.LinkedList;
 
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.Way;
 
@@ -80,9 +80,9 @@ public class Common {
 	}
 	
 	public static void writeStreetGraph(StreetGraph sg){
-		for(StreetJunction sj : sg.vertexSet()){
+		for(StreetVertex sj : sg.vertexSet()){
 			System.out.println(sj);
-			for(StreetEdge se :sg.getEdgesForNode(sj, false)){
+			for(StreetEdge se :sg.getEdgesForVertex(sj, 1)){
 				System.out.println("\t" + se);
 			}
 		}

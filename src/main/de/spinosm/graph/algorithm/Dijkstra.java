@@ -6,103 +6,110 @@ import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.IdComparator;
 
-public class Dijkstra implements ShortestPath{
+public class Dijkstra extends ObservableShortestPath{
 	private StreetGraph graph; 
-	private TreeSet<StreetJunction> S;
-	private PriorityQueue<StreetJunction> Q;
-	private TreeMap<StreetJunction, StreetJunction> pi;
-	private StreetJunction startVertex;
-	private StreetJunction endVertex;	
+	private TreeSet<StreetVertex> visitedVertecies;
+	private PriorityQueue<StreetVertex> toVisitVertecies;
+	private TreeMap<StreetVertex, StreetVertex> shortestPathMap;
+	private StreetVertex startVertex;
+	private StreetVertex endVertex;
+	private int direction;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
-		this.graph = streetgraph;
-		S = new TreeSet<StreetJunction>(new IdComparator());
-		Q = new PriorityQueue<StreetJunction>();		
-		pi = new TreeMap<StreetJunction, StreetJunction>(new IdComparator());
+		this(streetgraph, StreetGraph.DEFAULT_DIRECTION);
 	}
 	
-	public Dijkstra(StreetGraph streetgraph, TreeSet<StreetJunction> S, PriorityQueue<StreetJunction> Q) {
+	public Dijkstra(StreetGraph streetgraph, int direction){
 		this.graph = streetgraph;
-		this.S = S;
-		this.Q = Q;
+		this.direction = direction;
+		visitedVertecies = new TreeSet<StreetVertex>(new IdComparator());
+		toVisitVertecies = new PriorityQueue<StreetVertex>();		
+		shortestPathMap = new TreeMap<StreetVertex, StreetVertex>(new IdComparator());
+	}
+	
+	public Dijkstra(StreetGraph streetgraph, TreeSet<StreetVertex> visitedVertecies, PriorityQueue<StreetVertex> toVisitVertecies) {
+		this.graph = streetgraph;
+		this.visitedVertecies = visitedVertecies;
+		this.toVisitVertecies = toVisitVertecies;
 	}
 
 	@Override
-	public List<StreetJunction> getShortestPath(StreetJunction start, StreetJunction end) {
+	public List<StreetVertex> getShortestPath(StreetVertex start, StreetVertex end) {
 		init(start);
 		endVertex = end;
 			
-		while(!Q.isEmpty()){
-			if(Q.peek().getId() == endVertex.getId())
+		while(!toVisitVertecies.isEmpty()){
+			if(isEndVertexFound())
 				return buildShortestPathTo(endVertex);
 			checkNextVertex();
 		}
 		return null;
 	}
-
-	/**
-	 * @param pi
-	 * @param u
-	 */
+	
 	void checkNextVertex() {
-		StreetJunction u = Q.poll();
-		System.out.println(u.getId() + ": " + u.getDistance());
-		
-		S.add(u);
+		StreetVertex u = toVisitVertecies.poll();
+		visitedVertecies.add(u);
+		setChanged();
+		notifyObservers(u);		
 		
 		if(!u.isEdgesLoaded())
-			for(StreetEdge e : 	graph.getEdgesForNode(u))
-				graph.addEdge(e);				
+			loadEdges(u);				
 		
-		for(StreetEdge e : graph.getEdgesForNode(u)){
-			StreetJunction v = e.getOtherKnotThan(u);
-			
-			if(!S.contains(v)){
-				if(Q.contains(v)){						
-					if(v.getDistance()  > (u.getDistance() + e.getWeight())){
-						Q.remove(v);
-						v.setDistance(u.getDistance() + e.getWeight());
-						Q.add(v);
-						pi.put(v, u);
-						System.out.println("--" + v.getId() + " now: " + v.getDistance());
-
-					}
+		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
+			StreetVertex v = e.getOtherKnotThan(u);
+			if(!visitedVertecies.contains(v)){
+				if(toVisitVertecies.contains(v)){					
+					if(v.getDistance() > (u.getDistance() + e.getWeight()))
+						decraeseValue(u, e, v);
 				}else{
-					v.setDistance(u.getDistance() + e.getWeight());						
-					Q.add(v);
-					pi.put(v, u);
-					System.out.println("-" + v.getId() + " yet: " + v.getDistance() );
+					insertNewValue(u, e, v);
 				}
 			}
 		}
 	}
+	
+	private boolean isEndVertexFound() {
+		return toVisitVertecies.peek().getId() == endVertex.getId();
+	}
+	
+	private void decraeseValue(StreetVertex u, StreetEdge e, StreetVertex v) {
+		toVisitVertecies.remove(v);
+		insertNewValue(u, e, v);
+	}
 
-	List<StreetJunction> buildShortestPathTo(StreetJunction endVertex) {
-		StreetJunction v = pi.get(endVertex);
-		LinkedList<StreetJunction> returnValue = new LinkedList<StreetJunction>();	
+	private void insertNewValue(StreetVertex u, StreetEdge e, StreetVertex v) {
+		v.setDistance(u.getDistance() + e.getWeight());						
+		toVisitVertecies.add(v);
+		shortestPathMap.put(v, u);
+	}
+
+	private void loadEdges(StreetVertex u) {
+		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction))
+			graph.addEdge(e);
+	}
+
+	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {
+		StreetVertex v = shortestPathMap.get(endVertex);
+		LinkedList<StreetVertex> returnValue = new LinkedList<StreetVertex>();	
 		returnValue.add(v);
-		//System.out.println(pi);
 		while(v.getId() != startVertex.getId()){
-			//System.out.println(v.getId());
-			v = pi.get(v);
+			v = shortestPathMap.get(v);
 			returnValue.add(v);
 		}
 		
 		return returnValue;
 	}
 
-	
-	void init(StreetJunction start){
+	void init(StreetVertex start){
 		startVertex = start;
 		startVertex.setDistance(0);
-		graph.getEdgesForNode(startVertex);
-		Q.add(graph.getNode(startVertex.getId()));
+		graph.getEdgesForVertex(startVertex, direction);
+		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
 	}
 
 	@Override
@@ -116,35 +123,35 @@ public class Dijkstra implements ShortestPath{
 		return graph;
 	}
 
-	public TreeSet<StreetJunction> getS() {
-		return S;
+	public TreeSet<StreetVertex> getVisitedVertecies() {
+		return visitedVertecies;
 	}
 
-	public void setS(TreeSet<StreetJunction> s) {
-		S = s;
+	public void setVisitedVertecies(TreeSet<StreetVertex> vertecies) {
+		visitedVertecies = vertecies;
 	}
 
-	public PriorityQueue<StreetJunction> getQ() {
-		return Q;
+	public PriorityQueue<StreetVertex> getQ() {
+		return toVisitVertecies;
 	}
 
-	public void setQ(PriorityQueue<StreetJunction> q) {
-		Q = q;
+	public void setQ(PriorityQueue<StreetVertex> q) {
+		toVisitVertecies = q;
 	}
 
-	public StreetJunction getStartVertex() {
+	public StreetVertex getStartVertex() {
 		return startVertex;
 	}
 
-	public void setStartVertex(StreetJunction startVertex) {
+	public void setStartVertex(StreetVertex startVertex) {
 		this.startVertex = startVertex;
 	}
 
-	public StreetJunction getEndVertex() {
+	public StreetVertex getEndVertex() {
 		return endVertex;
 	}
 
-	public void setEndVertex(StreetJunction endVertex) {
+	public void setEndVertex(StreetVertex endVertex) {
 		this.endVertex = endVertex;
 	}
 	

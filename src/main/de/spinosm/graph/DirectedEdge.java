@@ -5,11 +5,11 @@ public abstract class DirectedEdge implements RouteableEdge{
 
 	private static final long serialVersionUID = -9135933798984497839L;
 	
-	private StreetJunction source;
-	private StreetJunction target;
+	private StreetVertex source;
+	private StreetVertex target;
 	private double weight;
 	
-	DirectedEdge(StreetJunction start, StreetJunction end, double weight){
+	DirectedEdge(StreetVertex start, StreetVertex end, double weight){
 		if(start.equals(end))
 			return;
 		this.source = start;
@@ -27,39 +27,39 @@ public abstract class DirectedEdge implements RouteableEdge{
 		this.weight = weight;
 	}
 	
-	public StreetJunction getStart() {
+	public StreetVertex getStart() {
 		return source;
 	}
 	
-	public void setStart(StreetJunction start) {
+	public void setStart(StreetVertex start) {
 		this.source = start;		
 	}
 
-	public StreetJunction getEnd() {
+	public StreetVertex getEnd() {
 		return target;
 	}
 	
-	public void setEnd(StreetJunction end) {
+	public void setEnd(StreetVertex end) {
 		this.target = end;
 		
 	}
 	
-	public StreetJunction getOtherKnotThan(StreetJunction that) {
-		if(isStartKnot(that))
+	public StreetVertex getOtherKnotThan(StreetVertex that) {
+		if(isStartVertex(that))
 			return target;
-		else if(isEndKnot(that))
+		else if(isEndVertex(that))
 			return source;
 		else
-			throw new IllegalArgumentException("The Knot " + that + " isn't in this Graph");
+			throw new IllegalArgumentException("The Vertex " + that + " isn't in this Graph");
 	}
 	
-	public void replace(StreetJunction oldNode, StreetJunction newNode){
-		if(isStartKnot(oldNode))
-			this.setStart(newNode);
-		else if(isEndKnot(oldNode))
-			this.setEnd(newNode);
+	public void replace(StreetVertex oldVertex, StreetVertex newVertex){
+		if(isStartVertex(oldVertex))
+			this.setStart(newVertex);
+		else if(isEndVertex(oldVertex))
+			this.setEnd(newVertex);
 		else
-			throw new IllegalArgumentException("The Knot " + oldNode + " isn't in this Graph");
+			throw new IllegalArgumentException("The Vertex " + oldVertex + " isn't in this Graph");
 	}
 	
 	@Override
@@ -67,13 +67,13 @@ public abstract class DirectedEdge implements RouteableEdge{
 		return "s: " + this.getStart() + "; e: " + this.getEnd() + "; c: " + this.getWeight();
 	}
 
-	private boolean isStartKnot(RouteableNode that) {
+	private boolean isStartVertex(RouteableVertex that) {
 		if(that.hasSameId(source))
 			return true;
 		return false;
 	}
 
-	private boolean isEndKnot(RouteableNode that) {
+	private boolean isEndVertex(RouteableVertex that) {
 		if(that.hasSameId(target))
 			return true;
 		return false;

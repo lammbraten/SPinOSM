@@ -1,80 +1,62 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.Observable;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
-import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
-import de.spinosm.graph.pattern.HashComparator;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.IdComparator;
 
-public class DepthFirstSearch {
+public class DepthFirstSearch extends Observable {
 
 	private long maxDepth;
-	private StreetGraph g;
-	private TreeSet<StreetJunction> Q;
-	private TreeSet<StreetJunction> S;
+	private StreetGraph graph;
+	private TreeSet<StreetVertex> toVisitVertecie;
+	private PriorityQueue<StreetVertex>  vistitedVertecies;
 
 	
 	public DepthFirstSearch(StreetGraph g, long id, long maxDepth){
-		this.g = g;
-		int depth = 0;
+		this.graph = g;
 		setMaxDepth(maxDepth);
-		S = new TreeSet<StreetJunction>(new HashComparator());
-		Q = new TreeSet<StreetJunction>(new HashComparator());		
-		StreetJunction s = g.getNode(id);
+		vistitedVertecies = new PriorityQueue<StreetVertex>(new IdComparator());
+		toVisitVertecie = new TreeSet<StreetVertex>(new IdComparator());		
+		StreetVertex s = g.getVertex(id);
 		mark(s);
-		searchDephtFirst();
-		
-		Q.add(s);
 	}
-
-
-	/**
-	 * Rekursiv
-	 * @param u
-	 * @param depth
-	 */
-	/*private void searchDepthFirst(StreetJunction u, int depth){
-		u = mark(u);
-		
-		if(maxDepth <= depth)
-			return;
-		
-		for(StreetEdge e : g.getEdgesForNode(u))
-			if(!e.getEnd().isEdgesLoaded())
-				searchDepthFirst(e.getEnd(), depth+1);
-	}*/
 	
-	private void searchDephtFirst(){
+	public void searchDephtFirst(){
 		long depth = 0;
-		while(!Q.isEmpty() && maxDepth > depth){
-			StreetJunction sj = Q.pollFirst();
-			S.add(sj);			
-			mark(sj);
+		while(!toVisitVertecie.isEmpty() && maxDepth > depth){
+			StreetVertex u = toVisitVertecie.pollFirst();
+			
+			setChanged();
+			notifyObservers(u);		
+			
+			if(!u.isEdgesLoaded())
+				loadEdges(u);	
+			
+			vistitedVertecies.add(u);			
+			mark(u);
 			depth++;
-			System.out.println(sj);
-
+			}
+	}
+	
+	private void mark(StreetVertex u){
+		for(StreetEdge e : graph.getEdgesForVertex(u, 1)){
+			StreetVertex v = e.getOtherKnotThan(u);
+			if(!vistitedVertecies.contains(v)){
+				toVisitVertecie.add(v);
+			}
 		}
 	}
 	
-	private StreetJunction mark(StreetJunction u){
-		//EdgesLoaded is like isVisible
-		if(!u.isEdgesLoaded())
-			for(StreetEdge e : 	g.getEdgesForNode(u)){
-				g.addEdge(e);		
-				StreetJunction v = e.getEnd();
-				if(!S.contains(v));
-					Q.add(v);
-			}
-		return u;
+	private void loadEdges(StreetVertex u) {
+		for(StreetEdge e : 	graph.getEdgesForVertex(u, 1))
+			graph.addEdge(e);
 	}
 	
-	/**
-	 * @param maxDepth
-	 */
 	private void setMaxDepth(long maxDepth) {
 		if(maxDepth < 0)
 			this.maxDepth = Long.MAX_VALUE;

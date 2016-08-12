@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.spinosm.graph.StreetEdge;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmConnectionException;
@@ -130,13 +130,13 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public StreetJunction getStreetJunction(long id) {
-		StreetJunction returnValue;
+	public StreetVertex getStreetJunction(long id) {
+		StreetVertex returnValue;
 		OsmNode osmNode = (OsmNode) this.getNode(id);
 		if(osmNode == null){
 			throw new IllegalArgumentException("Node not existing in OSM");
 		}else{
-			returnValue = buildNewStreetJunction(osmNode);
+			returnValue = buildNewStreetVertex(osmNode);
 		}
 		return returnValue;
 	}
@@ -148,7 +148,7 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public List<StreetJunction> getStreetJunctionsForStreetEdge(long id) {
+	public List<StreetVertex> getStreetJunctionsForStreetEdge(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -202,12 +202,12 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForNode(StreetJunction sj) {
+	public Set<StreetEdge> getStreetEdgesForNode(StreetVertex sj) {
 		Set<StreetEdge> returnValue;
 		if(sj == null){
 			throw new IllegalArgumentException("Node not existing in OSM");
 		}else{
-			returnValue = getRouteableEdgesForNode(sj);
+			returnValue = getRouteableEdgesForVertex(sj);
 		}
 		return returnValue;
 	}

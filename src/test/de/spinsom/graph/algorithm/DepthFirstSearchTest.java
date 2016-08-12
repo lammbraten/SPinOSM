@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.DepthFirstSearch;

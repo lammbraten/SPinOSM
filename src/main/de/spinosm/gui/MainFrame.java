@@ -20,7 +20,7 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.algorithm.AStar;
@@ -108,10 +108,10 @@ public class MainFrame extends JFrame {
         List<GeoPosition> track = new LinkedList<GeoPosition>();
         List<GeoPosition> graph = new LinkedList<GeoPosition>();
         
-        for(RouteableNode routePoint : route)
+        for(RouteableVertex routePoint : route)
         	track.add(new GeoPosition(routePoint.getPosition().getLatitude(), routePoint.getPosition().getLongitude()));
 
-        for(RouteableNode graphPoint : aStar.getGraph().vertexSet())
+        for(RouteableVertex graphPoint : aStar.getGraph().vertexSet())
         	graph.add(new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude()));
 
         

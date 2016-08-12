@@ -16,7 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spinosm.common.Common;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.data.OsmApiWrapper;

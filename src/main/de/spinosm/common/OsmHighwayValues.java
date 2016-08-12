@@ -129,20 +129,58 @@ public class OsmHighwayValues {
 	}
 
 
-	public static int getTruckSpeedLimits(Way way) {
-		// TODO Auto-generated method stub
-		return -1;
+	public static double getTruckSpeedLimits(Way way) {
+		return getTruckSpeedLimitsInKMH(way) /TOMS;
+	}
+
+
+	private static double getTruckSpeedLimitsInKMH(Way way) {
+		if(way.getTags().containsKey("maxspeed:hgv")){
+			try {
+				return Integer.parseInt(way.getTags().get("maxspeed"));
+			} catch (Exception e) {}				
+		}
+		
+		String value = way.getTags().get("highway");
+		switch(value){
+			case MOTORWAY:
+				return 80;
+			case TRUNK:
+				return 80;
+			case PRIMARY:
+				return 60;
+			case SECONDARY:
+				return 60;
+			case TERTIARY:
+				return 50;
+			case RESIDENTIAL:
+				return 30;
+			case MOTORWAY_LINK:
+				return 75;
+			case TRUNK_LINK:
+				return 75;
+			case PRIMARY_LINK:
+				return 55;
+			case SECONDARY_LINK:
+				return 55;
+			case TERTIARY_LINK:
+				return 30;
+			case LIVING_STREET:
+				return 6;
+			case ROAD:
+				return 20;
+			default:
+				return 20;
+		}
 	}
 
 
 	public static int getPedestrianSpeeds(Way way) {
-		// TODO Auto-generated method stub
 		return 7;
 	}
 
 
 	public static int getBycicleSpeeds(Way way) {
-		// TODO Auto-generated method stub
 		return 20;
 	}
 	

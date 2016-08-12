@@ -11,7 +11,7 @@ import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 
 public class ArrowPainter implements Painter<JXMapViewer>{
 	private Color color = Color.RED;

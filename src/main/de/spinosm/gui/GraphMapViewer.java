@@ -28,7 +28,7 @@ import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
 import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableNode;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
@@ -101,7 +101,7 @@ public class GraphMapViewer implements Observer{
 	private void prepareShortestPathForPainting() {
 		List<GeoPosition> track = new LinkedList<GeoPosition>();
 		if(route != null){
-			for(RouteableNode routePoint : route)
+			for(RouteableVertex routePoint : route)
 				track.add(routeableNodeToGeoPosiotion(routePoint));
 		}
 		RoutePainter routePainter = new RoutePainter(track);
@@ -114,7 +114,7 @@ public class GraphMapViewer implements Observer{
 	private void prepareNodeEdgesForPainting() {
 		for(StreetJunction node : sg.vertexSet()){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(StreetEdge routeEdge : sg.getEdgesForNode(node, false)){
+			for(StreetEdge routeEdge : sg.getEdgesForVertex(node, false)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}
@@ -143,7 +143,7 @@ public class GraphMapViewer implements Observer{
 	 */
 	private Set<Waypoint> generateWaypointsFromGraphVertecies() {
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
-		for(RouteableNode graphPoint : sg.vertexSet()){
+		for(RouteableVertex graphPoint : sg.vertexSet()){
 			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
 			vertecieWaypoints.add(new DefaultWaypoint(gp));
 		}
@@ -168,7 +168,7 @@ public class GraphMapViewer implements Observer{
 		return new Color(genrator.nextInt(255), genrator.nextInt(255), genrator.nextInt(255));
 	}
 
-	private GeoPosition routeableNodeToGeoPosiotion(RouteableNode node) {
+	private GeoPosition routeableNodeToGeoPosiotion(RouteableVertex node) {
 		return new GeoPosition(node.getPosition().getLatitude(), node.getPosition().getLongitude());
 	}
 
