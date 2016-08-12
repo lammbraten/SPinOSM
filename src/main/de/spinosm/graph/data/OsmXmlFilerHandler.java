@@ -43,6 +43,11 @@ public class OsmXmlFilerHandler{
 
 	public List<Way> getWaysForNode(long id) {
 		Set<Long> wayIdsForNode = waysOfNode.get(id);
+		/*for(Way way : ways.values()){
+			OsmWay oway = (OsmWay) way;
+			if(oway.getNodeIds().contains(id))
+				waysForNode.add(way);
+		}*/ 
 		LinkedList<Way> waysForNode = new LinkedList<Way>();
 		for(long wid: wayIdsForNode)
 			waysForNode.add(ways.get(wid));
