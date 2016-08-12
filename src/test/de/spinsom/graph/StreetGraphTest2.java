@@ -18,7 +18,7 @@ import org.junit.Test;
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
@@ -35,20 +35,20 @@ public class StreetGraphTest2 {
 	private static final OsmNode EXISTING_NODE6 = new OsmNode(415866943l, 2, 51.3078516, 6.5848661, null, null);
 	private static final OsmNode EXISTING_NODE7 = new OsmNode(415866943l , 2, 51.3078953, 6.5848224, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
-	private static final StreetJunction[] EXISTING_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE2),
-			new StreetJunction(EXISTING_NODE3),
-			new StreetJunction(EXISTING_NODE4),
-			new StreetJunction(EXISTING_NODE5),
-			new StreetJunction(EXISTING_NODE6),
-			new StreetJunction(EXISTING_NODE7)
+	private static final StreetVertex[] EXISTING_NODE_ARRAY = {
+			new StreetVertex(EXISTING_NODE1),
+			new StreetVertex(EXISTING_NODE2),
+			new StreetVertex(EXISTING_NODE3),
+			new StreetVertex(EXISTING_NODE4),
+			new StreetVertex(EXISTING_NODE5),
+			new StreetVertex(EXISTING_NODE6),
+			new StreetVertex(EXISTING_NODE7)
 	};
-	private static final StreetJunction[] INITIAL_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE3)
+	private static final StreetVertex[] INITIAL_NODE_ARRAY = {
+			new StreetVertex(EXISTING_NODE1),
+			new StreetVertex(EXISTING_NODE3)
 	};
-	private static final StreetJunction[] NO_NODES_BUFFERED = {
+	private static final StreetVertex[] NO_NODES_BUFFERED = {
 	};
 	private static final OsmNode[] TEST_SET1 = {
 			EXISTING_NODE1,
@@ -68,8 +68,8 @@ public class StreetGraphTest2 {
 	public static void setUpBeforeClass() throws Exception {
 		WeightFunction wf = new DefaultCostFunction();
 		osmapiwrapper = new OsmApiWrapper(wf);
-		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
-		for(StreetJunction sj : INITIAL_NODE_ARRAY){
+		TreeSet<StreetVertex> bufferedTreeSet = new TreeSet<StreetVertex>();
+		for(StreetVertex sj : INITIAL_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
 		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
@@ -77,8 +77,8 @@ public class StreetGraphTest2 {
 	
 	@Before
 	public void setUpBeforeMethod() throws Exception {
-		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
-		for(StreetJunction sj : INITIAL_NODE_ARRAY){
+		TreeSet<StreetVertex> bufferedTreeSet = new TreeSet<StreetVertex>();
+		for(StreetVertex sj : INITIAL_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
 		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);
@@ -96,14 +96,14 @@ public class StreetGraphTest2 {
 	public void testGetSetStreetJunctions() {
 		//Test for NullPointerExption
 		streetGraph = new StreetGraph(osmapiwrapper);
-		assertEquals(0,streetGraph.getStreetJunctions().size());
+		assertEquals(0,streetGraph.getStreetVertecies().size());
 		//Test for setting new Nodes
-		TreeSet<StreetJunction> bufferedTreeSet = new TreeSet<StreetJunction>();
-		for(StreetJunction sj : EXISTING_NODE_ARRAY){
+		TreeSet<StreetVertex> bufferedTreeSet = new TreeSet<StreetVertex>();
+		for(StreetVertex sj : EXISTING_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
 		streetGraph.setStreetJunctions(bufferedTreeSet);
-		assertEquals(bufferedTreeSet, streetGraph.getStreetJunctions());
+		assertEquals(bufferedTreeSet, streetGraph.getStreetVertecies());
 	}
 
 
@@ -132,8 +132,8 @@ public class StreetGraphTest2 {
 		
 		streetGraph = new StreetGraph(osmapiwrapper);
 
-		for(StreetJunction sj : EXISTING_NODE_ARRAY){
-			streetGraph.getNode(sj.getId());
+		for(StreetVertex sj : EXISTING_NODE_ARRAY){
+			streetGraph.getVertex(sj.getId());
 		}
 		GraphMapViewer gmv = new GraphMapViewer(streetGraph);		
 		Common.writeStreetGraph(streetGraph);
@@ -149,8 +149,8 @@ public class StreetGraphTest2 {
 	public void testSerialization(){
 		streetGraph = new StreetGraph(osmapiwrapper);
 
-		for(StreetJunction sj : EXISTING_NODE_ARRAY){
-			streetGraph.getNode(sj.getId());
+		for(StreetVertex sj : EXISTING_NODE_ARRAY){
+			streetGraph.getVertex(sj.getId());
 		}
 		
 		try {

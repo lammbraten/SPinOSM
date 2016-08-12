@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
@@ -29,16 +29,16 @@ public class StreetGraphTest {
 	private static final OsmNode EXISTING_NODE2 = new OsmNode(203986826l, 7, 50.8975988, 7.0364495, null, null);
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(1861698092l, 2, 50.8978525, 7.0351034, null, null);
 	private static final OsmNode NOT_EXISTING_NODE = new OsmNode(10011l, 0, null, null, null, null);
-	private static final StreetJunction[] ALL_NODES_BUFFERED = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE2),
-			new StreetJunction(EXISTING_NODE3)
+	private static final StreetVertex[] ALL_NODES_BUFFERED = {
+			new StreetVertex(EXISTING_NODE1),
+			new StreetVertex(EXISTING_NODE2),
+			new StreetVertex(EXISTING_NODE3)
 	};
-	private static final StreetJunction[] SOME_NODES_BUFFERED = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE3)
+	private static final StreetVertex[] SOME_NODES_BUFFERED = {
+			new StreetVertex(EXISTING_NODE1),
+			new StreetVertex(EXISTING_NODE3)
 	};
-	private static final StreetJunction[] NO_NODES_BUFFERED = {
+	private static final StreetVertex[] NO_NODES_BUFFERED = {
 	};
 	private static final OsmNode[] TEST_SET1 = {
 			EXISTING_NODE1,
@@ -54,15 +54,15 @@ public class StreetGraphTest {
 	private int testResult;
 	private StreetGraph streetGraph;
 	private OsmNode[] testSet;
-	private TreeSet<StreetJunction> bufferedTreeSet;
+	private TreeSet<StreetVertex> bufferedTreeSet;
 	static OsmApiWrapper osmapiwrapper;
 	
 	
-	public StreetGraphTest(int testResult, StreetJunction[] buffer, OsmNode[] testSet){
+	public StreetGraphTest(int testResult, StreetVertex[] buffer, OsmNode[] testSet){
 		super();
 		this.testResult = testResult;
-		bufferedTreeSet = new TreeSet<StreetJunction>();
-		for(StreetJunction sj : buffer){
+		bufferedTreeSet = new TreeSet<StreetVertex>();
+		for(StreetVertex sj : buffer){
 			bufferedTreeSet.add(sj);
 		}
 		//streetGraph = new StreetGraph(osmapiwrapper, bufferedTreeSet);		
@@ -93,14 +93,14 @@ public class StreetGraphTest {
 	public void testgetStreetJunctions() {
 		switch(testResult){
 			case TEST_SHOULD_WORK:
-				assertNotNull(streetGraph.getStreetJunctions());
+				assertNotNull(streetGraph.getStreetVertecies());
 				break;
 			case TEST_SHOULD_FAIL:
-				assertTrue(streetGraph.getStreetJunctions().isEmpty());		
+				assertTrue(streetGraph.getStreetVertecies().isEmpty());		
 				break;
 			case TEST_THROWS_EXCEPTION: //Not Used yet
 				try{
-					streetGraph.getStreetJunctions();
+					streetGraph.getStreetVertecies();
 					fail();
 				} catch(Exception e){}
 				break;
@@ -113,14 +113,14 @@ public class StreetGraphTest {
 		switch(testResult){
 			case TEST_SHOULD_WORK:
 				streetGraph.setStreetJunctions(bufferedTreeSet);
-				assertEquals(3, streetGraph.getStreetJunctions().size());
+				assertEquals(3, streetGraph.getStreetVertecies().size());
 				break;
 			case TEST_SHOULD_FAIL:
-				assertTrue(streetGraph.getStreetJunctions().isEmpty());		
+				assertTrue(streetGraph.getStreetVertecies().isEmpty());		
 				break;
 			case TEST_THROWS_EXCEPTION: //Not Used yet
 				try{
-					streetGraph.getStreetJunctions();
+					streetGraph.getStreetVertecies();
 					fail();
 				} catch(Exception e){}
 				break;

@@ -1,38 +1,19 @@
 package de.spinosm;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
-import org.jgrapht.graph.DirectedWeightedSubgraph;
-import org.jgrapht.graph.GraphUnion;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-import org.jgrapht.graph.Subgraph;
-
-import de.spinosm.common.Common;
-import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableVertex;
-import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
-import de.spinosm.gui.ShortestPathObserver;
 
 public class OSMtoStreetgraphConverter {
 	private static Matcher matcher;

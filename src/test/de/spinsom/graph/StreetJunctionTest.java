@@ -1,25 +1,18 @@
 package de.spinsom.graph;
 
-import static org.junit.Assert.*;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.TreeSet;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.spinosm.graph.RouteableVertex;
-import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
-import de.spinosm.gui.GraphMapViewer;
 import de.westnordost.osmapi.map.data.OsmNode;
 
 public class StreetJunctionTest {
@@ -28,9 +21,9 @@ public class StreetJunctionTest {
 	private static final OsmNode EXISTING_NODE3 = new OsmNode(45107637l, 2, 51.3087028, 6.5891021, null, null);
 
 	
-	private static final StreetJunction[] INITIAL_NODE_ARRAY = {
-			new StreetJunction(EXISTING_NODE1),
-			new StreetJunction(EXISTING_NODE3)
+	private static final StreetVertex[] INITIAL_NODE_ARRAY = {
+			new StreetVertex(EXISTING_NODE1),
+			new StreetVertex(EXISTING_NODE3)
 	};
 
 	static OsmApiWrapper osmapiwrapper;
@@ -60,7 +53,7 @@ public class StreetJunctionTest {
 		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream( new FileInputStream( "C:\\Users\\lammbraten\\Dropbox\\Bachelorarbeit\\05_Tests\\TestStreetJunction.sg" ) );
-			StreetJunction sj = (StreetJunction) ois.readObject();
+			StreetVertex sj = (StreetVertex) ois.readObject();
 			ois.close();		
 			System.out.println(sj.getId() + ": " +sj.getPosition().getLatitude());
 			

@@ -22,7 +22,7 @@ import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetJunction;
+import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.graph.data.LocalProvider;
@@ -98,13 +98,13 @@ public class MainFrame extends JFrame {
         StreetGraph streetgraph = new StreetGraph(osmapi);
         ShortestPath aStar = new AStar(streetgraph, null);
                 
-		StreetJunction startJunction = osmapi.getStreetJunction(start);
-		StreetJunction endJunction = osmapi.getStreetJunction(end);
+		StreetVertex startJunction = osmapi.getStreetJunction(start);
+		StreetVertex endJunction = osmapi.getStreetJunction(end);
 		
 		streetgraph.addVertex(startJunction);
 		streetgraph.addVertex(endJunction);
         
-        List<StreetJunction> route = aStar.getShortestPath(startJunction, endJunction);
+        List<StreetVertex> route = aStar.getShortestPath(startJunction, endJunction);
         List<GeoPosition> track = new LinkedList<GeoPosition>();
         List<GeoPosition> graph = new LinkedList<GeoPosition>();
         
