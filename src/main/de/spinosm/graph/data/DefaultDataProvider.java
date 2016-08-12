@@ -1,5 +1,7 @@
 package de.spinosm.graph.data;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
-		return null;
+		return new LinkedList<StreetEdge>();
 	}
 
 	@Override
@@ -42,6 +44,6 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public Set<StreetEdge> getStreetEdgesForNode(StreetJunction sj) {
-		return null;
+		return new HashSet<StreetEdge>();
 	}
 }

@@ -38,12 +38,13 @@ import de.spinosm.gui.drawing.GenericWaypointRenderer;
 import de.spinosm.gui.drawing.RoutePainter;
 import de.westnordost.osmapi.map.data.BoundingBox;
 
-public class GraphMapViewer implements Observer{
+public class GraphMapViewer extends Thread implements Observer, Runnable{
 
 	private StreetGraph sg;
 	private List<StreetJunction> route;
 	final static JXMapKit mapView = new JXMapKit();
 	private List<Painter<JXMapViewer>> painters;
+	private JXMapViewer map;
 	
 	public GraphMapViewer(StreetGraph g) {
 		this(g, null);
@@ -68,7 +69,14 @@ public class GraphMapViewer implements Observer{
 	}
 	
 	public void showMap(){
-		JXMapViewer map = initMap();   
+		map = initMap();   
+		handle();
+	}
+
+	/**
+	 * @param map
+	 */
+	private void handle() {
 		prepareVerteciesForPainting();
 		prepareNodeEdgesForPainting();
 		prepareShortestPathForPainting();	 	
@@ -91,7 +99,7 @@ public class GraphMapViewer implements Observer{
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 		mapView.setTileFactory(tileFactory);
 		JXMapViewer map = mapView.getMainMap();
-		mapView.setZoom(11);
+		mapView.setZoom(17);
 		return map;
 	}
 
@@ -114,7 +122,7 @@ public class GraphMapViewer implements Observer{
 	private void prepareNodeEdgesForPainting() {
 		for(StreetJunction node : sg.vertexSet()){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(StreetEdge routeEdge : sg.getEdgesForNode(node, false)){
+			for(StreetEdge routeEdge : sg.getEdgesForNode(node, StreetGraph.DEFAULT_DIRECTION, false)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}
@@ -159,8 +167,8 @@ public class GraphMapViewer implements Observer{
 		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
 		double label = routeEdge.getWeight();
 		String formattedLabel = String.format("%.4f", label);
-		ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
-		painters.add(arrowPainter);
+		//ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
+		//painters.add(arrowPainter);
 	}
 
 	private Color generateRandomColor() {
@@ -174,7 +182,14 @@ public class GraphMapViewer implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		handle();
 		
+	}
+	
+	@Override 
+	public void run(){
+		try {sleep(1000);}
+		catch(InterruptedException e) {}
+		handle();
 	}
 }

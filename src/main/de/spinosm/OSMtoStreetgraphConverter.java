@@ -32,6 +32,7 @@ import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
+import de.spinosm.gui.ShortestPathObserver;
 
 public class OSMtoStreetgraphConverter {
 	private static Matcher matcher;
@@ -46,7 +47,10 @@ public class OSMtoStreetgraphConverter {
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
 			generateOSMFileReader();
-			new DepthFirstSearch(streetgraph, nid, -1);
+			//ShortestPathObserver spo = new ShortestPathObserver();			
+			new DepthFirstSearch(streetgraph, nid, 5000000);
+
+			
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
@@ -67,7 +71,8 @@ public class OSMtoStreetgraphConverter {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outFile+".bin"));
 			StreetGraph active = (StreetGraph) ois.readObject();
 			ois.close();
-			new GraphMapViewer(active);					
+			Thread gmvt = new Thread(new GraphMapViewer(active));
+			gmvt.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

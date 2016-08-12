@@ -1,5 +1,6 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.Observable;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
@@ -10,25 +11,25 @@ import de.spinosm.graph.StreetJunction;
 import de.spinosm.graph.pattern.HashComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
-public class DepthFirstSearch {
+public class DepthFirstSearch extends Observable {
 
 	private long maxDepth;
-	private StreetGraph g;
+	private StreetGraph graph;
 	private TreeSet<StreetJunction> Q;
-	private TreeSet<StreetJunction> S;
+	private PriorityQueue<StreetJunction>  S;
 
 	
 	public DepthFirstSearch(StreetGraph g, long id, long maxDepth){
-		this.g = g;
+		this.graph = g;
 		int depth = 0;
 		setMaxDepth(maxDepth);
-		S = new TreeSet<StreetJunction>(new HashComparator());
-		Q = new TreeSet<StreetJunction>(new HashComparator());		
+		S = new PriorityQueue<StreetJunction>(new IdComparator());
+		Q = new TreeSet<StreetJunction>(new IdComparator());		
 		StreetJunction s = g.getNode(id);
 		mark(s);
 		searchDephtFirst();
 		
-		Q.add(s);
+		//Q.add(s);
 	}
 
 
@@ -51,25 +52,34 @@ public class DepthFirstSearch {
 	private void searchDephtFirst(){
 		long depth = 0;
 		while(!Q.isEmpty() && maxDepth > depth){
-			StreetJunction sj = Q.pollFirst();
-			S.add(sj);			
-			mark(sj);
+			StreetJunction u = Q.pollFirst();
+			
+			setChanged();
+			notifyObservers(u);		
+			
+			if(!u.isEdgesLoaded())
+				loadEdges(u);	
+			
+			S.add(u);			
+			mark(u);
 			depth++;
-			System.out.println(sj);
-
+			}
+	}
+	
+	private void mark(StreetJunction u){
+		//EdgesLoaded is like isVisible
+		for(StreetEdge e : graph.getEdgesForNode(u, 1)){
+			StreetJunction v = e.getOtherKnotThan(u);
+			if(!S.contains(v)){
+				Q.add(v);
+			}
 		}
 	}
 	
-	private StreetJunction mark(StreetJunction u){
-		//EdgesLoaded is like isVisible
-		if(!u.isEdgesLoaded())
-			for(StreetEdge e : 	g.getEdgesForNode(u)){
-				g.addEdge(e);		
-				StreetJunction v = e.getEnd();
-				if(!S.contains(v));
-					Q.add(v);
-			}
-		return u;
+	
+	private void loadEdges(StreetJunction u) {
+		for(StreetEdge e : 	graph.getEdgesForNode(u, 1))
+			graph.addEdge(e);
 	}
 	
 	/**

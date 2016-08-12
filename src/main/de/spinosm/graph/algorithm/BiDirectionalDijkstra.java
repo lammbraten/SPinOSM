@@ -8,9 +8,9 @@ import java.util.TreeSet;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetJunction;
 
-public class BiDirectionalDijkstra implements ShortestPath{
+public class BiDirectionalDijkstra extends ObservableShortestPath{
 	private StreetGraph graph; 
-	private Dijkstra d1;
+	private Dijkstra reverse;
 	private Dijkstra d2;
 	private static StreetJunction startVertex;
 	private static StreetJunction endVertex;	
@@ -19,7 +19,7 @@ public class BiDirectionalDijkstra implements ShortestPath{
 	public BiDirectionalDijkstra(StreetGraph streetgraph) {
 		this.graph = streetgraph;
 		
-		this.d1 = new Dijkstra(graph);
+		this.reverse = new Dijkstra(graph,-1);
 		this.d2 = new Dijkstra(graph);
 		
 	}
@@ -29,11 +29,11 @@ public class BiDirectionalDijkstra implements ShortestPath{
 		startVertex = start;
 		endVertex = end;
 		
-		d1.init(startVertex);
+		reverse.init(startVertex);
 		d2.init(endVertex);
 		
-		while(intersectionOf(d1.getS(),d2.getS()).isEmpty() && (!d1.getQ().isEmpty() || !d2.getQ().isEmpty())){
-			d1.checkNextVertex();
+		while(intersectionOf(reverse.getS(),d2.getS()).isEmpty() && (!reverse.getQ().isEmpty() || !d2.getQ().isEmpty())){
+			reverse.checkNextVertex();
 			d2.checkNextVertex();
 		}
 			
@@ -41,8 +41,8 @@ public class BiDirectionalDijkstra implements ShortestPath{
 	}
 
 	private List<StreetJunction> buildShortestPath() {
-		StreetJunction jointValue = intersectionOf(d1.getS(),d2.getS()).first();
-		List<StreetJunction> shortestSub1PathReverse = d1.buildShortestPathTo(jointValue);	
+		StreetJunction jointValue = intersectionOf(reverse.getS(),d2.getS()).first();
+		List<StreetJunction> shortestSub1PathReverse = reverse.buildShortestPathTo(jointValue);	
 		List<StreetJunction> shortestSub2Path = d2.buildShortestPathTo(jointValue);
 	    ListIterator<StreetJunction> listIterator = shortestSub1PathReverse.listIterator();
 		List<StreetJunction>  shortestPath = new LinkedList<StreetJunction>();
