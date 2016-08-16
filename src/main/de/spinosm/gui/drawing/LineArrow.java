@@ -45,7 +45,7 @@ public class LineArrow implements Arrow {
 	private void drawArrow(Graphics2D g) {
 		g.drawLine(0, SHIFT, len, SHIFT);
 		drawArrowHead(g);
-		//drawLabel(g);
+		drawLabel(g);
 	}
 
 	private void drawLabel(Graphics2D g) {

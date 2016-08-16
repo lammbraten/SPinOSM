@@ -1,6 +1,5 @@
 package de.spinosm.graph.data;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -143,19 +142,16 @@ public class OsmApiWrapper extends AbstractProvider{
 
 	@Override
 	public StreetEdge getStreetEdge(long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<StreetVertex> getStreetJunctionsForStreetEdge(long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

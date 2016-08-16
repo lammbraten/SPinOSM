@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.LocalProvider;
+import de.spinosm.graph.weights.AsTheCrowFliesDistanceWeight;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
@@ -27,16 +28,16 @@ public class OSMtoStreetgraphConverter {
 
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
-			generateOSMFileReader();
+			//generateOSMFileReader();
 			//ShortestPathObserver spo = new ShortestPathObserver();			
-			new DepthFirstSearch(streetgraph, nid, 5000000);
+			//new DepthFirstSearch(streetgraph, nid, -1).searchDephtFirst();
 
 			
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
 			System.out.println("Write Streetgraph to File:");
-			writeStreetgraph();
+			//writeStreetgraph();
 			
 			System.out.println("Read Streetgraph from File:");
 			readStreetgraph();
@@ -68,7 +69,7 @@ public class OSMtoStreetgraphConverter {
 	}
 
 	private static void generateOSMFileReader() {
-		WeightFunction wf = new DefaultCostFunction();
+		WeightFunction wf = new AsTheCrowFliesDistanceWeight();
 		dataprovider = new LocalProvider(inFile, wf);
 		streetgraph = new StreetGraph(dataprovider);
 	}

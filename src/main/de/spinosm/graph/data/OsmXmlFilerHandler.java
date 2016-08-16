@@ -11,7 +11,6 @@ import java.util.Set;
 import de.westnordost.osmapi.map.MapDataParser;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
 import de.westnordost.osmapi.map.data.Node;
-import de.westnordost.osmapi.map.data.OsmWay;
 import de.westnordost.osmapi.map.data.Way;
 
 public class OsmXmlFilerHandler{
@@ -43,11 +42,6 @@ public class OsmXmlFilerHandler{
 
 	public List<Way> getWaysForNode(long id) {
 		Set<Long> wayIdsForNode = waysOfNode.get(id);
-		/*for(Way way : ways.values()){
-			OsmWay oway = (OsmWay) way;
-			if(oway.getNodeIds().contains(id))
-				waysForNode.add(way);
-		}*/ 
 		LinkedList<Way> waysForNode = new LinkedList<Way>();
 		for(long wid: wayIdsForNode)
 			waysForNode.add(ways.get(wid));

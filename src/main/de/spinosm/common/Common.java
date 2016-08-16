@@ -53,6 +53,10 @@ public class Common {
 	    double lon1 = toRad(node1.getLongitude());
 	    double lon2 = toRad(node2.getLongitude());
 
+	    return asTheCrowFlies(lat1, lat2 , lon1, lon2);
+	}
+	
+	public static double asTheCrowFlies(double lat1, double lat2 , double lon1, double lon2){
 	    return EARTHRADIUS *  haversine(lat1, lat2, lon1, lon2);
 	}
 	
