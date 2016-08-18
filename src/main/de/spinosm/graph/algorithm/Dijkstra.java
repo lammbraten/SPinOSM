@@ -14,13 +14,13 @@ import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class Dijkstra extends ObservableShortestPath{
-	private StreetGraph graph; 
-	private TreeSet<StreetVertex> visitedVertecies;
-	private PriorityQueue<StreetVertex> toVisitVertecies;
-	private TreeMap<StreetVertex, StreetVertex> shortestPathMap;
-	private StreetVertex startVertex;
-	private StreetVertex endVertex;
-	private int direction;	
+	protected StreetGraph graph; 
+	protected TreeSet<StreetVertex> visitedVertecies;
+	protected PriorityQueue<StreetVertex> toVisitVertecies;
+	protected TreeMap<StreetVertex, StreetVertex> shortestPathMap;
+	protected StreetVertex startVertex;
+	protected StreetVertex endVertex;
+	protected int direction;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
 		this(streetgraph, StreetGraph.DEFAULT_DIRECTION);
@@ -42,9 +42,17 @@ public class Dijkstra extends ObservableShortestPath{
 
 	@Override
 	public List<StreetVertex> getShortestPath(StreetVertex start, StreetVertex end) {
+		endVertex = end;		
 		init(start);
-		endVertex = end;
+
 			
+		return iterateThrougGraph();
+	}
+
+	/**
+	 * @return
+	 */
+	protected List<StreetVertex> iterateThrougGraph() {
 		while(!toVisitVertecies.isEmpty()){
 			if(isEndVertexFound())
 				return buildShortestPathTo(endVertex);
@@ -67,9 +75,9 @@ public class Dijkstra extends ObservableShortestPath{
 			if(!visitedVertecies.contains(v)){
 				if(toVisitVertecies.contains(v)){					
 					if(v.getDistance() > (u.getDistance() + e.getWeight()))
-						decraeseValue(u, e, v);
+						decraeseValue(u, v, e.getWeight());
 				}else{
-					insertNewValue(u, e, v);
+					insertNewValue(u, v, e.getWeight());
 				}
 			}
 		}
@@ -79,18 +87,18 @@ public class Dijkstra extends ObservableShortestPath{
 		return toVisitVertecies.peek().getId() == endVertex.getId();
 	}
 	
-	private void decraeseValue(StreetVertex u, StreetEdge e, StreetVertex v) {
+	protected void decraeseValue(StreetVertex u, StreetVertex v, double weight) {
 		toVisitVertecies.remove(v);
-		insertNewValue(u, e, v);
+		insertNewValue(u, v, weight);
 	}
 
-	private void insertNewValue(StreetVertex u, StreetEdge e, StreetVertex v) {
-		v.setDistance(u.getDistance() + e.getWeight());						
+	protected void insertNewValue(StreetVertex u, StreetVertex v, double weight) {
+		v.setDistance(u.getDistance() + weight);						
 		toVisitVertecies.offer(v);
 		shortestPathMap.put(v, u);
 	}
 
-	private void loadEdges(StreetVertex u) {
+	protected void loadEdges(StreetVertex u) {
 		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction))
 			graph.addEdge(e);
 	}

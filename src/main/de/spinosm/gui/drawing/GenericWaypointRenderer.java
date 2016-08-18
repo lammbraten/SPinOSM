@@ -9,13 +9,14 @@ import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointRenderer;
 
 public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
-	private static int r = 5;
-	private static int d = 2*r;
+	private int r = 5;
+	private int d = 2*r;
 	private Color color;
 	
 	
-	public GenericWaypointRenderer(Color color) {
+	public GenericWaypointRenderer(Color color, int radius) {
 		this.color = color;
+		this.r = radius;
 	}
 
 

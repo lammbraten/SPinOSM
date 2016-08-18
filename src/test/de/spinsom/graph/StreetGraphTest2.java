@@ -135,7 +135,7 @@ public class StreetGraphTest2 {
 		for(StreetVertex sj : EXISTING_NODE_ARRAY){
 			streetGraph.getVertex(sj.getId());
 		}
-		GraphMapViewer gmv = new GraphMapViewer(streetGraph);		
+		GraphMapViewer gmv = new GraphMapViewer();		
 		Common.writeStreetGraph(streetGraph);
 		try {
 			System.in.read();
@@ -168,7 +168,7 @@ public class StreetGraphTest2 {
 			StreetGraph streetGraph2 = (StreetGraph) ois.readObject();
 			ois.close();
 			Common.writeStreetGraph(streetGraph);
-			new GraphMapViewer(streetGraph2);					
+			//new GraphMapViewer(streetGraph2);					
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

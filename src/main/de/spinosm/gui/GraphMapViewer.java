@@ -132,26 +132,26 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	 */
 	private void prepareVerteciesForPainting() {
 		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(sg.vertexSet());
-		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(0, 143, 255));
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(0, 143, 255), 3);
 	}
 
 	private void prepareBorderForPainting() {
 		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(border));
-		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(143, 143, 255));
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(238, 77, 46), 5);
 	}
 
 	private void prepareFinishedForPainting() {
 		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(finisched));
-		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(143, 0, 255));
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(91, 158, 28), 4);
 	}
 	
 	/**
 	 * @param vertecieWaypoints
 	 */
-	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints, Color color) {
+	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints, Color color, int radius) {
 		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();	
 		graphNodesPainter.setWaypoints(vertecieWaypoints);
-		graphNodesPainter.setRenderer(new GenericWaypointRenderer(color));
+		graphNodesPainter.setRenderer(new GenericWaypointRenderer(color, radius));
 		painters.add(graphNodesPainter);
 	}
 

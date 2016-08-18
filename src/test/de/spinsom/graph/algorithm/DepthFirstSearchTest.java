@@ -48,7 +48,7 @@ public class DepthFirstSearchTest {
 		
 		Common.writeStreetGraph(streetgraph);
 
-		GraphMapViewer gmv = new GraphMapViewer(streetgraph);	
+		GraphMapViewer gmv = new GraphMapViewer();	
 		try {
 			System.in.read();
 		} catch (IOException e) {

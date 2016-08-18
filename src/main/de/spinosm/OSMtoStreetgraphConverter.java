@@ -53,7 +53,9 @@ public class OSMtoStreetgraphConverter {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outFile+".bin"));
 			StreetGraph active = (StreetGraph) ois.readObject();
 			ois.close();
-			Thread gmvt = new Thread(new GraphMapViewer(active));
+			GraphMapViewer gmv = new GraphMapViewer();
+			gmv.paintAlsoGraph(active);
+			Thread gmvt = new Thread(gmv);
 			gmvt.start();
 		} catch (IOException|ClassNotFoundException e) {e.printStackTrace();}
 	}

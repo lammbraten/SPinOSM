@@ -1,55 +1,30 @@
 package de.spinosm.graph.algorithm;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
-import de.spinosm.graph.pattern.IdComparator;
 import de.spinosm.graph.weights.DefaultHeuristic;
 import de.spinosm.graph.weights.Heuristic;
 
-public class AStar implements ShortestPath {
-	private StreetGraph graph; 
-	private TreeSet<StreetVertex> S;
-	private TreeSet<StreetVertex> Q;
-	private TreeMap<StreetVertex, StreetVertex> pi;
-	private StreetVertex startVertex;
-	private StreetVertex endVertex;	
+public class AStar extends Dijkstra {
 	private Heuristic heuristic;	
 	
+	public AStar(StreetGraph streetgraph){
+		this(streetgraph, null);
+	}
 	
 	public AStar(StreetGraph streetgraph, Heuristic heuristic){
-		this.graph = streetgraph;
-		this.heuristic = heuristic;
-		S = new TreeSet<StreetVertex>(new IdComparator());
-		Q = new TreeSet<StreetVertex>();		
-		pi = new TreeMap<StreetVertex, StreetVertex>(new IdComparator());
+		super(streetgraph);
+		this.heuristic = heuristic;	
 	}
 	
-	public AStar(StreetGraph streetgraph, Heuristic heuristic, TreeSet<StreetVertex> S, TreeSet<StreetVertex> Q) {
-		this.heuristic = heuristic;
-		this.graph = streetgraph;
-		this.S = S;
-		this.Q = Q;
-	}
-
 	@Override
 	public List<StreetVertex> getShortestPath(StreetVertex start, StreetVertex end) {
 		endVertex = end;		
 		init(start);
 
-			
-		while(!Q.isEmpty()){
-			if(Q.first().getId() == endVertex.getId())
-				return buildShortestPathTo(endVertex);
-			checkNextVertex();
-		}
-		return null;
+		return iterateThrougGraph();
 	}
 
 	/**
@@ -57,54 +32,27 @@ public class AStar implements ShortestPath {
 	 * @param u
 	 */
 	void checkNextVertex() {
-		StreetVertex u = Q.first();
-		System.out.println(u.getId() + ": " + u.getDistance());
-		
-		Q.remove(u);
-		S.add(u);
+		StreetVertex u = toVisitVertecies.poll();
+		visitedVertecies.add(u);
+		setChanged();
+		notifyObservers(u);		
 		
 		if(!u.isEdgesLoaded())
-			for(StreetEdge e : 	graph.getEdgesForVertex(u, StreetGraph.DEFAULT_DIRECTION))
-				graph.addEdge(e);				
+			loadEdges(u);				
 		
-		for(StreetEdge e : graph.getEdgesForVertex(u, StreetGraph.DEFAULT_DIRECTION)){
+		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
 			StreetVertex v = e.getOtherKnotThan(u);
-			
-			if(!S.contains(v)){
-				if(Q.contains(v)){
-					//v = getVertexFrom(v, Q); Nicht nötig, da in StreetGraph schon richtig verlinkt wird.
-						
-					if(v.getDistance()  > (u.getDistance() + e.getWeight()  + heuristicForVertex(u))){
-						Q.remove(v);
-						v.setDistance(u.getDistance() + e.getWeight()   + heuristicForVertex(v));
-						Q.add(v);
-						pi.put(v, u);
-						System.out.println("--" + v.getId() + " now: " + v.getDistance());
-
-					}
+			if(!visitedVertecies.contains(v)){
+				if(toVisitVertecies.contains(v)){					
+					if(v.getDistance() > (u.getDistance() + e.getWeight() ))
+						decraeseValue(u, v, e.getWeight() + heuristicForVertex(v));
 				}else{
-					v.setDistance(u.getDistance() + e.getWeight() + heuristicForVertex(v));						
-					Q.add(v);
-					pi.put(v, u);
-					System.out.println("-" + v.getId() + " yet: " + v.getDistance() );
+					insertNewValue(u, v, e.getWeight() + heuristicForVertex(v));
 				}
 			}
 		}
 	}
 
-	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {
-		StreetVertex v = pi.get(endVertex);
-		LinkedList<StreetVertex> returnValue = new LinkedList<StreetVertex>();	
-		returnValue.add(v);
-		//System.out.println(pi);
-		while(v.getId() != startVertex.getId()){
-			//System.out.println(v.getId());
-			v = pi.get(v);
-			returnValue.add(v);
-		}
-		
-		return returnValue;
-	}
 
 	
 	void init(StreetVertex start){
@@ -115,7 +63,7 @@ public class AStar implements ShortestPath {
 		startVertex = start;
 		startVertex.setDistance(heuristicForVertex(startVertex));
 		graph.getEdgesForVertex(startVertex, StreetGraph.DEFAULT_DIRECTION);
-		Q.add(graph.getVertex(startVertex.getId()));
+		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
 
 	}
 
@@ -133,16 +81,5 @@ public class AStar implements ShortestPath {
 	@Override
 	public void setGraph(StreetGraph g) {
 		this.graph = g;
-		
-	}
-
-	@Override
-	public List<StreetVertex> getBorderVertecies() {
-		return  new ArrayList<StreetVertex>(Q);
-	}
-
-	@Override
-	public List<StreetVertex> getFinishedVertecies() {
-		return new ArrayList<StreetVertex>(S);
 	}
 }

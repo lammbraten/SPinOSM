@@ -12,12 +12,17 @@ import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
+import de.spinosm.graph.algorithm.AStar;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
 import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.algorithm.ObservableShortestPath;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.DefaultDataProvider;
+import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.PythagoreanDistanceWeight;
+import de.spinosm.graph.weights.SimpleCrowFliesHeuristic;
+import de.spinosm.graph.weights.SimpleCrowFliesTimeHeuristic;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 import de.spinosm.gui.ShortestPathObserver;
@@ -39,19 +44,19 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = KREEFLD;
-	private static long end = DORTMUND;
+	private static long start = RA_GRO;
+	private static long end = SCH_GU;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//osmapi = new OsmApiWrapper();
-		WeightFunction wf = new DefaultCostFunction();
-        //osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
-		//streetgraph = new StreetGraph(osmapi);
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets3.streetgraph.bin"));
-		streetgraph = (StreetGraph) ois.readObject();
-		streetgraph.setDataprovider(new DefaultDataProvider());
-		ois.close();
+		WeightFunction wf = new PythagoreanDistanceWeight();
+        osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
+		streetgraph = new StreetGraph(osmapi);
+		//ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets3.streetgraph.bin"));
+		//streetgraph = (StreetGraph) ois.readObject();
+		//streetgraph.setDataprovider(new DefaultDataProvider());
+		//ois.close();
 	}
 
 	@AfterClass
@@ -81,19 +86,18 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		ObservableShortestPath sp = new Dijkstra(streetgraph);
+		ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 10));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 
 		
 		List<StreetVertex> graphPath = sp.getShortestPath(startJunction, endJunction);
-		StreetGraph sg = sp.getGraph();	
 
 		GraphMapViewer gmv = new GraphMapViewer();	
 		//gmv.paintAlsoGraph(sp.getGraph());
 		gmv.paintAlsoRoute(graphPath);
 		gmv.paintAlsoBorder(sp.getBorderVertecies());
-		gmv.paintAlsoFinished(sp.getFinishedVertecies());
+		//gmv.paintAlsoFinished(sp.getFinishedVertecies());
 		gmv.showMap();
 		
 		
