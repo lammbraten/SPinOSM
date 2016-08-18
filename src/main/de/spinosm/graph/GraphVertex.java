@@ -1,5 +1,7 @@
 package de.spinosm.graph;
 
+import org.jgrapht.util.FibonacciHeapNode;
+
 import de.westnordost.osmapi.map.data.LatLon;
 
 
@@ -11,7 +13,9 @@ public abstract class GraphVertex implements RouteableVertex {
 	private double distance;
 	private SerializableLatLon position; //needed for Heuristic
 	
+	public static int DISTANCE_INIT_VALUE = Integer.MAX_VALUE;
 	
+
 	public GraphVertex(long id, LatLon latLon, double distance){
 		this.setId(id);
 		this.setDistance(distance);
@@ -20,7 +24,7 @@ public abstract class GraphVertex implements RouteableVertex {
 	
 	public GraphVertex(long id, LatLon latLon){
 		this.setId(id);
-		this.setDistance(Integer.MAX_VALUE);
+		this.setDistance(DISTANCE_INIT_VALUE);
 		this.position = new SerializableLatLon(latLon);
 	}
 	

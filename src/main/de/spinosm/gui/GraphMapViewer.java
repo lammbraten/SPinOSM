@@ -1,6 +1,7 @@
 package de.spinosm.gui;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,6 +29,8 @@ import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
+import de.spinosm.graph.algorithm.ShortestPath;
+import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.GenericWaypointRenderer;
 import de.spinosm.gui.drawing.RoutePainter;
 
@@ -38,41 +41,44 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	final static JXMapKit mapView = new JXMapKit();
 	private List<Painter<JXMapViewer>> painters;
 	private JXMapViewer map;
+	private List<StreetVertex> border;
+	private List<StreetVertex> finisched;
 	
-	public GraphMapViewer(StreetGraph g) {
-		this(g, null);
+	
+	/**
+	 * @param graphPath 
+	 * @wbp.parser.constructor
+	 */
+	public GraphMapViewer() {
+		this.painters = new ArrayList<Painter<JXMapViewer>>();
+		
+		//showMap();
+	}
+
+	
+	public void showMap(){
+		map = initMap();   
+		handle();
+		showFrame();
 	}
 	
 	/**
-	 * @wbp.parser.constructor
+	 * @throws HeadlessException
 	 */
-	public GraphMapViewer(StreetGraph g, List<StreetVertex> graphPath) {
-		this.sg = g;
-		this.route = graphPath;
-		this.painters = new ArrayList<Painter<JXMapViewer>>();
-		
-		
-		showMap();
-		
-        JFrame frame = new JFrame("SPinOSM");
+	private void showFrame() throws HeadlessException {
+		JFrame frame = new JFrame("SPinOSM");
         frame.getContentPane().add(mapView);
         frame.setSize(1024, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 	}
 	
-	public void showMap(){
-		map = initMap();   
-		handle();
-	}
-
 	/**
 	 * @param map
 	 */
 	private void handle() {
-		prepareVerteciesForPainting();
-		prepareNodeEdgesForPainting();
-		prepareShortestPathForPainting();	 	
+
+ 	
 		paintOnMap(map);
 	}
 
@@ -125,26 +131,36 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	 * 
 	 */
 	private void prepareVerteciesForPainting() {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromGraphVertecies();
-		addVertecieWaypointsToPainters(vertecieWaypoints);
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(sg.vertexSet());
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(0, 143, 255));
 	}
 
+	private void prepareBorderForPainting() {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(border));
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(143, 143, 255));
+	}
+
+	private void prepareFinishedForPainting() {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(finisched));
+		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(143, 0, 255));
+	}
+	
 	/**
 	 * @param vertecieWaypoints
 	 */
-	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints) {
+	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints, Color color) {
 		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();	
 		graphNodesPainter.setWaypoints(vertecieWaypoints);
-		graphNodesPainter.setRenderer(new GenericWaypointRenderer());
+		graphNodesPainter.setRenderer(new GenericWaypointRenderer(color));
 		painters.add(graphNodesPainter);
 	}
 
 	/**
-	 * @param vertecies
+	 * @param set
 	 */
-	private Set<Waypoint> generateWaypointsFromGraphVertecies() {
+	private Set<Waypoint> generateWaypointsFromVertecies(Set<StreetVertex> set) {
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
-		for(RouteableVertex graphPoint : sg.vertexSet()){
+		for(RouteableVertex graphPoint : set){
 			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
 			vertecieWaypoints.add(new DefaultWaypoint(gp));
 		}
@@ -160,8 +176,8 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
 		double label = routeEdge.getWeight();
 		String formattedLabel = String.format("%.4f", label);
-		//ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
-		//painters.add(arrowPainter);
+		ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
+		painters.add(arrowPainter);
 	}
 
 	private Color generateRandomColor() {
@@ -185,4 +201,28 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		catch(InterruptedException e) {}
 		handle();
 	}
+
+	public void paintAlsoGraph(StreetGraph graph) {
+		sg = graph;
+		prepareVerteciesForPainting();
+		prepareNodeEdgesForPainting();	
+	}
+
+	public void paintAlsoRoute(List<StreetVertex> graphPath) {
+		route = graphPath;
+		prepareShortestPathForPainting();			
+	}
+
+	public void paintAlsoBorder(List<StreetVertex> borderVertecies) {
+		border = borderVertecies;
+		prepareBorderForPainting();			
+	}
+
+	public void paintAlsoFinished(List<StreetVertex> finishedVertecies) {
+		finisched = finishedVertecies;
+		prepareFinishedForPainting();			
+	}
+
+
+
 }

@@ -1,5 +1,6 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -133,5 +134,15 @@ public class AStar implements ShortestPath {
 	public void setGraph(StreetGraph g) {
 		this.graph = g;
 		
+	}
+
+	@Override
+	public List<StreetVertex> getBorderVertecies() {
+		return  new ArrayList<StreetVertex>(Q);
+	}
+
+	@Override
+	public List<StreetVertex> getFinishedVertecies() {
+		return new ArrayList<StreetVertex>(S);
 	}
 }

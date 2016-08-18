@@ -9,5 +9,8 @@ public interface ShortestPath {
 
 	public List<StreetVertex> getShortestPath(StreetVertex start, StreetVertex end);
 	public StreetGraph getGraph();
-	void setGraph(StreetGraph g);
+	public void setGraph(StreetGraph g);
+	public List<StreetVertex> getBorderVertecies();
+	public List<StreetVertex> getFinishedVertecies();
+	
 }

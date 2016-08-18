@@ -1,5 +1,6 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -34,7 +35,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		reverseDijkstra.init(startVertex);
 		straightDijkstra.init(endVertex);
 		
-		while(intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()).isEmpty() && (!reverseDijkstra.getQ().isEmpty() || !straightDijkstra.getQ().isEmpty())){
+		while(intersectionOf(reverseDijkstra.getFinishedVertecies(),straightDijkstra.getFinishedVertecies()).isEmpty() && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
 			reverseDijkstra.checkNextVertex();
 			straightDijkstra.checkNextVertex();
 		}
@@ -43,7 +44,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	}
 
 	private List<StreetVertex> buildShortestPath() {
-		StreetVertex jointValue = intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()).first();
+		StreetVertex jointValue = intersectionOf(reverseDijkstra.getFinishedVertecies(),straightDijkstra.getFinishedVertecies()).first();
 		List<StreetVertex> shortestSub1PathReverse = reverseDijkstra.buildShortestPathTo(jointValue);	
 		List<StreetVertex> shortestSub2Path = straightDijkstra.buildShortestPathTo(jointValue);
 	    ListIterator<StreetVertex> listIterator = shortestSub1PathReverse.listIterator();
@@ -71,9 +72,23 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		this.graph = g;	
 	}
 
-	private TreeSet<StreetVertex> intersectionOf(TreeSet<StreetVertex> treeSet, TreeSet<StreetVertex> treeSet2){
-		TreeSet<StreetVertex> intersection = new TreeSet<StreetVertex>(treeSet);
-		intersection.retainAll(treeSet2);
+	private TreeSet<StreetVertex> intersectionOf(List<StreetVertex> list, List<StreetVertex> list2){
+		TreeSet<StreetVertex> intersection = new TreeSet<StreetVertex>(list);
+		intersection.retainAll(list2);
 		return intersection;
+	}
+	
+	@Override
+	public List<StreetVertex> getBorderVertecies() {
+		ArrayList<StreetVertex> returnList = new ArrayList<StreetVertex>(straightDijkstra.getBorderVertecies()); 
+		returnList.addAll(reverseDijkstra.getBorderVertecies());
+		return returnList;
+	}
+
+	@Override
+	public List<StreetVertex> getFinishedVertecies() {
+		ArrayList<StreetVertex> returnList = new ArrayList<StreetVertex>(straightDijkstra.getFinishedVertecies()); 
+		returnList.addAll(reverseDijkstra.getFinishedVertecies());
+		return returnList;
 	}
 }

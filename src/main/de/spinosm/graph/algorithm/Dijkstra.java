@@ -1,5 +1,6 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -9,6 +10,7 @@ import java.util.TreeSet;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
+import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class Dijkstra extends ObservableShortestPath{
@@ -28,7 +30,7 @@ public class Dijkstra extends ObservableShortestPath{
 		this.graph = streetgraph;
 		this.direction = direction;
 		visitedVertecies = new TreeSet<StreetVertex>(new IdComparator());
-		toVisitVertecies = new PriorityQueue<StreetVertex>();		
+		toVisitVertecies = new PriorityQueue<StreetVertex>(new DistanceComparator());		
 		shortestPathMap = new TreeMap<StreetVertex, StreetVertex>(new IdComparator());
 	}
 	
@@ -84,7 +86,7 @@ public class Dijkstra extends ObservableShortestPath{
 
 	private void insertNewValue(StreetVertex u, StreetEdge e, StreetVertex v) {
 		v.setDistance(u.getDistance() + e.getWeight());						
-		toVisitVertecies.add(v);
+		toVisitVertecies.offer(v);
 		shortestPathMap.put(v, u);
 	}
 
@@ -122,23 +124,17 @@ public class Dijkstra extends ObservableShortestPath{
 	public StreetGraph getGraph() {
 		return graph;
 	}
-
-	public TreeSet<StreetVertex> getVisitedVertecies() {
-		return visitedVertecies;
+	
+	@Override
+	public List<StreetVertex> getBorderVertecies() {
+		return  new ArrayList<StreetVertex>(toVisitVertecies);
 	}
 
-	public void setVisitedVertecies(TreeSet<StreetVertex> vertecies) {
-		visitedVertecies = vertecies;
+	@Override
+	public List<StreetVertex> getFinishedVertecies() {
+		return new ArrayList<StreetVertex>(visitedVertecies);
 	}
-
-	public PriorityQueue<StreetVertex> getQ() {
-		return toVisitVertecies;
-	}
-
-	public void setQ(PriorityQueue<StreetVertex> q) {
-		toVisitVertecies = q;
-	}
-
+	
 	public StreetVertex getStartVertex() {
 		return startVertex;
 	}
@@ -154,8 +150,4 @@ public class Dijkstra extends ObservableShortestPath{
 	public void setEndVertex(StreetVertex endVertex) {
 		this.endVertex = endVertex;
 	}
-	
-
-
-
 }

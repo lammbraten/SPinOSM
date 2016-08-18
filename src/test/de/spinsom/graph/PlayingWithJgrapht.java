@@ -13,6 +13,7 @@ import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.algorithm.BiDirectionalDijkstra;
+import de.spinosm.graph.algorithm.Dijkstra;
 import de.spinosm.graph.algorithm.ObservableShortestPath;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.DefaultDataProvider;
@@ -38,8 +39,8 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = CAMPUS_WEST;
-	private static long end = EI_KOE;
+	private static long start = KREEFLD;
+	private static long end = DORTMUND;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -47,7 +48,7 @@ public class PlayingWithJgrapht {
 		WeightFunction wf = new DefaultCostFunction();
         //osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
 		//streetgraph = new StreetGraph(osmapi);
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\dues-RB.streets2.streetgraph.bin"));
+		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets3.streetgraph.bin"));
 		streetgraph = (StreetGraph) ois.readObject();
 		streetgraph.setDataprovider(new DefaultDataProvider());
 		ois.close();
@@ -80,7 +81,7 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
+		ObservableShortestPath sp = new Dijkstra(streetgraph);
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 
@@ -88,11 +89,15 @@ public class PlayingWithJgrapht {
 		List<StreetVertex> graphPath = sp.getShortestPath(startJunction, endJunction);
 		StreetGraph sg = sp.getGraph();	
 
-		GraphMapViewer gmv = new GraphMapViewer(sg, graphPath);	
+		GraphMapViewer gmv = new GraphMapViewer();	
+		//gmv.paintAlsoGraph(sp.getGraph());
+		gmv.paintAlsoRoute(graphPath);
+		gmv.paintAlsoBorder(sp.getBorderVertecies());
+		gmv.paintAlsoFinished(sp.getFinishedVertecies());
+		gmv.showMap();
 		
-
 		
-		Common.writeStreetGraph(streetgraph);
+		//Common.writeStreetGraph(streetgraph);
 		System.out.println("------------");
 		for(RouteableVertex n : graphPath)
 			System.out.println(n.getId() + ": " + n.getDistance());

@@ -11,8 +11,15 @@ import org.jxmapviewer.viewer.WaypointRenderer;
 public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 	private static int r = 5;
 	private static int d = 2*r;
+	private Color color;
 	
 	
+	public GenericWaypointRenderer(Color color) {
+		this.color = color;
+	}
+
+
+
 	@Override
 	public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint) {
 		g = (Graphics2D)g.create();
@@ -22,7 +29,7 @@ public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 		int x = (int)point.getX();
 		int y = (int)point.getY();
 		
-	    g.setColor(new Color(0, 143, 255));
+	    g.setColor(color);
 	    g.fillOval(x-r, y-r, d, d);
 
 		g.dispose();
