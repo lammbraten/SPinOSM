@@ -165,9 +165,11 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}
 
 	public void addEdge(StreetEdge e) {
-		super.addVertex(e.getEnd());
+		if(super.containsVertex(e.getEnd()))
+			linkEdgeWithAlreedyKnownVertex(e, e.getEnd());
+		else 
+			super.addVertex(e.getEnd());
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
-		//StreetEdge se = getEdge(e.getStart(), e.getStart());
 		if(se != null)
 			se.setWeight(e.getWeight());
 	}

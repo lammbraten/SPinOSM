@@ -8,6 +8,8 @@ public interface RouteableVertex extends Comparable<RouteableVertex>, Serializab
 	boolean hasSameId(RouteableVertex n);
 	public void setDistance(double distance);
 	public double getDistance();
+	public void setHeuristic(double heuristic);
+	public double getHeuristic();
 	public LatLon getPosition();
 	public boolean isEdgesLoaded();
 	public boolean equals(Object other);

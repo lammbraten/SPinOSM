@@ -86,7 +86,8 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 10));
+		ObservableShortestPath sp = new Dijkstra(streetgraph);
+		//ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 

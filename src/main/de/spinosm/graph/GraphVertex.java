@@ -1,7 +1,5 @@
 package de.spinosm.graph;
 
-import org.jgrapht.util.FibonacciHeapNode;
-
 import de.westnordost.osmapi.map.data.LatLon;
 
 
@@ -11,6 +9,7 @@ public abstract class GraphVertex implements RouteableVertex {
 	private static final long serialVersionUID = 1307414385237284029L;
 	private long id;
 	private double distance;
+	private double heuristic;
 	private SerializableLatLon position; //needed for Heuristic
 	
 	public static int DISTANCE_INIT_VALUE = Integer.MAX_VALUE;
@@ -55,6 +54,16 @@ public abstract class GraphVertex implements RouteableVertex {
 		if(distance < 0)
 			throw new IllegalArgumentException("Distance must be positive!");
 		this.distance = distance;
+	}
+
+	@Override
+	public double getHeuristic() {
+		return heuristic;
+	}
+
+	@Override
+	public void setHeuristic(double heuristic) {
+		this.heuristic = heuristic;
 	}
 
 	@Override

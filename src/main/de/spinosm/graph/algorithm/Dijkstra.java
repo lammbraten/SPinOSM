@@ -94,7 +94,7 @@ public class Dijkstra extends ObservableShortestPath{
 
 	protected void insertNewValue(StreetVertex u, StreetVertex v, double weight) {
 		v.setDistance(u.getDistance() + weight);						
-		toVisitVertecies.offer(v);
+		toVisitVertecies.add(v);
 		shortestPathMap.put(v, u);
 	}
 

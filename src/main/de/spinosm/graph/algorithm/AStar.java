@@ -1,9 +1,13 @@
 package de.spinosm.graph.algorithm;
 
 import java.util.List;
+import java.util.PriorityQueue;
+
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
+import de.spinosm.graph.pattern.DistanceComparator;
+import de.spinosm.graph.pattern.DistanceHeuristicComparator;
 import de.spinosm.graph.weights.DefaultHeuristic;
 import de.spinosm.graph.weights.Heuristic;
 
@@ -17,6 +21,7 @@ public class AStar extends Dijkstra {
 	public AStar(StreetGraph streetgraph, Heuristic heuristic){
 		super(streetgraph);
 		this.heuristic = heuristic;	
+		toVisitVertecies = new PriorityQueue<StreetVertex>(new DistanceHeuristicComparator());
 	}
 	
 	@Override
@@ -27,10 +32,6 @@ public class AStar extends Dijkstra {
 		return iterateThrougGraph();
 	}
 
-	/**
-	 * @param pi
-	 * @param u
-	 */
 	void checkNextVertex() {
 		StreetVertex u = toVisitVertecies.poll();
 		visitedVertecies.add(u);
@@ -44,10 +45,11 @@ public class AStar extends Dijkstra {
 			StreetVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
 				if(toVisitVertecies.contains(v)){					
-					if(v.getDistance() > (u.getDistance() + e.getWeight() ))
-						decraeseValue(u, v, e.getWeight() + heuristicForVertex(v));
+					if(v.getDistance() > (u.getDistance() + e.getWeight()))
+						decraeseValue(u, v, e.getWeight());
 				}else{
-					insertNewValue(u, v, e.getWeight() + heuristicForVertex(v));
+					v.setHeuristic(heuristicForVertex(v));
+					insertNewValue(u, v, e.getWeight());
 				}
 			}
 		}
@@ -61,7 +63,8 @@ public class AStar extends Dijkstra {
 		else
 			heuristic.setReferenceVertex(endVertex);
 		startVertex = start;
-		startVertex.setDistance(heuristicForVertex(startVertex));
+		startVertex.setDistance(0);
+		startVertex.setHeuristic(heuristicForVertex(startVertex));
 		graph.getEdgesForVertex(startVertex, StreetGraph.DEFAULT_DIRECTION);
 		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
 
