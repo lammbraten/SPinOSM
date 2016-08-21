@@ -44,8 +44,8 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = RA_GRO;
-	private static long end = SCH_GU;
+	private static long start = CAMPUS_SUED;
+	private static long end = CAMPUS_WEST;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -53,7 +53,7 @@ public class PlayingWithJgrapht {
 		WeightFunction wf = new PythagoreanDistanceWeight();
         osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
 		streetgraph = new StreetGraph(osmapi);
-		//ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets3.streetgraph.bin"));
+		//ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets4.streetgraph.bin"));
 		//streetgraph = (StreetGraph) ois.readObject();
 		//streetgraph.setDataprovider(new DefaultDataProvider());
 		//ois.close();
@@ -86,8 +86,8 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		ObservableShortestPath sp = new Dijkstra(streetgraph);
-		//ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
+		//ObservableShortestPath sp = new Dijkstra(streetgraph);
+		ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 
@@ -98,7 +98,7 @@ public class PlayingWithJgrapht {
 		//gmv.paintAlsoGraph(sp.getGraph());
 		gmv.paintAlsoRoute(graphPath);
 		gmv.paintAlsoBorder(sp.getBorderVertecies());
-		//gmv.paintAlsoFinished(sp.getFinishedVertecies());
+		gmv.paintAlsoFinished(sp.getFinishedVertecies());
 		gmv.showMap();
 		
 		

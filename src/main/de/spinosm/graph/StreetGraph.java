@@ -75,19 +75,20 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	private void linkWithAlredyKnownNodes(StreetVertex newNode){
 		for(StreetEdge edge : getEdgesForVertex(newNode, DEFAULT_DIRECTION)){
 			StreetVertex other = (StreetVertex) edge.getOtherKnotThan(newNode);
-			if(super.containsVertex( other))
-					linkEdgeWithAlreedyKnownVertex(edge, other);
+			//if(super.containsVertex( other))
+					//linkEdgeWithAlreedyKnownVertex(edge, other);
 				
 		}
 	}
 
+	/*
 	private void linkEdgeWithAlreedyKnownVertex(StreetEdge edge, StreetVertex toReplace){
-		for(StreetVertex node : super.vertexSet()){
+		for(StreetVertex node : super.vertexSet().){
 			if(node.hasSameId(toReplace)){
 				edge.replace(toReplace, node);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	public StreetEdge addEdge(StreetVertex sourceVertex, StreetVertex targetVertex) {
@@ -165,10 +166,11 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}
 
 	public void addEdge(StreetEdge e) {
-		if(super.containsVertex(e.getEnd()))
-			linkEdgeWithAlreedyKnownVertex(e, e.getEnd());
-		else 
-			super.addVertex(e.getEnd());
+		super.addVertex(e.getEnd());
+
+		//_______________________________________________//
+		//IRGENDWIE DIE VERTECIES AUF DOPPLER ÜBERPRÜFEN //
+		
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
 		if(se != null)
 			se.setWeight(e.getWeight());

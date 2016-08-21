@@ -1,6 +1,8 @@
 package de.spinosm.gui.drawing;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
@@ -12,7 +14,6 @@ public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 	private int r = 5;
 	private int d = 2*r;
 	private Color color;
-	
 	
 	public GenericWaypointRenderer(Color color, int radius) {
 		this.color = color;
@@ -32,8 +33,25 @@ public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 		
 	    g.setColor(color);
 	    g.fillOval(x-r, y-r, d, d);
+	    drawLabel(x, y, waypoint, g);
 
 		g.dispose();
+	}
+
+
+
+	private void drawLabel(int x, int y, Waypoint wp, Graphics2D g) {
+		if(!(wp instanceof LabeldWayPoint))
+			return;
+		LabeldWayPoint lwp = (LabeldWayPoint) wp;		
+		if(lwp.getLabel() == null)
+			return;
+		g.setFont(new Font("Helvitica", Font.BOLD, 12));
+		FontMetrics metrics = g.getFontMetrics();
+		int th = 1 + metrics.getAscent();
+		g.setColor(Color.BLACK);
+		g.drawString(lwp.getLabel(),x + 3,y + 3 + th);
+		
 	}
 
 }

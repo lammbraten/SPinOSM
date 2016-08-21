@@ -13,6 +13,7 @@ import de.spinosm.graph.algorithm.DepthFirstSearch;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.AsTheCrowFliesDistanceWeight;
 import de.spinosm.graph.weights.DefaultCostFunction;
+import de.spinosm.graph.weights.PythagoreanDistanceWeight;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 
@@ -55,8 +56,9 @@ public class OSMtoStreetgraphConverter {
 			ois.close();
 			GraphMapViewer gmv = new GraphMapViewer();
 			gmv.paintAlsoGraph(active);
-			Thread gmvt = new Thread(gmv);
-			gmvt.start();
+			gmv.showMap();
+			//Thread gmvt = new Thread(gmv);
+			//gmvt.start();
 		} catch (IOException|ClassNotFoundException e) {e.printStackTrace();}
 	}
 
@@ -71,7 +73,7 @@ public class OSMtoStreetgraphConverter {
 	}
 
 	private static void generateOSMFileReader() {
-		WeightFunction wf = new AsTheCrowFliesDistanceWeight();
+		WeightFunction wf = new PythagoreanDistanceWeight();
 		dataprovider = new LocalProvider(inFile, wf);
 		streetgraph = new StreetGraph(dataprovider);
 	}

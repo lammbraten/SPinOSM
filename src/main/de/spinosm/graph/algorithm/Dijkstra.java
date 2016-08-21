@@ -74,8 +74,7 @@ public class Dijkstra extends ObservableShortestPath{
 			StreetVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
 				if(toVisitVertecies.contains(v)){					
-					if(v.getDistance() > (u.getDistance() + e.getWeight()))
-						decraeseValue(u, v, e.getWeight());
+					decraeseValueIfLower(u, v, e.getWeight());
 				}else{
 					insertNewValue(u, v, e.getWeight());
 				}
@@ -87,9 +86,12 @@ public class Dijkstra extends ObservableShortestPath{
 		return toVisitVertecies.peek().getId() == endVertex.getId();
 	}
 	
-	protected void decraeseValue(StreetVertex u, StreetVertex v, double weight) {
-		toVisitVertecies.remove(v);
-		insertNewValue(u, v, weight);
+	protected void decraeseValueIfLower(StreetVertex u, StreetVertex v, double weight) {
+		StreetVertex alreadyFoundV = shortestPathMap.get(v);
+		if(alreadyFoundV.getDistance() > (u.getDistance() + weight)){
+			toVisitVertecies.remove(alreadyFoundV);			
+			insertNewValue(u, alreadyFoundV, weight);
+		}
 	}
 
 	protected void insertNewValue(StreetVertex u, StreetVertex v, double weight) {

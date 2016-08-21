@@ -32,6 +32,7 @@ import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.GenericWaypointRenderer;
+import de.spinosm.gui.drawing.LabeldWayPoint;
 import de.spinosm.gui.drawing.RoutePainter;
 
 public class GraphMapViewer extends Thread implements Observer, Runnable{
@@ -162,7 +163,7 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
 		for(RouteableVertex graphPoint : set){
 			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
-			vertecieWaypoints.add(new DefaultWaypoint(gp));
+			vertecieWaypoints.add(new LabeldWayPoint(gp, shortendDoubleString(graphPoint.getDistance())));
 		}
 		return vertecieWaypoints;
 	}
@@ -174,10 +175,17 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	private void addEdgeToPainters(Color edgeColorForThisVertex, StreetEdge routeEdge) {
 		GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
 		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
-		double label = routeEdge.getWeight();
-		String formattedLabel = String.format("%.4f", label);
-		ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, formattedLabel);	
+		ArrowPainter arrowPainter = new ArrowPainter(start, end, edgeColorForThisVertex, shortendDoubleString(routeEdge.getWeight()));	
 		painters.add(arrowPainter);
+	}
+
+
+	/**
+	 * @param routeEdge
+	 * @return
+	 */
+	protected String shortendDoubleString(double value) {
+		return String.format("%.4f", value);
 	}
 
 	private Color generateRandomColor() {
