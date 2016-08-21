@@ -44,12 +44,15 @@ public class AStar extends Dijkstra {
 		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
 			StreetVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
-				if(toVisitVertecies.contains(v)){
-					/*if(v.getDistance() > (u.getDistance() + e.getWeight()))*/
+				try {	
+					if(toVisitVertecies.contains(v)){
 						decraeseValueIfLower(u, v, e.getWeight());
-				}else{
-					v.setHeuristic(heuristicForVertex(v));
-					insertNewValue(u, v, e.getWeight());
+					}else{
+						v.setHeuristic(heuristicForVertex(v));
+						insertNewValue(u, v, e.getWeight());
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
 			}
 		}

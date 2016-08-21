@@ -120,7 +120,15 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	 * 
 	 */
 	private void prepareNodeEdgesForPainting() {
-		for(StreetVertex node : sg.vertexSet()){
+		paintAlsoEdgesOf(sg.vertexSet());
+	}
+
+
+	/**
+	 * 
+	 */
+	public void paintAlsoEdgesOf(Set<StreetVertex> vertecies) {
+		for(StreetVertex node : vertecies){
 			Color edgeColorForThisVertex = generateRandomColor();
 			for(StreetEdge routeEdge : sg.getEdgesForVertex(node, StreetGraph.DEFAULT_DIRECTION, false)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
@@ -131,18 +139,18 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	/**
 	 * 
 	 */
-	private void prepareVerteciesForPainting() {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(sg.vertexSet());
+	private void prepareVerteciesForPainting(boolean showLabel) {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(sg.vertexSet(), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(0, 143, 255), 3);
 	}
 
-	private void prepareBorderForPainting() {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(border));
+	private void prepareBorderForPainting(boolean showLabel) {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(border), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(238, 77, 46), 5);
 	}
 
-	private void prepareFinishedForPainting() {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(finisched));
+	private void prepareFinishedForPainting(boolean showLabel) {
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(finisched), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(91, 158, 28), 4);
 	}
 	
@@ -159,11 +167,14 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	/**
 	 * @param set
 	 */
-	private Set<Waypoint> generateWaypointsFromVertecies(Set<StreetVertex> set) {
+	private Set<Waypoint> generateWaypointsFromVertecies(Set<StreetVertex> set, boolean showLabel) {
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
 		for(RouteableVertex graphPoint : set){
 			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
-			vertecieWaypoints.add(new LabeldWayPoint(gp, shortendDoubleString(graphPoint.getDistance())));
+			if(showLabel)
+				vertecieWaypoints.add(new LabeldWayPoint(gp, shortendDoubleString(graphPoint.getDistance()) + ", " + shortendDoubleString(graphPoint.getHeuristic())));
+			else
+				vertecieWaypoints.add(new LabeldWayPoint(gp, ""));			
 		}
 		return vertecieWaypoints;
 	}
@@ -210,9 +221,9 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		handle();
 	}
 
-	public void paintAlsoGraph(StreetGraph graph) {
+	public void paintAlsoGraph(StreetGraph graph, boolean showLabel) {
 		sg = graph;
-		prepareVerteciesForPainting();
+		prepareVerteciesForPainting(showLabel);
 		prepareNodeEdgesForPainting();	
 	}
 
@@ -221,14 +232,24 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		prepareShortestPathForPainting();			
 	}
 
-	public void paintAlsoBorder(List<StreetVertex> borderVertecies) {
+	public void paintAlsoBorder(List<StreetVertex> borderVertecies, boolean showLabel) {
 		border = borderVertecies;
-		prepareBorderForPainting();			
+		prepareBorderForPainting(showLabel);			
 	}
 
-	public void paintAlsoFinished(List<StreetVertex> finishedVertecies) {
+	public void paintAlsoFinished(List<StreetVertex> finishedVertecies, boolean showLabel) {
 		finisched = finishedVertecies;
-		prepareFinishedForPainting();			
+		prepareFinishedForPainting(showLabel);			
+	}
+
+
+	public StreetGraph getSg() {
+		return sg;
+	}
+
+
+	public void setSg(StreetGraph sg) {
+		this.sg = sg;
 	}
 
 

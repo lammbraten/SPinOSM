@@ -8,7 +8,11 @@ public class IdComparator implements Comparator<RouteableVertex> {
 
 	@Override
 	public int compare(RouteableVertex o1, RouteableVertex o2) {
-		return (int) (o1.getId() - o2.getId());
+		if((o1.getId() - o2.getId())>0)
+			return 1;
+		if((o1.getId() - o2.getId())<0)
+			return -1;
+		return 0;
 	}
 
 }

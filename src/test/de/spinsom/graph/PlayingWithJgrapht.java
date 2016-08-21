@@ -3,7 +3,10 @@ package de.spinsom.graph;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,8 +47,8 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = CAMPUS_SUED;
-	private static long end = CAMPUS_WEST;
+	private static long start = SCH_GU;
+	private static long end = RA_GRO;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -96,9 +99,12 @@ public class PlayingWithJgrapht {
 
 		GraphMapViewer gmv = new GraphMapViewer();	
 		//gmv.paintAlsoGraph(sp.getGraph());
+		gmv.setSg(sp.getGraph());
+		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);
+		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(sp.getFinishedVertecies()));
+		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(graphPath));
+		gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
 		gmv.paintAlsoRoute(graphPath);
-		gmv.paintAlsoBorder(sp.getBorderVertecies());
-		gmv.paintAlsoFinished(sp.getFinishedVertecies());
 		gmv.showMap();
 		
 		

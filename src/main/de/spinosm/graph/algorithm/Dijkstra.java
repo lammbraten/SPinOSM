@@ -1,8 +1,12 @@
 package de.spinosm.graph.algorithm;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -45,7 +49,6 @@ public class Dijkstra extends ObservableShortestPath{
 		endVertex = end;		
 		init(start);
 
-			
 		return iterateThrougGraph();
 	}
 
@@ -73,10 +76,14 @@ public class Dijkstra extends ObservableShortestPath{
 		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
 			StreetVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
-				if(toVisitVertecies.contains(v)){					
-					decraeseValueIfLower(u, v, e.getWeight());
-				}else{
-					insertNewValue(u, v, e.getWeight());
+				try {				
+					if(toVisitVertecies.contains(v)){					
+						decraeseValueIfLower(u, v, e.getWeight());
+					}else{
+						insertNewValue(u, v, e.getWeight());
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
 			}
 		}
@@ -86,18 +93,22 @@ public class Dijkstra extends ObservableShortestPath{
 		return toVisitVertecies.peek().getId() == endVertex.getId();
 	}
 	
-	protected void decraeseValueIfLower(StreetVertex u, StreetVertex v, double weight) {
-		StreetVertex alreadyFoundV = shortestPathMap.get(v);
-		if(alreadyFoundV.getDistance() > (u.getDistance() + weight)){
-			toVisitVertecies.remove(alreadyFoundV);			
-			insertNewValue(u, alreadyFoundV, weight);
+	protected void decraeseValueIfLower(StreetVertex u, StreetVertex v, double weight) throws Exception {
+		StreetVertex alreadyFoundV = shortestPathMap.ceilingKey(v);
+		if(!alreadyFoundV.equals(v) || alreadyFoundV == null || u == null)
+			throw new Exception("Something went wrong");
+		if(alreadyFoundV.getDistance() > (u.getDistance() + weight)){			
+			alreadyFoundV.setDistance(u.getDistance() + weight);	
+			if(shortestPathMap.put(alreadyFoundV, u) == null)
+				throw new Exception("Something went wrong");
 		}
 	}
 
-	protected void insertNewValue(StreetVertex u, StreetVertex v, double weight) {
+	protected void insertNewValue(StreetVertex u, StreetVertex v, double weight) throws Exception {
 		v.setDistance(u.getDistance() + weight);						
 		toVisitVertecies.add(v);
-		shortestPathMap.put(v, u);
+		if(shortestPathMap.put(v, u) != null)
+			throw new Exception("Something went wrong");
 	}
 
 	protected void loadEdges(StreetVertex u) {
@@ -106,15 +117,33 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 
 	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {
+		//for(Entry<StreetVertex, StreetVertex> e : shortestPathMap.)
+		writeToLogFile(shortestPathMap.descendingMap());
+		
 		StreetVertex v = shortestPathMap.get(endVertex);
 		LinkedList<StreetVertex> returnValue = new LinkedList<StreetVertex>();	
 		returnValue.add(v);
 		while(v.getId() != startVertex.getId()){
 			v = shortestPathMap.get(v);
+			if(v == null)
+				break;
 			returnValue.add(v);
 		}
 		
 		return returnValue;
+	}
+
+	private void writeToLogFile(NavigableMap<StreetVertex, StreetVertex> navigableMap) {
+		try {
+			PrintWriter writer = new PrintWriter("C:\\Users\\lammbraten\\Desktop\\vertexMap.txt", "UTF-8");
+			for(StreetVertex k : navigableMap.keySet())
+				writer.write(k + ": " + navigableMap.get(k) + "\n");
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	void init(StreetVertex start){

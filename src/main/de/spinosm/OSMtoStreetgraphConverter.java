@@ -55,7 +55,7 @@ public class OSMtoStreetgraphConverter {
 			StreetGraph active = (StreetGraph) ois.readObject();
 			ois.close();
 			GraphMapViewer gmv = new GraphMapViewer();
-			gmv.paintAlsoGraph(active);
+			gmv.paintAlsoGraph(active, true);
 			gmv.showMap();
 			//Thread gmvt = new Thread(gmv);
 			//gmvt.start();

@@ -33,7 +33,7 @@ public class ArrowPainter implements Painter<JXMapViewer>{
 		this(startPoint, endPoint, color, null);
 	}
 
-	void drawArrow ( Graphics2D g, JXMapViewer map){
+	void drawArrow (Graphics2D g, JXMapViewer map){
 		Point2D start = coordinateToPixel(map, startCoordinate);
 		Point2D end = coordinateToPixel(map, endCoordinate);
 

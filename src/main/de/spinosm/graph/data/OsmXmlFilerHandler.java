@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.spinosm.common.Common;
+import de.spinosm.common.Vehicle;
 import de.westnordost.osmapi.map.MapDataParser;
 import de.westnordost.osmapi.map.OsmMapDataFactory;
 import de.westnordost.osmapi.map.data.Node;
@@ -44,8 +46,18 @@ public class OsmXmlFilerHandler{
 		Set<Long> wayIdsForNode = waysOfNode.get(id);
 		LinkedList<Way> waysForNode = new LinkedList<Way>();
 		for(long wid: wayIdsForNode)
-			waysForNode.add(ways.get(wid));
+			addIfUseable(waysForNode, wid);
 		return waysForNode;
+	}
+
+	/**
+	 * @param waysForNode
+	 * @param wid
+	 */
+	public void addIfUseable(LinkedList<Way> waysForNode, long wid) {
+		Way way = ways.get(wid);
+		if(Common.wayIsUseable(way, Vehicle.CAR))
+			waysForNode.add(way);
 	}
 
 	public Way getWay(long id) {

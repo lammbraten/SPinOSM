@@ -49,7 +49,7 @@ public class GenericWaypointRenderer implements WaypointRenderer<Waypoint> {
 		g.setFont(new Font("Helvitica", Font.BOLD, 12));
 		FontMetrics metrics = g.getFontMetrics();
 		int th = 1 + metrics.getAscent();
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLUE);
 		g.drawString(lwp.getLabel(),x + 3,y + 3 + th);
 		
 	}
