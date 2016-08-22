@@ -58,7 +58,7 @@ public class LocalProvider extends AbstractProvider{
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForNode(StreetVertex sj) {
+	public Set<StreetEdge> getStreetEdgesForVertex(StreetVertex sj) {
 		Set<StreetEdge> returnValue;
 		if(sj == null){
 			throw new IllegalArgumentException("Node not existing in OSM");

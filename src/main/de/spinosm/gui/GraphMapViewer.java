@@ -130,7 +130,7 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	public void paintAlsoEdgesOf(Set<StreetVertex> vertecies) {
 		for(StreetVertex node : vertecies){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(StreetEdge routeEdge : sg.getEdgesForVertex(node, StreetGraph.DEFAULT_DIRECTION, false)){
+			for(StreetEdge routeEdge : sg.getEdgesForVertex(node, StreetGraph.DEFAULT_DIRECTION)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}

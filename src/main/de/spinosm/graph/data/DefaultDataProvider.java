@@ -43,7 +43,7 @@ public class DefaultDataProvider implements DataProvider {
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForNode(StreetVertex sj) {
+	public Set<StreetEdge> getStreetEdgesForVertex(StreetVertex sj) {
 		return new HashSet<StreetEdge>();
 	}
 }

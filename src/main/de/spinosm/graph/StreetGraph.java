@@ -112,25 +112,16 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}
 	
 	public Set<StreetEdge> getEdgesForVertex(StreetVertex sv, int direction) {
-		Set<StreetEdge>  returnValue = checkBufferedEdgeForId(sv, direction);
-		if(!returnValue.isEmpty())
-			return returnValue;
+		if(sv.isEdgesLoaded())
+			return checkBufferedEdgeForId(sv, direction);
 		else{
 			loadEdgesFormDataprovider(sv);
 			return checkBufferedEdgeForId(sv, direction); //Had to that because, Loading From dataprovider with direction makes no sense
 		}
 	}
 	
-
-	public Set<StreetEdge> getEdgesForVertex(StreetVertex sv, int direction, boolean download) {
-		if(download)
-			return getEdgesForVertex(sv, direction);
-		return checkBufferedEdgeForId(sv, direction);
-	}
-
-
 	private Set<StreetEdge> loadEdgesFormDataprovider(StreetVertex sv) {
-		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForNode(sv);
+		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForVertex(sv);
 		for(StreetEdge e: edges)
 			addEdge(e);
 		sv.setEdgesLoaded(true);		
@@ -167,10 +158,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 
 	public void addEdge(StreetEdge e) {
 		super.addVertex(e.getEnd());
-
-		//_______________________________________________//
-		//IRGENDWIE DIE VERTECIES AUF DOPPLER ÜBERPRÜFEN //
-		
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
 		if(se != null)
 			se.setWeight(e.getWeight());

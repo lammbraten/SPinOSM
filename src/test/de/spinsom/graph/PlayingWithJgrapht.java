@@ -89,8 +89,8 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		//ObservableShortestPath sp = new Dijkstra(streetgraph);
-		ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
+		ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
+		//ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 
@@ -100,10 +100,10 @@ public class PlayingWithJgrapht {
 		GraphMapViewer gmv = new GraphMapViewer();	
 		//gmv.paintAlsoGraph(sp.getGraph());
 		gmv.setSg(sp.getGraph());
-		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);
 		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(sp.getFinishedVertecies()));
 		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(graphPath));
 		gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
+		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);
 		gmv.paintAlsoRoute(graphPath);
 		gmv.showMap();
 		

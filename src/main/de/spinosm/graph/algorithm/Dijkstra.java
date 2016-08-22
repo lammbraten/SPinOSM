@@ -117,8 +117,7 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 
 	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {
-		//for(Entry<StreetVertex, StreetVertex> e : shortestPathMap.)
-		writeToLogFile(shortestPathMap.descendingMap());
+		//writeToLogFile(shortestPathMap.descendingMap());
 		
 		StreetVertex v = shortestPathMap.get(endVertex);
 		LinkedList<StreetVertex> returnValue = new LinkedList<StreetVertex>();	
@@ -140,7 +139,6 @@ public class Dijkstra extends ObservableShortestPath{
 				writer.write(k + ": " + navigableMap.get(k) + "\n");
 			writer.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -173,6 +171,17 @@ public class Dijkstra extends ObservableShortestPath{
 	public List<StreetVertex> getFinishedVertecies() {
 		return new ArrayList<StreetVertex>(visitedVertecies);
 	}
+	
+	@Override
+	public TreeSet<StreetVertex> getVisitedVertecies() {
+		return visitedVertecies;
+	}
+
+	@Override
+	public void setVisitedVertecies(TreeSet<StreetVertex> visitedVertecies) {
+		this.visitedVertecies = visitedVertecies;
+	}
+
 	
 	public StreetVertex getStartVertex() {
 		return startVertex;

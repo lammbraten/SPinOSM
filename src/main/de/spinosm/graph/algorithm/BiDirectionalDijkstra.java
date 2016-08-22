@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.TreeSet;
 
+import de.spinosm.graph.SerializableLatLon;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
+import de.westnordost.osmapi.map.data.LatLon;
+import de.westnordost.osmapi.map.data.LatLons;
 
 public class BiDirectionalDijkstra extends ObservableShortestPath{
 	private static final int REVERSE_DIRECTION = -1;
@@ -35,7 +38,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		reverseDijkstra.init(startVertex);
 		straightDijkstra.init(endVertex);
 		
-		while(intersectionOf(reverseDijkstra.getFinishedVertecies(),straightDijkstra.getFinishedVertecies()).isEmpty() && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
+		while(intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()).isEmpty() && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
 			reverseDijkstra.checkNextVertex();
 			straightDijkstra.checkNextVertex();
 		}
@@ -43,8 +46,9 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		return buildShortestPath();
 	}
 
+	
 	private List<StreetVertex> buildShortestPath() {
-		StreetVertex jointValue = intersectionOf(reverseDijkstra.getFinishedVertecies(),straightDijkstra.getFinishedVertecies()).first();
+		StreetVertex jointValue = getMiddleVertex();
 		List<StreetVertex> shortestSub1PathReverse = reverseDijkstra.buildShortestPathTo(jointValue);	
 		List<StreetVertex> shortestSub2Path = straightDijkstra.buildShortestPathTo(jointValue);
 	    ListIterator<StreetVertex> listIterator = shortestSub1PathReverse.listIterator();
@@ -62,6 +66,20 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		return shortestPath;
 	}
 
+	/**
+	 * @return
+	 */
+	public StreetVertex getMiddleVertex() {
+		TreeSet<StreetVertex> intersectionSet = intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies());
+		StreetVertex lowestDistance = new StreetVertex();
+		
+		for(StreetVertex sv : intersectionSet)
+			if(sv.getDistance() < lowestDistance.getDistance())
+				lowestDistance = sv;
+		
+		return lowestDistance;
+	}
+
 	@Override
 	public StreetGraph getGraph() {
 		return graph;
@@ -72,7 +90,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		this.graph = g;	
 	}
 
-	private TreeSet<StreetVertex> intersectionOf(List<StreetVertex> list, List<StreetVertex> list2){
+	private TreeSet<StreetVertex> intersectionOf(TreeSet<StreetVertex> list, TreeSet<StreetVertex> list2){
 		TreeSet<StreetVertex> intersection = new TreeSet<StreetVertex>(list);
 		intersection.retainAll(list2);
 		return intersection;
@@ -90,5 +108,17 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		ArrayList<StreetVertex> returnList = new ArrayList<StreetVertex>(straightDijkstra.getFinishedVertecies()); 
 		returnList.addAll(reverseDijkstra.getFinishedVertecies());
 		return returnList;
+	}
+
+	@Override
+	public TreeSet<StreetVertex> getVisitedVertecies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setVisitedVertecies(TreeSet<StreetVertex> visitedVertecies) {
+		// TODO Auto-generated method stub
+		
 	}
 }

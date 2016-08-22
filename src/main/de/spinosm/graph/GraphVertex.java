@@ -24,7 +24,8 @@ public abstract class GraphVertex implements RouteableVertex {
 	public GraphVertex(long id, LatLon latLon){
 		this.setId(id);
 		this.setDistance(DISTANCE_INIT_VALUE);
-		this.position = new SerializableLatLon(latLon);
+		if(latLon != null)
+			this.position = new SerializableLatLon(latLon);
 	}
 	
 	public long getId() {
