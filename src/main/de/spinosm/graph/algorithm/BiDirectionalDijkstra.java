@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.TreeSet;
 
-import de.spinosm.graph.SerializableLatLon;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
-import de.westnordost.osmapi.map.data.LatLon;
-import de.westnordost.osmapi.map.data.LatLons;
 
 public class BiDirectionalDijkstra extends ObservableShortestPath{
 	private static final int REVERSE_DIRECTION = -1;

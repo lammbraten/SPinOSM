@@ -54,7 +54,7 @@ public class DepthFirstSearch extends Observable {
 	
 	private void loadEdges(StreetVertex u) {
 		for(StreetEdge e : 	graph.getEdgesForVertex(u, 1))
-			graph.addEdge(e);
+			graph.addEdge(e,u);
 	}
 	
 	private void setMaxDepth(long maxDepth) {

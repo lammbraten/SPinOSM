@@ -47,8 +47,8 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = SCH_GU;
-	private static long end = RA_GRO;
+	private static long start = KREEFLD;
+	private static long end = DORTMUND;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -61,7 +61,6 @@ public class PlayingWithJgrapht {
 		//streetgraph.setDataprovider(new DefaultDataProvider());
 		//ois.close();
 	}
-
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
@@ -89,8 +88,8 @@ public class PlayingWithJgrapht {
 		//gmvt.start();
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
-		ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
-		//ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1));
+		//ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
+		ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1.0f));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 
@@ -100,9 +99,9 @@ public class PlayingWithJgrapht {
 		GraphMapViewer gmv = new GraphMapViewer();	
 		//gmv.paintAlsoGraph(sp.getGraph());
 		gmv.setSg(sp.getGraph());
-		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(sp.getFinishedVertecies()));
+		gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(sp.getFinishedVertecies()));
 		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(graphPath));
-		gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
+		//gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
 		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);
 		gmv.paintAlsoRoute(graphPath);
 		gmv.showMap();

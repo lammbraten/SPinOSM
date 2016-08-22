@@ -49,13 +49,13 @@ abstract class AbstractProvider implements DataProvider {
 				if(isUseableDownTheRoad(way)){
 					try {edges.add(shapeNewOutgoingEdgeDownTheRoad(way, referenceVertex, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, referenceVertex, nodes, node));
+					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, referenceVertex, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
 				}
 				if(isUseableUpTheRoad(way)){
 					try {edges.add(shapeNewOutgoingEdgeUpTheRoad(way, referenceVertex, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, referenceVertex, nodes, node));	
+					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, referenceVertex, nodes, node));	
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
 				}
 			}

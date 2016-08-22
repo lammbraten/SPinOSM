@@ -2,8 +2,6 @@ package de.spinosm.graph.algorithm;
 
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.function.Predicate;
-
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;

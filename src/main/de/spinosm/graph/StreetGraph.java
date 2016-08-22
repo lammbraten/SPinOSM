@@ -72,7 +72,8 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		super.addVertex(newNode);
 	}
 	
-	private void linkWithAlredyKnownNodes(StreetVertex newNode){
+	/*
+	 private void linkWithAlredyKnownNodes(StreetVertex newNode){
 		for(StreetEdge edge : getEdgesForVertex(newNode, DEFAULT_DIRECTION)){
 			StreetVertex other = (StreetVertex) edge.getOtherKnotThan(newNode);
 			//if(super.containsVertex( other))
@@ -81,7 +82,6 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		}
 	}
 
-	/*
 	private void linkEdgeWithAlreedyKnownVertex(StreetEdge edge, StreetVertex toReplace){
 		for(StreetVertex node : super.vertexSet().){
 			if(node.hasSameId(toReplace)){
@@ -123,7 +123,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	private Set<StreetEdge> loadEdgesFormDataprovider(StreetVertex sv) {
 		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForVertex(sv);
 		for(StreetEdge e: edges)
-			addEdge(e);
+			addEdge(e, sv);
 		sv.setEdgesLoaded(true);		
 		return edges;
 	}
@@ -156,14 +156,13 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		return outgoingEdges;
 	}
 
-	public void addEdge(StreetEdge e) {
-		super.addVertex(e.getEnd());
+	public void addEdge(StreetEdge e, StreetVertex sv) {
+		super.addVertex(e.getOtherKnotThan(sv));
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
 		if(se != null)
 			se.setWeight(e.getWeight());
 	}
 
-	@SuppressWarnings("Deprecated")
 	@Override
 	public Set<StreetEdge> edgesOf(StreetVertex v){
 		try {

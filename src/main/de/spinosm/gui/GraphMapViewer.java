@@ -19,7 +19,6 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
-import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
@@ -29,7 +28,6 @@ import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
-import de.spinosm.graph.algorithm.ShortestPath;
 import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.GenericWaypointRenderer;
 import de.spinosm.gui.drawing.LabeldWayPoint;
@@ -45,27 +43,20 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	private List<StreetVertex> border;
 	private List<StreetVertex> finisched;
 	
-	
 	/**
 	 * @param graphPath 
 	 * @wbp.parser.constructor
 	 */
 	public GraphMapViewer() {
 		this.painters = new ArrayList<Painter<JXMapViewer>>();
-		
-		//showMap();
 	}
 
-	
 	public void showMap(){
 		map = initMap();   
 		handle();
 		showFrame();
 	}
 	
-	/**
-	 * @throws HeadlessException
-	 */
 	private void showFrame() throws HeadlessException {
 		JFrame frame = new JFrame("SPinOSM");
         frame.getContentPane().add(mapView);
@@ -73,27 +64,16 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 	}
-	
-	/**
-	 * @param map
-	 */
-	private void handle() {
 
- 	
+	private void handle() {
 		paintOnMap(map);
 	}
 
-	/**
-	 * @param map
-	 */
 	private void paintOnMap(JXMapViewer map) {
 		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 		map.setOverlayPainter(painter);
 	}
 
-	/**
-	 * @return
-	 */
 	private JXMapViewer initMap() {
 		TileFactoryInfo info = new OSMTileFactoryInfo();
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
@@ -103,9 +83,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		return map;
 	}
 
-	/**
-	 * 
-	 */
 	private void prepareShortestPathForPainting() {
 		List<GeoPosition> track = new LinkedList<GeoPosition>();
 		if(route != null){
@@ -116,17 +93,10 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		painters.add(routePainter);
 	}
 
-	/**
-	 * 
-	 */
 	private void prepareNodeEdgesForPainting() {
 		paintAlsoEdgesOf(sg.vertexSet());
 	}
 
-
-	/**
-	 * 
-	 */
 	public void paintAlsoEdgesOf(Set<StreetVertex> vertecies) {
 		for(StreetVertex node : vertecies){
 			Color edgeColorForThisVertex = generateRandomColor();
@@ -136,9 +106,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void prepareVerteciesForPainting(boolean showLabel) {
 		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(sg.vertexSet(), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(0, 143, 255), 3);
@@ -154,9 +121,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(91, 158, 28), 4);
 	}
 	
-	/**
-	 * @param vertecieWaypoints
-	 */
 	private void addVertecieWaypointsToPainters(Set<Waypoint> vertecieWaypoints, Color color, int radius) {
 		WaypointPainter<Waypoint> graphNodesPainter = new WaypointPainter<Waypoint>();	
 		graphNodesPainter.setWaypoints(vertecieWaypoints);
@@ -164,9 +128,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		painters.add(graphNodesPainter);
 	}
 
-	/**
-	 * @param set
-	 */
 	private Set<Waypoint> generateWaypointsFromVertecies(Set<StreetVertex> set, boolean showLabel) {
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
 		for(RouteableVertex graphPoint : set){
@@ -179,10 +140,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		return vertecieWaypoints;
 	}
 
-	/**
-	 * @param edgeColorForThisVertex
-	 * @param routeEdge
-	 */
 	private void addEdgeToPainters(Color edgeColorForThisVertex, StreetEdge routeEdge) {
 		GeoPosition start = routeableNodeToGeoPosiotion(routeEdge.getStart());
 		GeoPosition end = routeableNodeToGeoPosiotion(routeEdge.getEnd());	   
@@ -190,11 +147,6 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		painters.add(arrowPainter);
 	}
 
-
-	/**
-	 * @param routeEdge
-	 * @return
-	 */
 	protected String shortendDoubleString(double value) {
 		return String.format("%.4f", value);
 	}
@@ -242,16 +194,11 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		prepareFinishedForPainting(showLabel);			
 	}
 
-
 	public StreetGraph getSg() {
 		return sg;
 	}
 
-
 	public void setSg(StreetGraph sg) {
 		this.sg = sg;
 	}
-
-
-
 }

@@ -1,9 +1,5 @@
 package de.spinosm.common;
 
-import java.util.LinkedList;
-
-import de.spinosm.graph.RouteableEdge;
-import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;

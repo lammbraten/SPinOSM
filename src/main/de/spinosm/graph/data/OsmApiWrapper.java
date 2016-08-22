@@ -29,8 +29,6 @@ public class OsmApiWrapper extends AbstractProvider{
 	private static final int TIMEOUT = 10000; //10 secs
 	private static final int MAX_ATTEMPTS = 5;
 	private static final OAuthConsumer OSM_AUTH= null;
-	private static final int DOWNTHEROAD = -1;
-	private static final int UPTHEROAD = 1; 
 	
 	private OsmConnection osm;
 	private MapDataDao mddao;

@@ -112,15 +112,15 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 
 	protected void loadEdges(StreetVertex u) {
-		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction))
-			graph.addEdge(e);
+		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction));
+			//graph.addEdge(e);
 	}
 
 	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {
 		//writeToLogFile(shortestPathMap.descendingMap());
-		
 		StreetVertex v = shortestPathMap.get(endVertex);
 		LinkedList<StreetVertex> returnValue = new LinkedList<StreetVertex>();	
+		
 		returnValue.add(v);
 		while(v.getId() != startVertex.getId()){
 			v = shortestPathMap.get(v);
