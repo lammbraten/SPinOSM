@@ -36,8 +36,8 @@ public class AStar extends Dijkstra {
 		setChanged();
 		notifyObservers(u);		
 		
-		if(!u.isEdgesLoaded())
-			loadEdges(u);				
+		/*if(!u.isEdgesLoaded())
+			loadEdges(u);*/				
 		
 		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
 			StreetVertex v = e.getOtherKnotThan(u);

@@ -70,8 +70,8 @@ public class Dijkstra extends ObservableShortestPath{
 		setChanged();
 		notifyObservers(u);		
 		
-		if(!u.isEdgesLoaded())
-			loadEdges(u);				
+		/*if(!u.isEdgesLoaded())
+			loadEdges(u);	*/			
 		
 		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
 			StreetVertex v = e.getOtherKnotThan(u);
@@ -112,8 +112,8 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 
 	protected void loadEdges(StreetVertex u) {
-		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction));
-			//graph.addEdge(e);
+		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction))
+			graph.addEdge(e,u);
 	}
 
 	List<StreetVertex> buildShortestPathTo(StreetVertex endVertex) {

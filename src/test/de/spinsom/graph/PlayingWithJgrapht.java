@@ -47,8 +47,8 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = KREEFLD;
-	private static long end = DORTMUND;
+	private static long start = RA_GRO;
+	private static long end = CAMPUS_WEST;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

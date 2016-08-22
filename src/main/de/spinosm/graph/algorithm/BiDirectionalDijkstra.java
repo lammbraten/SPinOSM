@@ -88,6 +88,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	}
 
 	private TreeSet<StreetVertex> intersectionOf(TreeSet<StreetVertex> list, TreeSet<StreetVertex> list2){
+		//TODO; Make This more effictive
 		TreeSet<StreetVertex> intersection = new TreeSet<StreetVertex>(list);
 		intersection.retainAll(list2);
 		return intersection;
