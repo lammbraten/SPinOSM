@@ -1,0 +1,9 @@
+de.spinosm
+de.spinosm.common
+de.spinosm.graph
+de.spinosm.graph.algorithm
+de.spinosm.graph.data
+de.spinosm.graph.pattern
+de.spinosm.graph.weights
+de.spinosm.gui
+de.spinosm.gui.drawing

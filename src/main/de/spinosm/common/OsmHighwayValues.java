@@ -175,13 +175,13 @@ public class OsmHighwayValues {
 	}
 
 
-	public static int getPedestrianSpeeds(Way way) {
-		return 7;
+	public static double getPedestrianSpeeds(Way way) {
+		return 7/TOMS;
 	}
 
 
-	public static int getBycicleSpeeds(Way way) {
-		return 20;
+	public static double getBycicleSpeeds(Way way) {
+		return 20/TOMS;
 	}
 	
 

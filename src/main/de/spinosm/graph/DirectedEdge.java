@@ -1,8 +1,6 @@
 package de.spinosm.graph;
 
 public abstract class DirectedEdge implements RouteableEdge{
-
-
 	private static final long serialVersionUID = -9135933798984497839L;
 	
 	private StreetVertex source;
