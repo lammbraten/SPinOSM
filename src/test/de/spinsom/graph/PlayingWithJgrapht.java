@@ -69,8 +69,8 @@ public class PlayingWithJgrapht {
 	public void test() {
 		//StreetJunction startJunction = osmapi.getStreetJunction(start);
 		//StreetJunction endJunction = osmapi.getStreetJunction(end);
-		StreetVertex startJunction = streetgraph.getVertex(start);
-		StreetVertex endJunction = streetgraph.getVertex(end);
+		RouteableVertex startJunction = streetgraph.getVertex(start);
+		RouteableVertex endJunction = streetgraph.getVertex(end);
 		
 		//streetgraph.addVertex(startJunction);
 		//streetgraph.addVertex(endJunction);
@@ -94,12 +94,12 @@ public class PlayingWithJgrapht {
 		//sp.addObserver(gmv);
 
 		
-		List<StreetVertex> graphPath = sp.getShortestPath(startJunction, endJunction);
+		List<RouteableVertex> graphPath = sp.getShortestPath(startJunction, endJunction);
 
 		GraphMapViewer gmv = new GraphMapViewer();	
 		//gmv.paintAlsoGraph(sp.getGraph());
 		gmv.setSg(sp.getGraph());
-		gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(sp.getFinishedVertecies()));
+		gmv.paintAlsoEdgesOf(new HashSet<RouteableVertex>(sp.getFinishedVertecies()));
 		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(graphPath));
 		//gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
 		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);

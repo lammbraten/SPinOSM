@@ -27,7 +27,6 @@ import org.jxmapviewer.viewer.WaypointPainter;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.gui.drawing.ArrowPainter;
 import de.spinosm.gui.drawing.GenericWaypointRenderer;
 import de.spinosm.gui.drawing.LabeldWayPoint;
@@ -36,12 +35,12 @@ import de.spinosm.gui.drawing.RoutePainter;
 public class GraphMapViewer extends Thread implements Observer, Runnable{
 
 	private StreetGraph sg;
-	private List<StreetVertex> route;
+	private List<RouteableVertex> route;
 	final static JXMapKit mapView = new JXMapKit();
 	private List<Painter<JXMapViewer>> painters;
 	private JXMapViewer map;
-	private List<StreetVertex> border;
-	private List<StreetVertex> finisched;
+	private List<RouteableVertex> border;
+	private List<RouteableVertex> finisched;
 	
 	/**
 	 * @param graphPath 
@@ -97,8 +96,8 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		paintAlsoEdgesOf(sg.vertexSet());
 	}
 
-	public void paintAlsoEdgesOf(Set<StreetVertex> vertecies) {
-		for(StreetVertex node : vertecies){
+	public void paintAlsoEdgesOf(Set<RouteableVertex> set) {
+		for(RouteableVertex node : set){
 			Color edgeColorForThisVertex = generateRandomColor();
 			for(StreetEdge routeEdge : sg.getEdgesForVertex(node, StreetGraph.DEFAULT_DIRECTION)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
@@ -112,12 +111,12 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	}
 
 	private void prepareBorderForPainting(boolean showLabel) {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(border), showLabel);
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<RouteableVertex>(border), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(238, 77, 46), 5);
 	}
 
 	private void prepareFinishedForPainting(boolean showLabel) {
-		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<StreetVertex>(finisched), showLabel);
+		Set<Waypoint> vertecieWaypoints = generateWaypointsFromVertecies(new HashSet<RouteableVertex>(finisched), showLabel);
 		addVertecieWaypointsToPainters(vertecieWaypoints, new Color(91, 158, 28), 4);
 	}
 	
@@ -128,7 +127,7 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		painters.add(graphNodesPainter);
 	}
 
-	private Set<Waypoint> generateWaypointsFromVertecies(Set<StreetVertex> set, boolean showLabel) {
+	private Set<Waypoint> generateWaypointsFromVertecies(Set<RouteableVertex> set, boolean showLabel) {
 		Set<Waypoint> vertecieWaypoints = new HashSet<Waypoint>();	
 		for(RouteableVertex graphPoint : set){
 			GeoPosition gp = new GeoPosition(graphPoint.getPosition().getLatitude(), graphPoint.getPosition().getLongitude());
@@ -179,17 +178,17 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 		prepareNodeEdgesForPainting();	
 	}
 
-	public void paintAlsoRoute(List<StreetVertex> graphPath) {
+	public void paintAlsoRoute(List<RouteableVertex> graphPath) {
 		route = graphPath;
 		prepareShortestPathForPainting();			
 	}
 
-	public void paintAlsoBorder(List<StreetVertex> borderVertecies, boolean showLabel) {
+	public void paintAlsoBorder(List<RouteableVertex> borderVertecies, boolean showLabel) {
 		border = borderVertecies;
 		prepareBorderForPainting(showLabel);			
 	}
 
-	public void paintAlsoFinished(List<StreetVertex> finishedVertecies, boolean showLabel) {
+	public void paintAlsoFinished(List<RouteableVertex> finishedVertecies, boolean showLabel) {
 		finisched = finishedVertecies;
 		prepareFinishedForPainting(showLabel);			
 	}

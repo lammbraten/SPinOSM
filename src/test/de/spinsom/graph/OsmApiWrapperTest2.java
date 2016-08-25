@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableEdge;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
@@ -42,7 +43,7 @@ public class OsmApiWrapperTest2 {
 
 	@Test
 	public void testGetStreetJunction() {
-		StreetVertex sj = osmapiwrapper.getStreetJunction(HAF_KOE);
+		RouteableVertex sj = osmapiwrapper.getStreetJunction(HAF_KOE);
 		System.out.println(sj.toString());
 		/*sj = osmapiwrapper.getStreetJunction(RA_GRO);
 		System.out.println(sj.toString());

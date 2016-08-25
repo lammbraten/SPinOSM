@@ -1,5 +1,6 @@
 package de.spinosm.common;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
@@ -80,7 +81,7 @@ public class Common {
 	}
 	
 	public static void writeStreetGraph(StreetGraph sg){
-		for(StreetVertex sj : sg.vertexSet()){
+		for(RouteableVertex sj : sg.vertexSet()){
 			System.out.println(sj);
 			for(StreetEdge se :sg.getEdgesForVertex(sj, 1)){
 				System.out.println("\t" + se);

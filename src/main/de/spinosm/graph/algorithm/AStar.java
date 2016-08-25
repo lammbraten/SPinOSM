@@ -2,6 +2,8 @@ package de.spinosm.graph.algorithm;
 
 import java.util.List;
 import java.util.PriorityQueue;
+
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
@@ -19,11 +21,11 @@ public class AStar extends Dijkstra {
 	public AStar(StreetGraph streetgraph, Heuristic heuristic){
 		super(streetgraph);
 		this.heuristic = heuristic;	
-		toVisitVertecies = new PriorityQueue<StreetVertex>(new DistanceHeuristicComparator());
+		toVisitVertecies = new PriorityQueue<RouteableVertex>(new DistanceHeuristicComparator());
 	}
 	
 	@Override
-	public List<StreetVertex> getShortestPath(StreetVertex start, StreetVertex end) {
+	public List<RouteableVertex> getShortestPath(RouteableVertex start, RouteableVertex end) {
 		endVertex = end;		
 		init(start);
 
@@ -31,7 +33,7 @@ public class AStar extends Dijkstra {
 	}
 
 	void checkNextVertex() {
-		StreetVertex u = toVisitVertecies.poll();
+		RouteableVertex u = toVisitVertecies.poll();
 		visitedVertecies.add(u);
 		setChanged();
 		notifyObservers(u);		
@@ -40,7 +42,7 @@ public class AStar extends Dijkstra {
 			loadEdges(u);*/				
 		
 		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
-			StreetVertex v = e.getOtherKnotThan(u);
+			RouteableVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
 				try {	
 					if(toVisitVertecies.contains(v)){
@@ -70,9 +72,9 @@ public class AStar extends Dijkstra {
 	}
 
 
-	private double heuristicForVertex(StreetVertex v) {			
+	private double heuristicForVertex(RouteableVertex startVertex) {			
 		//return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) /(50 * 2) ; //(Angenommene Durchschnittsgeschwindigkeit * Gewichtung) 
-		return this.heuristic.heuristicForVertex(v);
+		return this.heuristic.heuristicForVertex(startVertex);
 	}
 
 	@Override

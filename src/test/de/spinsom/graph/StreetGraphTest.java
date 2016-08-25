@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
@@ -54,14 +55,14 @@ public class StreetGraphTest {
 	private int testResult;
 	private StreetGraph streetGraph;
 	private OsmNode[] testSet;
-	private TreeSet<StreetVertex> bufferedTreeSet;
+	private TreeSet<RouteableVertex> bufferedTreeSet;
 	static OsmApiWrapper osmapiwrapper;
 	
 	
 	public StreetGraphTest(int testResult, StreetVertex[] buffer, OsmNode[] testSet){
 		super();
 		this.testResult = testResult;
-		bufferedTreeSet = new TreeSet<StreetVertex>();
+		bufferedTreeSet = new TreeSet<RouteableVertex>();
 		for(StreetVertex sj : buffer){
 			bufferedTreeSet.add(sj);
 		}

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmConnectionException;
@@ -127,8 +127,8 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public StreetVertex getStreetJunction(long id) {
-		StreetVertex returnValue;
+	public RouteableVertex getStreetJunction(long id) {
+		RouteableVertex returnValue;
 		OsmNode osmNode = (OsmNode) this.getNode(id);
 		if(osmNode == null){
 			throw new IllegalArgumentException("Node not existing in OSM");
@@ -144,7 +144,7 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public List<StreetVertex> getStreetJunctionsForStreetEdge(long id) {
+	public List<RouteableVertex> getStreetJunctionsForStreetEdge(long id) {
 		return null;
 	}
 
@@ -196,7 +196,7 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForVertex(StreetVertex sj) {
+	public Set<StreetEdge> getStreetEdgesForVertex(RouteableVertex sj) {
 		Set<StreetEdge> returnValue;
 		if(sj == null){
 			throw new IllegalArgumentException("Node not existing in OSM");

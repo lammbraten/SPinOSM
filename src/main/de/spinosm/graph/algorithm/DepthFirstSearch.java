@@ -4,32 +4,32 @@ import java.util.Observable;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class DepthFirstSearch extends Observable {
 
 	private long maxDepth;
 	private StreetGraph graph;
-	private TreeSet<StreetVertex> toVisitVertecie;
-	private PriorityQueue<StreetVertex>  vistitedVertecies;
+	private TreeSet<RouteableVertex> toVisitVertecie;
+	private PriorityQueue<RouteableVertex>  vistitedVertecies;
 
 	
 	public DepthFirstSearch(StreetGraph g, long id, long maxDepth){
 		this.graph = g;
 		setMaxDepth(maxDepth);
-		vistitedVertecies = new PriorityQueue<StreetVertex>(new IdComparator());
-		toVisitVertecie = new TreeSet<StreetVertex>(new IdComparator());		
-		StreetVertex s = g.getVertex(id);
+		vistitedVertecies = new PriorityQueue<RouteableVertex>(new IdComparator());
+		toVisitVertecie = new TreeSet<RouteableVertex>(new IdComparator());		
+		RouteableVertex s = g.getVertex(id);
 		mark(s);
 	}
 	
 	public void searchDephtFirst(){
 		long depth = 0;
 		while(!toVisitVertecie.isEmpty() && maxDepth > depth){
-			StreetVertex u = toVisitVertecie.pollFirst();
+			RouteableVertex u = toVisitVertecie.pollFirst();
 			
 			setChanged();
 			notifyObservers(u);		
@@ -43,16 +43,16 @@ public class DepthFirstSearch extends Observable {
 			}
 	}
 	
-	private void mark(StreetVertex u){
-		for(StreetEdge e : graph.getEdgesForVertex(u, 1)){
-			StreetVertex v = e.getOtherKnotThan(u);
+	private void mark(RouteableVertex s){
+		for(StreetEdge e : graph.getEdgesForVertex(s, 1)){
+			RouteableVertex v = e.getOtherKnotThan(s);
 			if(!vistitedVertecies.contains(v)){
 				toVisitVertecie.add(v);
 			}
 		}
 	}
 	
-	private void loadEdges(StreetVertex u) {
+	private void loadEdges(RouteableVertex u) {
 		for(StreetEdge e : 	graph.getEdgesForVertex(u, 1))
 			graph.addEdge(e,u);
 	}

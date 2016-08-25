@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
@@ -24,7 +25,7 @@ public class LocalProvider extends AbstractProvider{
 	}
 	
 	@Override
-	public StreetVertex getStreetJunction(long id) {
+	public RouteableVertex getStreetJunction(long id) {
 		OsmNode n = (OsmNode) osmxmlelements.getNode(id);
 		return 	buildNewStreetVertex(n);
 	}
@@ -35,7 +36,7 @@ public class LocalProvider extends AbstractProvider{
 	}
 
 	@Override
-	public List<StreetVertex> getStreetJunctionsForStreetEdge(long id) {
+	public List<RouteableVertex> getStreetJunctionsForStreetEdge(long id) {
 		return null;
 	}
 
@@ -58,7 +59,7 @@ public class LocalProvider extends AbstractProvider{
 	}
 
 	@Override
-	public Set<StreetEdge> getStreetEdgesForVertex(StreetVertex sj) {
+	public Set<StreetEdge> getStreetEdgesForVertex(RouteableVertex sj) {
 		Set<StreetEdge> returnValue;
 		if(sj == null){
 			throw new IllegalArgumentException("Node not existing in OSM");

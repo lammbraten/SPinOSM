@@ -11,7 +11,7 @@ import de.spinosm.graph.data.DefaultDataProvider;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, StreetEdge> implements Serializable, WeightedGraph<StreetVertex, StreetEdge>{
+public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, StreetEdge> implements Serializable, WeightedGraph<RouteableVertex, StreetEdge>{
 
 	private static final long serialVersionUID = -67998995199008728L;
 	transient private DataProvider dataprovider;
@@ -25,31 +25,31 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 			this.dataprovider = dataprovider;
 	}
 	
-	public void setStreetJunctions(TreeSet<StreetVertex> vertecies) {
+	public void setStreetJunctions(TreeSet<RouteableVertex> vertecies) {
 		if(vertecies != null){
 			super.removeAllVertices(vertecies);
-			for(StreetVertex v : vertecies)
+			for(RouteableVertex v : vertecies)
 				super.addVertex(v);
 		}else{
 			throw new IllegalArgumentException("vertecies is null");
 		}
 	}
 	
-	public Set<StreetVertex> getStreetVertecies() {
+	public Set<RouteableVertex> getStreetVertecies() {
 		return super.vertexSet();	
 	}
 	
 
-	public StreetVertex getVertex(long id){
-		StreetVertex returnValue = checkBufferedVerteciesForId(id);
+	public RouteableVertex getVertex(long id){
+		RouteableVertex returnValue = checkBufferedVerteciesForId(id);
 		if(returnValue != null)
 			return returnValue;
 		
 		return getStreetVertexFromDataProvider(id);
 	}
 
-	private StreetVertex getStreetVertexFromDataProvider(long id) {
-		StreetVertex returnValue = null;
+	private RouteableVertex getStreetVertexFromDataProvider(long id) {
+		RouteableVertex returnValue = null;
 		try {
 			returnValue = this.dataprovider.getStreetJunction(id);
 			this.integrateNewNodeToGraph(returnValue);			
@@ -59,14 +59,14 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		return returnValue;
 	}
 
-	private StreetVertex checkBufferedVerteciesForId(long id) {
-		for(StreetVertex n : super.vertexSet())
+	private RouteableVertex checkBufferedVerteciesForId(long id) {
+		for(RouteableVertex n : super.vertexSet())
 			if(n.getId() == id && n.isEdgesLoaded())
 				return n;
 		return null;
 	}
 	
-	private void integrateNewNodeToGraph(StreetVertex newNode){
+	private void integrateNewNodeToGraph(RouteableVertex newNode){
 		//Prüfe ob benachbarte knoten schon im graph. wenn ja verlinke sie
 //		linkWithAlredyKnownNodes(newNode);
 		super.addVertex(newNode);
@@ -91,7 +91,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}*/
 
 	@Override
-	public StreetEdge addEdge(StreetVertex sourceVertex, StreetVertex targetVertex) {
+	public StreetEdge addEdge(RouteableVertex sourceVertex, RouteableVertex targetVertex) {
 		try {
 			return super.addEdge(sourceVertex, targetVertex);
 		} catch (IllegalArgumentException e) {
@@ -100,47 +100,47 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}
 
 	@Override
-	public boolean addEdge(StreetVertex sourceVertex, StreetVertex targetVertex, StreetEdge e) {
+	public boolean addEdge(RouteableVertex sourceVertex, RouteableVertex targetVertex, StreetEdge e) {
 		return super.addEdge(sourceVertex, targetVertex, e);
 	}
 
 	@Override
-	public boolean containsVertex(StreetVertex vertex) {
+	public boolean containsVertex(RouteableVertex vertex) {
 		if(super.containsVertex(vertex))
 			return true;
 		return false;
 	}
 	
-	public Set<StreetEdge> getEdgesForVertex(StreetVertex sv, int direction) {
-		if(sv.isEdgesLoaded())
-			return checkBufferedEdgeForId(sv, direction);
+	public Set<StreetEdge> getEdgesForVertex(RouteableVertex startVertex, int direction) {
+		if(startVertex.isEdgesLoaded())
+			return checkBufferedEdgeForId(startVertex, direction);
 		else{
-			loadEdgesFormDataprovider(sv);
-			return checkBufferedEdgeForId(sv, direction); //Had to that because, Loading From dataprovider with direction makes no sense
+			loadEdgesFormDataprovider(startVertex);
+			return checkBufferedEdgeForId(startVertex, direction); //Had to that because, Loading From dataprovider with direction makes no sense
 		}
 	}
 	
-	private Set<StreetEdge> loadEdgesFormDataprovider(StreetVertex sv) {
-		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForVertex(sv);
+	private Set<StreetEdge> loadEdgesFormDataprovider(RouteableVertex startVertex) {
+		Set<StreetEdge> edges =	dataprovider.getStreetEdgesForVertex(startVertex);
 		for(StreetEdge e: edges)
-			addEdge(e, sv);
-		sv.setEdgesLoaded(true);		
+			addEdge(e, startVertex);
+		startVertex.setEdgesLoaded(true);		
 		return edges;
 	}
 
-	private Set<StreetEdge> checkBufferedEdgeForId(StreetVertex sv, int direction) {
+	private Set<StreetEdge> checkBufferedEdgeForId(RouteableVertex startVertex, int direction) {
 		Set<StreetEdge> edges = new HashSet<StreetEdge>();
 		try {
-			edges = super.edgesOf(sv);
+			edges = super.edgesOf(startVertex);
 		} catch (Exception e) {}
 		if(direction > 0)
-			return outgoingEdgesOf(sv, edges);
+			return outgoingEdgesOf(startVertex, edges);
 		else
-			return incomingEdgesOf(sv, edges);
+			return incomingEdgesOf(startVertex, edges);
 		
 	}
 
-	private Set<StreetEdge> incomingEdgesOf(StreetVertex sv, Set<StreetEdge> edges) {
+	private Set<StreetEdge> incomingEdgesOf(RouteableVertex sv, Set<StreetEdge> edges) {
 		Set<StreetEdge> incomingEdges = new HashSet<StreetEdge>();
 		for(StreetEdge e: edges)
 			if(e.getEnd().getId() == sv.getId())
@@ -148,7 +148,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		return incomingEdges;
 	}
 
-	private Set<StreetEdge> outgoingEdgesOf(StreetVertex sv, Set<StreetEdge> edges) {
+	private Set<StreetEdge> outgoingEdgesOf(RouteableVertex sv, Set<StreetEdge> edges) {
 		Set<StreetEdge> outgoingEdges = new HashSet<StreetEdge>();
 		for(StreetEdge e: edges)
 			if(e.getStart().getId() == sv.getId())
@@ -156,7 +156,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 		return outgoingEdges;
 	}
 
-	public void addEdge(StreetEdge e, StreetVertex sv) {
+	public void addEdge(StreetEdge e, RouteableVertex sv) {
 		super.addVertex(e.getOtherKnotThan(sv));
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
 		if(se != null)
@@ -164,7 +164,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<StreetVertex, Stree
 	}
 
 	@Override
-	public Set<StreetEdge> edgesOf(StreetVertex v){
+	public Set<StreetEdge> edgesOf(RouteableVertex v){
 		try {
 			throw new Exception("Don't use me. use getEdgesForNode(sj)");
 		} catch (Exception e) {

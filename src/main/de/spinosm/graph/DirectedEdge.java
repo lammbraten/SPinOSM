@@ -3,15 +3,15 @@ package de.spinosm.graph;
 public abstract class DirectedEdge implements RouteableEdge{
 	private static final long serialVersionUID = -9135933798984497839L;
 	
-	private StreetVertex source;
-	private StreetVertex target;
+	private RouteableVertex source;
+	private RouteableVertex target;
 	private double weight;
 	
-	DirectedEdge(StreetVertex start, StreetVertex end, double weight){
-		if(start.equals(end))
+	DirectedEdge(RouteableVertex source2, RouteableVertex target2, double weight){
+		if(source2.equals(target2))
 			return;
-		this.source = start;
-		this.target = end;
+		this.source = source2;
+		this.target = target2;
 		this.weight = weight;
 	}
 	
@@ -25,33 +25,33 @@ public abstract class DirectedEdge implements RouteableEdge{
 		this.weight = weight;
 	}
 	
-	public StreetVertex getStart() {
+	public RouteableVertex getStart() {
 		return source;
 	}
 	
-	public void setStart(StreetVertex start) {
+	public void setStart(RouteableVertex start) {
 		this.source = start;		
 	}
 
-	public StreetVertex getEnd() {
+	public RouteableVertex getEnd() {
 		return target;
 	}
 	
-	public void setEnd(StreetVertex end) {
+	public void setEnd(RouteableVertex end) {
 		this.target = end;
 		
 	}
 	
-	public StreetVertex getOtherKnotThan(StreetVertex that) {
-		if(isStartVertex(that))
+	public RouteableVertex getOtherKnotThan(RouteableVertex u) {
+		if(isStartVertex(u))
 			return target;
-		else if(isEndVertex(that))
+		else if(isEndVertex(u))
 			return source;
 		else
-			throw new IllegalArgumentException("The Vertex " + that + " isn't in this Graph");
+			throw new IllegalArgumentException("The Vertex " + u + " isn't in this Graph");
 	}
 	
-	public void replace(StreetVertex oldVertex, StreetVertex newVertex){
+	public void replace(RouteableVertex oldVertex, RouteableVertex newVertex){
 		if(isStartVertex(oldVertex))
 			this.setStart(newVertex);
 		else if(isEndVertex(oldVertex))

@@ -14,4 +14,5 @@ public interface RouteableVertex extends Comparable<RouteableVertex>, Serializab
 	public boolean isEdgesLoaded();
 	public boolean equals(Object other);
 	public int compareTo(RouteableVertex other);
+	public void setEdgesLoaded(boolean b);
 }

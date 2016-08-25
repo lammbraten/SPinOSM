@@ -98,7 +98,7 @@ public class StreetGraphTest2 {
 		streetGraph = new StreetGraph(osmapiwrapper);
 		assertEquals(0,streetGraph.getStreetVertecies().size());
 		//Test for setting new Nodes
-		TreeSet<StreetVertex> bufferedTreeSet = new TreeSet<StreetVertex>();
+		TreeSet<RouteableVertex> bufferedTreeSet = new TreeSet<RouteableVertex>();
 		for(StreetVertex sj : EXISTING_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}

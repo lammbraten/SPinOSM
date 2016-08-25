@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
@@ -151,7 +152,7 @@ public class OsmApiWrapperTest {
 				
 			}catch(Exception e){fail();}
 		else{
-			StreetVertex sj = osmapiwrapper.getStreetJunction(testcase[NODEINDEX]);
+			RouteableVertex sj = osmapiwrapper.getStreetJunction(testcase[NODEINDEX]);
 			assertNotNull(sj);		
 		}
 	}

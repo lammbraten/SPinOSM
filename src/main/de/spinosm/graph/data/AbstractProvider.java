@@ -8,6 +8,7 @@ import java.util.Set;
 
 import de.spinosm.common.Common;
 import de.spinosm.common.Vehicle;
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
@@ -20,13 +21,13 @@ abstract class AbstractProvider implements DataProvider {
 	
 	protected WeightFunction weightFunction;
 	
-	protected StreetVertex buildNewStreetVertex(OsmNode osmNode) {
-		StreetVertex returnValue;	
+	protected RouteableVertex buildNewStreetVertex(OsmNode osmNode) {
+		RouteableVertex returnValue;	
 		returnValue = new StreetVertex(osmNode);
 		return returnValue;
 	}
 	
-	protected Set<StreetEdge> getRouteableEdgesForVertex(StreetVertex sj) {
+	protected Set<StreetEdge> getRouteableEdgesForVertex(RouteableVertex sj) {
 		Set<StreetEdge> waysFromNode = new HashSet<StreetEdge>();
 		List<Way> ways = this.getWaysForNode(sj.getId());
 		for(Way way : ways){
@@ -40,22 +41,22 @@ abstract class AbstractProvider implements DataProvider {
 
 	}
 
-	protected List<StreetEdge> parseToRouteableEdge(Way way, StreetVertex referenceVertex) {
+	protected List<StreetEdge> parseToRouteableEdge(Way way, RouteableVertex sj) {
 		List<StreetEdge> edges = new LinkedList<StreetEdge>();
 		List<Long> nids = way.getNodeIds();
 		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
 		for(Node node : nodes){
-			if(referenceVertex.getId() == node.getId()){
+			if(sj.getId() == node.getId()){
 				if(isUseableDownTheRoad(way)){
-					try {edges.add(shapeNewOutgoingEdgeDownTheRoad(way, referenceVertex, nodes, node));
+					try {edges.add(shapeNewOutgoingEdgeDownTheRoad(way, sj, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, referenceVertex, nodes, node));
+					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, sj, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
 				}
 				if(isUseableUpTheRoad(way)){
-					try {edges.add(shapeNewOutgoingEdgeUpTheRoad(way, referenceVertex, nodes, node));
+					try {edges.add(shapeNewOutgoingEdgeUpTheRoad(way, sj, nodes, node));
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, referenceVertex, nodes, node));	
+					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, sj, nodes, node));	
 					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
 				}
 			}
@@ -91,7 +92,7 @@ abstract class AbstractProvider implements DataProvider {
 		return true;
 	}
 
-	protected StreetEdge shapeNewOutgoingEdgeUpTheRoad(Way way, StreetVertex startingNode, List<Node> nodes, Node node) throws Exception {
+	protected StreetEdge shapeNewOutgoingEdgeUpTheRoad(Way way, RouteableVertex startingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
@@ -103,19 +104,19 @@ abstract class AbstractProvider implements DataProvider {
 		throw new Exception("No junction found");
 	}
 
-	protected StreetEdge shapeNewOutgoingEdgeDownTheRoad(Way way, StreetVertex startingNode, List<Node> nodes, Node node) throws Exception {
+	protected StreetEdge shapeNewOutgoingEdgeDownTheRoad(Way way, RouteableVertex sj, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
 			shapingNodes.add(nodes.get(i));
 			if(isRouteableVertex(nodes.get(i))){
-				return new StreetEdge(startingNode, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
+				return new StreetEdge(sj, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 			}
 		}
 		throw new Exception("No junction found");
 	}
 	
-	private StreetEdge shapeNewIncomingEdgeUpTheRoad(Way way, StreetVertex endingNode, List<Node> nodes, Node node) throws Exception {
+	private StreetEdge shapeNewIncomingEdgeUpTheRoad(Way way, RouteableVertex endingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
@@ -127,7 +128,7 @@ abstract class AbstractProvider implements DataProvider {
 		throw new Exception("No junction found");
 	}
 
-	private StreetEdge shapeNewIncomingEdgeDownTheRoad(Way way, StreetVertex endingNode, List<Node> nodes, Node node) throws Exception {
+	private StreetEdge shapeNewIncomingEdgeDownTheRoad(Way way, RouteableVertex endingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
