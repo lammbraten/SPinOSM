@@ -6,15 +6,13 @@ import de.westnordost.osmapi.map.data.LatLon;
 
 public abstract class GraphVertex implements RouteableVertex {
 
+	public static double DISTANCE_INIT_VALUE = Double.MAX_VALUE;
 	private static final long serialVersionUID = 1307414385237284029L;
 	private long id;
 	private double distance;
 	private double heuristic;
 	private SerializableLatLon position; //needed for Heuristic
 	
-	public static int DISTANCE_INIT_VALUE = Integer.MAX_VALUE;
-	
-
 	public GraphVertex(long id, LatLon latLon, double distance){
 		this.setId(id);
 		this.setDistance(distance);
@@ -24,6 +22,7 @@ public abstract class GraphVertex implements RouteableVertex {
 	public GraphVertex(long id, LatLon latLon){
 		this.setId(id);
 		this.setDistance(DISTANCE_INIT_VALUE);
+		this.setHeuristic(DISTANCE_INIT_VALUE);
 		if(latLon != null)
 			this.position = new SerializableLatLon(latLon);
 	}
@@ -68,6 +67,11 @@ public abstract class GraphVertex implements RouteableVertex {
 	}
 
 	@Override
+	public boolean hasSameId(RouteableVertex n) {
+		return (this.getId() == n.getId());
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		if(other == null)
 			return false;
@@ -79,11 +83,6 @@ public abstract class GraphVertex implements RouteableVertex {
 				return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public boolean hasSameId(RouteableVertex n) {
-		return (this.getId() == n.getId());
 	}
 
 	@Override

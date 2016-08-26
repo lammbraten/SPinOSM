@@ -44,7 +44,7 @@ public class DepthFirstSearch extends Observable {
 	}
 	
 	private void mark(RouteableVertex s){
-		for(StreetEdge e : graph.getEdgesForVertex(s, 1)){
+		for(StreetEdge e : graph.edgesOf(s, 1)){
 			RouteableVertex v = e.getOtherKnotThan(s);
 			if(!vistitedVertecies.contains(v)){
 				toVisitVertecie.add(v);
@@ -53,7 +53,7 @@ public class DepthFirstSearch extends Observable {
 	}
 	
 	private void loadEdges(RouteableVertex u) {
-		for(StreetEdge e : 	graph.getEdgesForVertex(u, 1))
+		for(StreetEdge e : 	graph.edgesOf(u, 1))
 			graph.addEdge(e,u);
 	}
 	

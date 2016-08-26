@@ -43,13 +43,13 @@ public class OsmApiWrapperTest2 {
 
 	@Test
 	public void testGetStreetJunction() {
-		RouteableVertex sj = osmapiwrapper.getStreetJunction(HAF_KOE);
+		RouteableVertex sj = osmapiwrapper.getVertex(HAF_KOE);
 		System.out.println(sj.toString());
 		/*sj = osmapiwrapper.getStreetJunction(RA_GRO);
 		System.out.println(sj.toString());
 		for(RouteableEdge e : sj.getEdges())
 			System.out.println("\t" + e.toString());*/
-		sj = osmapiwrapper.getStreetJunction(HAF_HAF);
+		sj = osmapiwrapper.getVertex(HAF_HAF);
 		System.out.println(sj.toString());
 	}
 

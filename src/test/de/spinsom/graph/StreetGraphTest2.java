@@ -96,14 +96,14 @@ public class StreetGraphTest2 {
 	public void testGetSetStreetJunctions() {
 		//Test for NullPointerExption
 		streetGraph = new StreetGraph(osmapiwrapper);
-		assertEquals(0,streetGraph.getStreetVertecies().size());
+		assertEquals(0,streetGraph.getVertecies().size());
 		//Test for setting new Nodes
 		TreeSet<RouteableVertex> bufferedTreeSet = new TreeSet<RouteableVertex>();
 		for(StreetVertex sj : EXISTING_NODE_ARRAY){
 			bufferedTreeSet.add(sj);
 		}
-		streetGraph.setStreetJunctions(bufferedTreeSet);
-		assertEquals(bufferedTreeSet, streetGraph.getStreetVertecies());
+		streetGraph.setVertecies(bufferedTreeSet);
+		assertEquals(bufferedTreeSet, streetGraph.getVertecies());
 	}
 
 

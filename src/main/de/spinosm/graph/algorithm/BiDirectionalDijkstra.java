@@ -1,6 +1,7 @@
 package de.spinosm.graph.algorithm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -36,7 +37,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		reverseDijkstra.init(startVertex);
 		straightDijkstra.init(endVertex);
 		
-		while(intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()).isEmpty() && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
+		while(!hasSomeSameElement(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()) && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
 			reverseDijkstra.checkNextVertex();
 			straightDijkstra.checkNextVertex();
 		}
@@ -45,6 +46,13 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	}
 
 	
+	private boolean hasSomeSameElement(HashSet<RouteableVertex> visitedVertecies, HashSet<RouteableVertex> visitedVertecies2) {
+		for(RouteableVertex rv : visitedVertecies)
+			if(visitedVertecies2.contains(rv))
+				return true;
+		return false;
+	}
+
 	private List<RouteableVertex> buildShortestPath() {
 		RouteableVertex jointValue = getMiddleVertex();
 		List<RouteableVertex> shortestSub1PathReverse = reverseDijkstra.buildShortestPathTo(jointValue);	
@@ -88,10 +96,10 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		this.graph = g;	
 	}
 
-	private TreeSet<RouteableVertex> intersectionOf(TreeSet<RouteableVertex> treeSet, TreeSet<RouteableVertex> treeSet2){
+	private TreeSet<RouteableVertex> intersectionOf(HashSet<RouteableVertex> hashSet, HashSet<RouteableVertex> hashSet2){
 		//TODO; Make This more effictive
-		TreeSet<RouteableVertex> intersection = new TreeSet<RouteableVertex>(treeSet);
-		intersection.retainAll(treeSet2);
+		TreeSet<RouteableVertex> intersection = new TreeSet<RouteableVertex>(hashSet);
+		intersection.retainAll(hashSet2);
 		return intersection;
 	}
 	
@@ -110,13 +118,13 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	}
 
 	@Override
-	public TreeSet<RouteableVertex> getVisitedVertecies() {
+	public HashSet<RouteableVertex> getVisitedVertecies() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setVisitedVertecies(TreeSet<RouteableVertex> visitedVertecies) {
+	public void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies) {
 		// TODO Auto-generated method stub
 		
 	}

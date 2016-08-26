@@ -127,7 +127,7 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public RouteableVertex getStreetJunction(long id) {
+	public RouteableVertex getVertex(long id) {
 		RouteableVertex returnValue;
 		OsmNode osmNode = (OsmNode) this.getNode(id);
 		if(osmNode == null){
@@ -144,12 +144,12 @@ public class OsmApiWrapper extends AbstractProvider{
 	}
 
 	@Override
-	public List<RouteableVertex> getStreetJunctionsForStreetEdge(long id) {
+	public List<RouteableVertex> getVerteciesOfStreetEdge(long id) {
 		return null;
 	}
 
 	@Override
-	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
+	public List<StreetEdge> getStreetEdgesForVertexId(long id) {
 		return null;
 	}
 	

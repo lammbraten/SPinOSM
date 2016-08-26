@@ -17,11 +17,6 @@ public class PythagoreanDistanceWeight implements WeightFunction {
 	}
 
 	private double calcDistance(LatLon node1, LatLon node2) {
-	    double lat1 = Common.toRad(node1.getLatitude());
-	    double lat2 = Common.toRad(node2.getLatitude());
-	    double lon1 = Common.toRad(node1.getLongitude());
-	    double lon2 = Common.toRad(node2.getLongitude());
-
-	    return Common.EARTHRADIUS * Common.pythagoras(lat1, lat2, lon1, lon2);
+	    return Common.PythagoreanDistance(node1, node2);
 	}
 }

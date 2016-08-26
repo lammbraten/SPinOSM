@@ -14,7 +14,7 @@ import de.westnordost.osmapi.map.data.Way;
 public class DefaultDataProvider implements DataProvider {
 
 	@Override
-	public RouteableVertex getStreetJunction(long id) {
+	public RouteableVertex getVertex(long id) {
 		return null;
 	}
 
@@ -24,12 +24,12 @@ public class DefaultDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<RouteableVertex> getStreetJunctionsForStreetEdge(long id) {
+	public List<RouteableVertex> getVerteciesOfStreetEdge(long id) {
 		return null;
 	}
 
 	@Override
-	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
+	public List<StreetEdge> getStreetEdgesForVertexId(long id) {
 		return new LinkedList<StreetEdge>();
 	}
 

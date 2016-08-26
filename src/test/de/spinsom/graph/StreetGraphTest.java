@@ -94,14 +94,14 @@ public class StreetGraphTest {
 	public void testgetStreetJunctions() {
 		switch(testResult){
 			case TEST_SHOULD_WORK:
-				assertNotNull(streetGraph.getStreetVertecies());
+				assertNotNull(streetGraph.getVertecies());
 				break;
 			case TEST_SHOULD_FAIL:
-				assertTrue(streetGraph.getStreetVertecies().isEmpty());		
+				assertTrue(streetGraph.getVertecies().isEmpty());		
 				break;
 			case TEST_THROWS_EXCEPTION: //Not Used yet
 				try{
-					streetGraph.getStreetVertecies();
+					streetGraph.getVertecies();
 					fail();
 				} catch(Exception e){}
 				break;
@@ -113,15 +113,15 @@ public class StreetGraphTest {
 		int size = bufferedTreeSet.size();
 		switch(testResult){
 			case TEST_SHOULD_WORK:
-				streetGraph.setStreetJunctions(bufferedTreeSet);
-				assertEquals(3, streetGraph.getStreetVertecies().size());
+				streetGraph.setVertecies(bufferedTreeSet);
+				assertEquals(3, streetGraph.getVertecies().size());
 				break;
 			case TEST_SHOULD_FAIL:
-				assertTrue(streetGraph.getStreetVertecies().isEmpty());		
+				assertTrue(streetGraph.getVertecies().isEmpty());		
 				break;
 			case TEST_THROWS_EXCEPTION: //Not Used yet
 				try{
-					streetGraph.getStreetVertecies();
+					streetGraph.getVertecies();
 					fail();
 				} catch(Exception e){}
 				break;

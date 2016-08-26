@@ -24,7 +24,7 @@ public class TestLocalProvider {
 
 	@Test
 	public void test() {
-		System.out.println(lp.getStreetJunction(116108105l).getId());
+		System.out.println(lp.getVertex(116108105l).getId());
 		System.out.println("Hi");
 	}
 

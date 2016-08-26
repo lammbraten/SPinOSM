@@ -65,20 +65,7 @@ public abstract class DirectedEdge implements RouteableEdge{
 		return "s: " + this.getStart() + "; e: " + this.getEnd() + "; c: " + this.getWeight();
 	}
 
-	private boolean isStartVertex(RouteableVertex that) {
-		if(that.hasSameId(source))
-			return true;
-		return false;
-	}
-
-	private boolean isEndVertex(RouteableVertex that) {
-		if(that.hasSameId(target))
-			return true;
-		return false;
-	}	
-	
-
-    @Override 
+	@Override 
     public Object clone(){
         try {
             return super.clone();
@@ -106,5 +93,17 @@ public abstract class DirectedEdge implements RouteableEdge{
     public int hashCode(){
 		return Long.hashCode(source.getId()) + Long.hashCode(target.getId());
     }
+
+	private boolean isStartVertex(RouteableVertex that) {
+		if(that.hasSameId(source))
+			return true;
+		return false;
+	}
+
+	private boolean isEndVertex(RouteableVertex that) {
+		if(that.hasSameId(target))
+			return true;
+		return false;
+	}
     
 }

@@ -6,10 +6,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.algorithm.DepthFirstSearch;
+import de.spinosm.graph.data.DefaultDataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.AsTheCrowFliesDistanceWeight;
 import de.spinosm.graph.weights.DefaultCostFunction;
@@ -29,16 +34,16 @@ public class OSMtoStreetgraphConverter {
 
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
-			generateOSMFileReader();
+			//generateOSMFileReader();
 			//ShortestPathObserver spo = new ShortestPathObserver();			
-			new DepthFirstSearch(streetgraph, nid, -1).searchDephtFirst();
+			//new DepthFirstSearch(streetgraph, nid, -1).searchDephtFirst();
 
 			
 			System.out.println( "  ending at " + new Date() );
 			
 			//new GraphMapViewer(streetgraph);	
 			System.out.println("Write Streetgraph to File:");
-			writeStreetgraph();
+			//writeStreetgraph();
 			
 			System.out.println("Read Streetgraph from File:");
 			readStreetgraph();
@@ -53,9 +58,11 @@ public class OSMtoStreetgraphConverter {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(outFile+".bin"));
 			StreetGraph active = (StreetGraph) ois.readObject();
+			active.setDataprovider(new DefaultDataProvider());
 			ois.close();
 			GraphMapViewer gmv = new GraphMapViewer();
-			gmv.paintAlsoGraph(active, true);
+			//gmv.paintAlsoGraph(active, true);
+			gmv.paintAlsoFinished(new LinkedList<RouteableVertex>(active.vertexSet()), false);
 			gmv.showMap();
 			//Thread gmvt = new Thread(gmv);
 			//gmvt.start();

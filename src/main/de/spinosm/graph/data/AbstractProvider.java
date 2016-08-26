@@ -92,7 +92,7 @@ abstract class AbstractProvider implements DataProvider {
 		return true;
 	}
 
-	protected StreetEdge shapeNewOutgoingEdgeUpTheRoad(Way way, RouteableVertex startingNode, List<Node> nodes, Node node) throws Exception {
+	private StreetEdge shapeNewOutgoingEdgeUpTheRoad(Way way, RouteableVertex startingNode, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
@@ -104,7 +104,7 @@ abstract class AbstractProvider implements DataProvider {
 		throw new Exception("No junction found");
 	}
 
-	protected StreetEdge shapeNewOutgoingEdgeDownTheRoad(Way way, RouteableVertex sj, List<Node> nodes, Node node) throws Exception {
+	private StreetEdge shapeNewOutgoingEdgeDownTheRoad(Way way, RouteableVertex sj, List<Node> nodes, Node node) throws Exception {
 		LinkedList<Node> shapingNodes = new LinkedList<Node>();	
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){

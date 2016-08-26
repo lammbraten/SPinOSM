@@ -2,6 +2,7 @@ package de.spinsom.graph;
 
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.junit.Test;
@@ -15,12 +16,15 @@ import de.westnordost.osmapi.map.data.OsmLatLon;
 import de.westnordost.osmapi.map.data.Way;
 
 public class CommonTest {
-	private static OsmLatLon KREFELD_CAMPUS_SUED = new OsmLatLon(51.3164074, 6.5697757);
+	private static OsmLatLon KREFELD_CAMPUS_SUED = new OsmLatLon(51.3162898, 6.569983);
+	private static OsmLatLon KREFELD_CAMPUS_SUED_BIB = new OsmLatLon(51.3166598, 6.5694603);
+	private static OsmLatLon KREFELD_CAMPUS_WEST = new OsmLatLon(51.3240241, 6.5539725);
 	private static OsmLatLon MGLADBACH_CAMPUS = new OsmLatLon(51.1791281, 6.4412589);
 	private static OsmLatLon FISCHELN_RATHAUS = new OsmLatLon(51.305541, 6.5871852);
 	private static OsmLatLon STADTBAD_FISCHELN = new OsmLatLon(51.3089328, 6.5837814);
 	private static OsmLatLon WEDELSTRASSE_19 = new OsmLatLon(51.3062602, 6.5898457);
 	private static OsmLatLon WEDELSTRASSE_17 = new OsmLatLon(51.3063454, 6.590146);
+	private static OsmLatLon MIT = new OsmLatLon(42.3553475, -71.1054415);
 	
 	private static OsmLatLon[] TARTANBAHN = {
 			new OsmLatLon(51.3115358, 6.5826916),
@@ -54,51 +58,53 @@ public class CommonTest {
 	};
 			
 	
-	private static double LONG_DISTANCE = 17.6;
-	private static double MIDDLE_DISTANCE = 0.4457;
-	private static double SHORT_DISTANCE = 0.0229;
-	private static double TARTANBAHN_DISTANCE = 0.400;
+	private static double LONG_DISTANCE = 17600;
+	private static double MIDDLE_DISTANCE = 445.7;
+	private static double SHORT_DISTANCE = 22.9;
+	private static double TARTANBAHN_DISTANCE = 400;
 	
 	private static double COST_FOR_MIDDLEDISTANCE = 0.008904603;
 
 	@Test
-	public void calcDistanceTest() {
-/*		double long_distance = 0.0;
-		for(int i = 0; i<10000000 ; i++) //Stresstest		
-			long_distance = Common.calcDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+	public void calcPythDistanceTest() {
+		double long_distance = 0.0;
 		System.out.println(long_distance);
-		long_distance = Common.calcDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
-		double middle_distance = Common.calcDistance(FISCHELN_RATHAUS , STADTBAD_FISCHELN);
-		double short_distance = Common.calcDistance(WEDELSTRASSE_19 , WEDELSTRASSE_17);
-		assertEquals(SHORT_DISTANCE, short_distance, 0.013);
-		assertEquals(MIDDLE_DISTANCE, middle_distance, 0.1);		
-		assertEquals(LONG_DISTANCE, long_distance, 3.33);		
-		testDistanceOnTartanbahn();
-		*/
+		long_distance = Common.PythagoreanDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		double middle_distance = Common.PythagoreanDistance(FISCHELN_RATHAUS , STADTBAD_FISCHELN);
+		double short_distance = Common.PythagoreanDistance(WEDELSTRASSE_19 , WEDELSTRASSE_17);
+		assertEquals(SHORT_DISTANCE, short_distance, 15);
+		assertEquals(MIDDLE_DISTANCE, middle_distance, 100);	
+		assertEquals(LONG_DISTANCE, long_distance, 4000);	
 	}
 	
 	@Test
 	public void astheCrowFliesTest() {
 		double long_distance = 0.0;
-		for(int i = 0; i<10000000 ; i++) //Stresstest		
-			long_distance = Common.asTheCrowFlies(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
 		System.out.println(long_distance);
 		long_distance = Common.asTheCrowFlies(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
 		double middle_distance = Common.asTheCrowFlies(FISCHELN_RATHAUS , STADTBAD_FISCHELN);
 		double short_distance = Common.asTheCrowFlies(WEDELSTRASSE_19 , WEDELSTRASSE_17);
-		assertEquals(SHORT_DISTANCE, short_distance, 0.0001);
-		assertEquals(MIDDLE_DISTANCE, middle_distance, 0.001);	
-		assertEquals(LONG_DISTANCE, long_distance, 0.1);	
-		testDistanceOnTartanbahn();
+		assertEquals(SHORT_DISTANCE, short_distance, 0.1);
+		assertEquals(MIDDLE_DISTANCE, middle_distance, 10);	
+		assertEquals(LONG_DISTANCE, long_distance, 500);	
 	}
 
-
-	private void testDistanceOnTartanbahn() {
+	@Test
+	public void testDistanceOnTartanbahnCrow() {
 		double length = 0.0;
 		for(int i = 0; TARTANBAHN.length-1 > i; i++){
 			length += Common.asTheCrowFlies(TARTANBAHN[i], TARTANBAHN[i+1]);
 		}
-		assertEquals(TARTANBAHN_DISTANCE, length, 0.001);
+		assertEquals(TARTANBAHN_DISTANCE, length, 0.5);
+	}
+	
+	@Test
+	public void testDistanceOnTartanbahnPyth() {
+		double length = 0.0;
+		for(int i = 0; TARTANBAHN.length-1 > i; i++){
+			length += Common.PythagoreanDistance(TARTANBAHN[i], TARTANBAHN[i+1]);
+		}
+		assertEquals(TARTANBAHN_DISTANCE, length, 105);
 	}
 
 	@Test
@@ -111,5 +117,48 @@ public class CommonTest {
 			latlons.add(osmapiwrapper.getNode(nid).getPosition());
 		//double cost = osmapiwrapper.calcCost(latlons, koelnerstrasse);
 		//assertEquals(COST_FOR_MIDDLEDISTANCE, cost, 0.00001);
+	}
+	
+	@Test
+	public void writeProtocol() {
+		System.out.println("------");
+		for(int i = 0; i < 10; i++)
+			//System.out.println("10^"+i+": "+benchmarkCrow(Math.pow(10,i)));
+		System.out.println("------");
+		for(int i = 0; i < 10; i++)
+			System.out.println("10^"+i+": "+benchmarkPyth(Math.pow(10,i)));
+						
+		System.out.println("------");
+		System.out.println("x\t\t\t| Pythagorean\t\t| Crowflies\t\t| Difference\t");
+		System.out.println("Mensa - Bibliothek\t|"+values(KREFELD_CAMPUS_SUED, KREFELD_CAMPUS_SUED_BIB));
+		System.out.println("Campus-Süd - Campus-West|"+values(KREFELD_CAMPUS_SUED, KREFELD_CAMPUS_WEST));
+		System.out.println("Campus-Süd - Campus-MG\t|"+values(KREFELD_CAMPUS_SUED, MGLADBACH_CAMPUS));
+		System.out.println("Campus-Süd - MIT\t|" +values(KREFELD_CAMPUS_SUED, MIT));
+	}
+
+	/**
+	 * 
+	 */
+	public String values(OsmLatLon node1, OsmLatLon node2) {
+		double crow = Common.asTheCrowFlies(node1 , node2);
+		double pyth = Common.PythagoreanDistance(node1 , node2);
+		double diff = (pyth/crow);
+		return ""+pyth+"\t| "+crow+"\t|"+diff;
+	}
+	
+	private long benchmarkCrow(double d){
+		Date start = new Date();
+		for(int i = 0; i < d; i++)
+			Common.asTheCrowFlies(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		Date end = new Date();
+		return end.getTime() - start.getTime() ;
+	}
+	
+	private long benchmarkPyth(double d){
+		Date start = new Date();
+		for(int i = 0; i < d; i++)
+			Common.PythagoreanDistance(KREFELD_CAMPUS_SUED , MGLADBACH_CAMPUS);
+		Date end = new Date();
+		return end.getTime() - start.getTime() ;
 	}
 }

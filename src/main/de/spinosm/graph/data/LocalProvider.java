@@ -25,7 +25,7 @@ public class LocalProvider extends AbstractProvider{
 	}
 	
 	@Override
-	public RouteableVertex getStreetJunction(long id) {
+	public RouteableVertex getVertex(long id) {
 		OsmNode n = (OsmNode) osmxmlelements.getNode(id);
 		return 	buildNewStreetVertex(n);
 	}
@@ -36,12 +36,12 @@ public class LocalProvider extends AbstractProvider{
 	}
 
 	@Override
-	public List<RouteableVertex> getStreetJunctionsForStreetEdge(long id) {
+	public List<RouteableVertex> getVerteciesOfStreetEdge(long id) {
 		return null;
 	}
 
 	@Override
-	public List<StreetEdge> getStreetEdgesForStreetJunction(long id) {
+	public List<StreetEdge> getStreetEdgesForVertexId(long id) {
 		return null;
 	}
 

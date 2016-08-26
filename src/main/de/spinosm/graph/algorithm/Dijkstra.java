@@ -1,16 +1,11 @@
 package de.spinosm.graph.algorithm;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NavigableMap;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
-import java.util.TreeSet;
-
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
@@ -20,7 +15,7 @@ import de.spinosm.graph.pattern.IdComparator;
 
 public class Dijkstra extends ObservableShortestPath{
 	protected StreetGraph graph; 
-	protected TreeSet<RouteableVertex> visitedVertecies;
+	protected HashSet<RouteableVertex> visitedVertecies;
 	protected PriorityQueue<RouteableVertex> toVisitVertecies;
 	protected TreeMap<RouteableVertex, RouteableVertex> shortestPathMap;
 	protected RouteableVertex startVertex;
@@ -34,12 +29,12 @@ public class Dijkstra extends ObservableShortestPath{
 	public Dijkstra(StreetGraph streetgraph, int direction){
 		this.graph = streetgraph;
 		this.direction = direction;
-		visitedVertecies = new TreeSet<RouteableVertex>(new IdComparator());
+		visitedVertecies = new HashSet<RouteableVertex>();
 		toVisitVertecies = new PriorityQueue<RouteableVertex>(new DistanceComparator());		
 		shortestPathMap = new TreeMap<RouteableVertex, RouteableVertex>(new IdComparator());
 	}
 	
-	public Dijkstra(StreetGraph streetgraph, TreeSet<RouteableVertex> visitedVertecies, PriorityQueue<RouteableVertex> toVisitVertecies) {
+	public Dijkstra(StreetGraph streetgraph, HashSet<RouteableVertex> visitedVertecies, PriorityQueue<RouteableVertex> toVisitVertecies) {
 		this.graph = streetgraph;
 		this.visitedVertecies = visitedVertecies;
 		this.toVisitVertecies = toVisitVertecies;
@@ -71,10 +66,7 @@ public class Dijkstra extends ObservableShortestPath{
 		setChanged();
 		notifyObservers(u);		
 		
-		/*if(!u.isEdgesLoaded())
-			loadEdges(u);	*/			
-		
-		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
+		for(StreetEdge e : graph.edgesOf(u, direction)){
 			RouteableVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
 				try {				
@@ -113,7 +105,7 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 
 	protected void loadEdges(StreetVertex u) {
-		for(StreetEdge e : 	graph.getEdgesForVertex(u, direction))
+		for(StreetEdge e : 	graph.edgesOf(u, direction))
 			graph.addEdge(e,u);
 	}
 
@@ -133,22 +125,10 @@ public class Dijkstra extends ObservableShortestPath{
 		return returnValue;
 	}
 
-	private void writeToLogFile(NavigableMap<RouteableVertex, RouteableVertex> navigableMap) {
-		try {
-			PrintWriter writer = new PrintWriter("C:\\Users\\lammbraten\\Desktop\\vertexMap.txt", "UTF-8");
-			for(RouteableVertex k : navigableMap.keySet())
-				writer.write(k + ": " + navigableMap.get(k) + "\n");
-			writer.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
 	void init(RouteableVertex start){
 		startVertex = start;
 		startVertex.setDistance(0);
-		graph.getEdgesForVertex(startVertex, direction);
+		graph.edgesOf(startVertex, direction);
 		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
 	}
 
@@ -174,12 +154,12 @@ public class Dijkstra extends ObservableShortestPath{
 	}
 	
 	@Override
-	public TreeSet<RouteableVertex> getVisitedVertecies() {
+	public HashSet<RouteableVertex> getVisitedVertecies() {
 		return visitedVertecies;
 	}
 
 	@Override
-	public void setVisitedVertecies(TreeSet<RouteableVertex> visitedVertecies) {
+	public void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies) {
 		this.visitedVertecies = visitedVertecies;
 	}
 

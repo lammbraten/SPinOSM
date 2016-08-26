@@ -30,8 +30,18 @@ public class Common {
 		return false;
 	}
 	
+	public static double PythagoreanDistance(LatLon node1, LatLon node2){
+	    double lat1 = Common.toRad(node1.getLatitude());
+	    double lat2 = Common.toRad(node2.getLatitude());
+	    double lon1 = Common.toRad(node1.getLongitude());
+	    double lon2 = Common.toRad(node2.getLongitude());
+	    
+	    return EARTHRADIUS * pythagoras(lat1, lat2, lon1, lon2);
+
+	}
+	
 	public static double pythagoras(double lat1, double lat2, double lon1, double lon2) {
-		return Math.sqrt(
+		return  Math.sqrt(
 				Math.pow((lat1-lat2),2) +
 				Math.pow((lon1-lon2),2)
 				);
@@ -83,7 +93,7 @@ public class Common {
 	public static void writeStreetGraph(StreetGraph sg){
 		for(RouteableVertex sj : sg.vertexSet()){
 			System.out.println(sj);
-			for(StreetEdge se :sg.getEdgesForVertex(sj, 1)){
+			for(StreetEdge se :sg.edgesOf(sj, 1)){
 				System.out.println("\t" + se);
 			}
 		}

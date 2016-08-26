@@ -38,10 +38,7 @@ public class AStar extends Dijkstra {
 		setChanged();
 		notifyObservers(u);		
 		
-		/*if(!u.isEdgesLoaded())
-			loadEdges(u);*/				
-		
-		for(StreetEdge e : graph.getEdgesForVertex(u, direction)){
+		for(StreetEdge e : graph.edgesOf(u, direction)){
 			RouteableVertex v = e.getOtherKnotThan(u);
 			if(!visitedVertecies.contains(v)){
 				try {	
@@ -66,7 +63,7 @@ public class AStar extends Dijkstra {
 		startVertex = start;
 		startVertex.setDistance(0);
 		startVertex.setHeuristic(heuristicForVertex(startVertex));
-		graph.getEdgesForVertex(startVertex, StreetGraph.DEFAULT_DIRECTION);
+		graph.edgesOf(startVertex, StreetGraph.DEFAULT_DIRECTION);
 		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
 
 	}

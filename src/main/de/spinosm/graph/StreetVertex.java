@@ -22,14 +22,6 @@ public class StreetVertex extends GraphVertex implements Serializable {
 	}
 		
 	@Override
-	public boolean equals(Object other) {
-		if(super.equals(other))
-			//if(this.position.equals(((StreetJunction)other).position))
-				return true;
-		return false;
-	}
-
-	@Override
 	public boolean isEdgesLoaded() {
 		return edgesLoaded;
 	}
@@ -42,4 +34,12 @@ public class StreetVertex extends GraphVertex implements Serializable {
     public int hashCode(){
 		return Long.hashCode(getId());
     }
+
+	@Override
+	public boolean equals(Object other) {
+		if(super.equals(other))
+			//if(this.position.equals(((StreetJunction)other).position))
+				return true;
+		return false;
+	}
 }

@@ -1,8 +1,8 @@
 package de.spinosm.graph.algorithm;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
-
+import java.util.Set;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 
@@ -12,7 +12,7 @@ public interface ShortestPath {
 	public void setGraph(StreetGraph g);
 	public List<RouteableVertex> getBorderVertecies();
 	public List<RouteableVertex> getFinishedVertecies();
-	TreeSet<RouteableVertex> getVisitedVertecies();
-	void setVisitedVertecies(TreeSet<RouteableVertex> visitedVertecies);
+	public Set<RouteableVertex> getVisitedVertecies();
+	void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies);
 	
 }

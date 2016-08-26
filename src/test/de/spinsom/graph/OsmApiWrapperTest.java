@@ -146,13 +146,13 @@ public class OsmApiWrapperTest {
 	public void getStreetJunction(){
 		if(testShouldFail)
 			try{
-				assertNull(osmapiwrapper.getStreetJunction(testcase[NODEINDEX]));
+				assertNull(osmapiwrapper.getVertex(testcase[NODEINDEX]));
 				fail();
 			}catch(IllegalArgumentException e){
 				
 			}catch(Exception e){fail();}
 		else{
-			RouteableVertex sj = osmapiwrapper.getStreetJunction(testcase[NODEINDEX]);
+			RouteableVertex sj = osmapiwrapper.getVertex(testcase[NODEINDEX]);
 			assertNotNull(sj);		
 		}
 	}
