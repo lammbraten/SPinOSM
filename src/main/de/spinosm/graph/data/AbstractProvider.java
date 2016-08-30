@@ -30,17 +30,15 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 	}
 
 	protected RouteableVertex buildNewStreetVertex(OsmNode osmNode) {
-		RouteableVertex returnValue;	
-		returnValue = new StreetVertex(osmNode);
-		return returnValue;
+		return new StreetVertex(osmNode);
 	}
 	
-	protected Set<StreetEdge> getRouteableEdgesForVertex(RouteableVertex sj) {
+	protected Set<StreetEdge> getRouteableEdgesForVertex(RouteableVertex rv) {
 		Set<StreetEdge> waysFromNode = new HashSet<StreetEdge>();
-		List<Way> ways = this.getWaysForNode(sj.getId());
+		List<Way> ways = this.getWaysForNode(rv.getId());
 		for(Way way : ways){
 			try{
-				waysFromNode.addAll(parseToRouteableEdge(way, sj));
+				waysFromNode.addAll(parseToStreetEdge(rv, way));
 			}catch(Exception e){
 				//System.out.println(e.getMessage());
 			}
@@ -49,30 +47,30 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 
 	}
 
-	protected boolean isRouteableVertex(Node node) {
+	protected boolean canBeRouteableVertex(Node node) {
 		List<Way> waysOfNode = this.getWaysForNode(node.getId());
 		if(waysOfNode.size() >= 2)
 			return hasAnotherRoute(waysOfNode);
 		return false;
 	}
 
-	protected List<StreetEdge> parseToRouteableEdge(Way way, RouteableVertex sj) {
+	protected List<StreetEdge> parseToStreetEdge(RouteableVertex rv, Way way) {
 		List<StreetEdge> edges = new LinkedList<StreetEdge>();
 		List<Long> nids = way.getNodeIds();
 		List<Node> nodes =  this.getWayNodesComplete(way.getId(), nids);
 		for(Node node : nodes){
-			if(sj.getId() == node.getId()){
+			if(rv.getId() == node.getId()){
 				if(isUseableDownTheRoad(way)){
-					try {edges.add(shapeNewOutgoingEdgeDownTheRoad(way, sj, nodes, node));
-					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, sj, nodes, node));
-					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
+					try {edges.add(shapeNewOutgoingEdgeDownTheRoad(way, rv, nodes, node));
+					}catch (Exception e) {}
+					try {edges.add(shapeNewIncomingEdgeDownTheRoad(way, rv, nodes, node));
+					}catch (Exception e) {}
 				}
 				if(isUseableUpTheRoad(way)){
-					try {edges.add(shapeNewOutgoingEdgeUpTheRoad(way, sj, nodes, node));
-					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
-					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, sj, nodes, node));	
-					}catch (Exception e) {/*System.out.println(e.getMessage());*/}
+					try {edges.add(shapeNewOutgoingEdgeUpTheRoad(way, rv, nodes, node));
+					}catch (Exception e) {}
+					try {edges.add(shapeNewIncomingEdgeUpTheRoad(way, rv, nodes, node));	
+					}catch (Exception e) {}
 				}
 			}
 		}
@@ -151,7 +149,7 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
 			shapingNodes.add(nodes.get(i));
-			if(isRouteableVertex(nodes.get(i))){
+			if(canBeRouteableVertex(nodes.get(i))){
 				return new StreetEdge(startingNode, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 			}
 		}
@@ -163,7 +161,7 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
 			shapingNodes.add(nodes.get(i));
-			if(isRouteableVertex(nodes.get(i))){
+			if(canBeRouteableVertex(nodes.get(i))){
 				return new StreetEdge(sj, new StreetVertex((OsmNode) nodes.get(i)), calcCost(way, shapingNodes));
 			}
 		}
@@ -175,7 +173,7 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)-1; i >= 0; i--){
 			shapingNodes.add(nodes.get(i));
-			if(isRouteableVertex(nodes.get(i))){
+			if(canBeRouteableVertex(nodes.get(i))){
 				return new StreetEdge(new StreetVertex((OsmNode) nodes.get(i)), endingNode, calcCost(way, shapingNodes));
 			}
 		}
@@ -187,7 +185,7 @@ abstract class AbstractProvider implements DataProvider, OsmDataHandler {
 		shapingNodes.add(node);
 		for(int i = nodes.indexOf(node)+1; i < nodes.size(); i++){
 			shapingNodes.add(nodes.get(i));
-			if(isRouteableVertex(nodes.get(i))){
+			if(canBeRouteableVertex(nodes.get(i))){
 				return new StreetEdge(new StreetVertex((OsmNode) nodes.get(i)), endingNode, calcCost(way, shapingNodes));
 			}
 		}

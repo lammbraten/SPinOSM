@@ -38,7 +38,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 	}
 
 	public RouteableVertex getVertex(long id){
-		RouteableVertex returnValue = checkBufferedVerticesForId(id);
+		RouteableVertex returnValue = checkLoadedVerticesForId(id);
 		if(returnValue != null)
 			return returnValue;
 		
@@ -47,10 +47,10 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 
 	public Set<StreetEdge> edgesOf(RouteableVertex startVertex, int direction) {
 		if(startVertex.isEdgesLoaded())
-			return checkBufferedEdgeForId(startVertex, direction);
+			return checkLoadedEdgesForId(startVertex, direction);
 		else{
 			loadEdgesFormDataprovider(startVertex);
-			return checkBufferedEdgeForId(startVertex, direction); //Had to that because, Loading From dataprovider with direction makes no sense
+			return checkLoadedEdgesForId(startVertex, direction); //Had to that because, Loading From dataprovider with direction makes no sense
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 		if(download)
 			return edgesOf(vertex, direction);
 		else
-			return checkBufferedEdgeForId(vertex, direction);
+			return checkLoadedEdgesForId(vertex, direction);
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 		return returnValue;
 	}
 
-	private Set<StreetEdge> checkBufferedEdgeForId(RouteableVertex startVertex, int direction) {
+	private Set<StreetEdge> checkLoadedEdgesForId(RouteableVertex startVertex, int direction) {
 		if(direction > 0)
 			return outgoingEdgesOf(startVertex);
 		else
@@ -117,7 +117,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 	 * @param id
 	 * @return
 	 */
-	private RouteableVertex checkBufferedVerticesForId(long id) {
+	private RouteableVertex checkLoadedVerticesForId(long id) {
 		for(RouteableVertex n : super.vertexSet())
 			if(n.getId() == id)
 				return n;
