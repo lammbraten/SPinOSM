@@ -98,7 +98,7 @@ public class OsmHighwayValues {
 		String value = way.getTags().get("highway");
 		switch(value){
 			case MOTORWAY:
-				return 100;
+				return 130;
 			case TRUNK:
 				return 100;
 			case PRIMARY:

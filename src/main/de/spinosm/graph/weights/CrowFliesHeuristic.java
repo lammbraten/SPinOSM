@@ -3,12 +3,13 @@ package de.spinosm.graph.weights;
 import de.spinosm.common.Common;
 import de.spinosm.graph.RouteableVertex;
 
-public class SimpleCrowFliesHeuristic implements Heuristic{
+public class CrowFliesHeuristic implements Heuristic{
 
-	private RouteableVertex reference;
-	private float weight;
+	private static final long serialVersionUID = -2029496330097990129L;
+	protected RouteableVertex reference;
+	protected float weight;
 	
-	public SimpleCrowFliesHeuristic(RouteableVertex endVertex, float weight) {
+	public CrowFliesHeuristic(RouteableVertex endVertex, float weight) {
 		this.reference = endVertex;
 		this.weight = weight;
 	}

@@ -1,4 +1,4 @@
 package de.spinosm.graph.weights;
 
-public class DefaultCostFunction extends SimpleFastTimeWeight {
+public class DefaultCostFunction extends PythagoreanTimeWeight {
 }

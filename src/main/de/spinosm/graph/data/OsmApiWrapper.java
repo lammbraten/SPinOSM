@@ -51,6 +51,43 @@ public class OsmApiWrapper extends AbstractProvider{
 		this.weightFunction = weightFunction;
 	}
 	
+	@Override
+	public RouteableVertex getVertex(long id) {
+		RouteableVertex returnValue;
+		OsmNode osmNode = (OsmNode) this.getNode(id);
+		if(osmNode == null){
+			throw new IllegalArgumentException("Node not existing in OSM");
+		}else{
+			returnValue = buildNewStreetVertex(osmNode);
+		}
+		return returnValue;
+	}
+
+	@Override
+	public Set<StreetEdge> getStreetEdgesForVertex(RouteableVertex sj) {
+		Set<StreetEdge> returnValue;
+		if(sj == null){
+			throw new IllegalArgumentException("Node not existing in OSM");
+		}else{
+			returnValue = getRouteableEdgesForVertex(sj);
+		}
+		return returnValue;
+	}
+
+	@Override
+	public List<Node> getWayNodesComplete(long id, List<Long> nids) {
+		if(osmNodeListBuffer.contains(id))
+			return getWayCompleteFromBuffer(id);
+		return getWayCompleteFromServer(id, nids);
+	}
+
+	@Override
+	public List<Way> getWaysForNode(long id){
+		if(osmWaysOfNodeBuffer.contains(id))
+			return getWaysOfNodeFromBuffer(id);
+		return getWayForNodeFromServer(id);
+	}
+
 	public Node getNode(long id){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
 			try{return mddao.getNode(id);}catch(OsmConnectionException e){}
@@ -70,24 +107,10 @@ public class OsmApiWrapper extends AbstractProvider{
 		return null;
 	}
 	
-	@Override
-	public List<Node> getWayNodesComplete(long id, List<Long> nids) {
-		if(osmNodeListBuffer.contains(id))
-			return getWayCompleteFromBuffer(id);
-		return getWayCompleteFromServer(id, nids);
-	}
-	
 	public List<Way> getWays(Collection<Long> wayIds){
 		for(int attempt = 0; attempt < MAX_ATTEMPTS; attempt++)
 			try{return mddao.getWays(wayIds);}catch(OsmConnectionException e){}
 		return null;
-	}
-	
-	@Override
-	public List<Way> getWaysForNode(long id){
-		if(osmWaysOfNodeBuffer.contains(id))
-			return getWaysOfNodeFromBuffer(id);
-		return getWayForNodeFromServer(id);
 	}
 	
 	public Relation getRelation(long id){
@@ -126,33 +149,6 @@ public class OsmApiWrapper extends AbstractProvider{
 		return null;
 	}
 
-	@Override
-	public RouteableVertex getVertex(long id) {
-		RouteableVertex returnValue;
-		OsmNode osmNode = (OsmNode) this.getNode(id);
-		if(osmNode == null){
-			throw new IllegalArgumentException("Node not existing in OSM");
-		}else{
-			returnValue = buildNewStreetVertex(osmNode);
-		}
-		return returnValue;
-	}
-
-	@Override
-	public StreetEdge getStreetEdge(long id) {
-		return null;
-	}
-
-	@Override
-	public List<RouteableVertex> getVerteciesOfStreetEdge(long id) {
-		return null;
-	}
-
-	@Override
-	public List<StreetEdge> getStreetEdgesForVertexId(long id) {
-		return null;
-	}
-	
 	private List<Node> getWayCompleteFromBuffer(long id) {
 		return osmNodeListBuffer.getElementList(id);
 	}
@@ -193,16 +189,5 @@ public class OsmApiWrapper extends AbstractProvider{
 				return returnValue;
 			}catch(OsmConnectionException e){}
 		return null;
-	}
-
-	@Override
-	public Set<StreetEdge> getStreetEdgesForVertex(RouteableVertex sj) {
-		Set<StreetEdge> returnValue;
-		if(sj == null){
-			throw new IllegalArgumentException("Node not existing in OSM");
-		}else{
-			returnValue = getRouteableEdgesForVertex(sj);
-		}
-		return returnValue;
 	}
 }

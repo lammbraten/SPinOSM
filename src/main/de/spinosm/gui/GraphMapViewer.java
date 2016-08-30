@@ -99,7 +99,7 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	public void paintAlsoEdgesOf(Set<RouteableVertex> set) {
 		for(RouteableVertex node : set){
 			Color edgeColorForThisVertex = generateRandomColor();
-			for(StreetEdge routeEdge : sg.edgesOf(node, StreetGraph.DEFAULT_DIRECTION)){
+			for(StreetEdge routeEdge : sg.edgesOf(node, StreetGraph.DEFAULT_DIRECTION, false)){
 				addEdgeToPainters(edgeColorForThisVertex, routeEdge);
 			}
 		}
@@ -147,6 +147,8 @@ public class GraphMapViewer extends Thread implements Observer, Runnable{
 	}
 
 	protected String shortendDoubleString(double value) {
+		if(value == Double.MAX_VALUE)
+			return "infinity";
 		return String.format("%.4f", value);
 	}
 

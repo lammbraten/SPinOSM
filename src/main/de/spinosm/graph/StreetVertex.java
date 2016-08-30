@@ -21,6 +21,10 @@ public class StreetVertex extends GraphVertex implements Serializable {
 		super(osmNode.getId() , osmNode.getPosition());		
 	}
 		
+	public StreetVertex(long id) {
+		super(id, null, 0);
+	}
+
 	@Override
 	public boolean isEdgesLoaded() {
 		return edgesLoaded;

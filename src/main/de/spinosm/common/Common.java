@@ -30,6 +30,24 @@ public class Common {
 		return false;
 	}
 	
+	public static double getSpeedLimits(Way way, Vehicle vehicle) {
+		if(way.getTags().containsKey("highway")){
+			switch(vehicle){
+			case CAR:
+				return OsmHighwayValues.getCarSpeedLimits(way);	
+			case TRUCK:
+				return OsmHighwayValues.getTruckSpeedLimits(way);
+			case PEDESTRIAN:
+				return OsmHighwayValues.getPedestrianSpeeds(way);
+			case BICYCLE:
+				return OsmHighwayValues.getBycicleSpeeds(way);
+			default:
+				throw new IllegalArgumentException("Vehicle unknown!");
+			}
+		}
+		throw new IllegalArgumentException("Not a Highway!");
+	}
+	
 	public static double PythagoreanDistance(LatLon node1, LatLon node2){
 	    double lat1 = Common.toRad(node1.getLatitude());
 	    double lat2 = Common.toRad(node2.getLatitude());

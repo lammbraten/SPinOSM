@@ -24,8 +24,8 @@ public class OsmXmlHandler implements MapDataHandler  {
 	
 	@Override
 	public void handle(BoundingBox bounds) {
-		System.out.println("Bounds");
-		System.out.println(bounds.getAsLeftBottomRightTopString());
+		//System.out.println("Bounds");
+		//System.out.println(bounds.getAsLeftBottomRightTopString());
 	}
 
 	@Override

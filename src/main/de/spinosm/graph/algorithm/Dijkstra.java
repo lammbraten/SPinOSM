@@ -13,14 +13,16 @@ import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
-public class Dijkstra extends ObservableShortestPath{
+public class Dijkstra extends ObservableShortestPath {
+	private static final long serialVersionUID = 8742913011912127748L;
 	protected StreetGraph graph; 
 	protected HashSet<RouteableVertex> visitedVertecies;
 	protected PriorityQueue<RouteableVertex> toVisitVertecies;
 	protected TreeMap<RouteableVertex, RouteableVertex> shortestPathMap;
 	protected RouteableVertex startVertex;
 	protected RouteableVertex endVertex;
-	protected int direction;	
+	protected int direction;
+	private LinkedList<RouteableVertex> calculatetdPath;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
 		this(streetgraph, StreetGraph.DEFAULT_DIRECTION);
@@ -67,7 +69,7 @@ public class Dijkstra extends ObservableShortestPath{
 		notifyObservers(u);		
 		
 		for(StreetEdge e : graph.edgesOf(u, direction)){
-			RouteableVertex v = e.getOtherKnotThan(u);
+			RouteableVertex v = e.getOtherVertexThan(u);
 			if(!visitedVertecies.contains(v)){
 				try {				
 					if(toVisitVertecies.contains(v)){					
@@ -121,7 +123,7 @@ public class Dijkstra extends ObservableShortestPath{
 				break;
 			returnValue.add(v);
 		}
-		
+		calculatetdPath = returnValue;
 		return returnValue;
 	}
 
@@ -178,5 +180,10 @@ public class Dijkstra extends ObservableShortestPath{
 
 	public void setEndVertex(RouteableVertex endVertex) {
 		this.endVertex = endVertex;
+	}
+
+	@Override
+	public List<RouteableVertex> getCalculatedShortestPath() {
+		return calculatetdPath;
 	}
 }

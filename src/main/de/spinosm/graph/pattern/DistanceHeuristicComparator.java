@@ -1,10 +1,12 @@
 package de.spinosm.graph.pattern;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import de.spinosm.graph.RouteableVertex;
 
-public class DistanceHeuristicComparator implements Comparator<RouteableVertex> {
+public class DistanceHeuristicComparator implements Comparator<RouteableVertex>, Serializable {
+	private static final long serialVersionUID = -6405437387322559473L;
 
 	@Override
 	public int compare(RouteableVertex v1, RouteableVertex v2) {

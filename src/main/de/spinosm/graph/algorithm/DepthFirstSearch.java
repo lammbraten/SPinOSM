@@ -34,9 +34,6 @@ public class DepthFirstSearch extends Observable {
 			setChanged();
 			notifyObservers(u);		
 			
-			if(!u.isEdgesLoaded())
-				loadEdges(u);	
-			
 			vistitedVertecies.add(u);			
 			mark(u);
 			depth++;
@@ -45,16 +42,11 @@ public class DepthFirstSearch extends Observable {
 	
 	private void mark(RouteableVertex s){
 		for(StreetEdge e : graph.edgesOf(s, 1)){
-			RouteableVertex v = e.getOtherKnotThan(s);
+			RouteableVertex v = e.getOtherVertexThan(s);
 			if(!vistitedVertecies.contains(v)){
 				toVisitVertecie.add(v);
 			}
 		}
-	}
-	
-	private void loadEdges(RouteableVertex u) {
-		for(StreetEdge e : 	graph.edgesOf(u, 1))
-			graph.addEdge(e,u);
 	}
 	
 	private void setMaxDepth(long maxDepth) {

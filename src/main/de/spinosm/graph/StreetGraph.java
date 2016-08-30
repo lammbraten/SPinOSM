@@ -13,6 +13,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 	private static final long serialVersionUID = -67998995199008728L;
 	transient private DataProvider dataprovider;
 	public static int DEFAULT_DIRECTION = 1;
+	public static double MAXSPEED = 36.5;
 
 	public StreetGraph(DataProvider dataprovider){
 		super(new StreetEdgeFactory());
@@ -53,6 +54,13 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 		}
 	}
 	
+	public Set<StreetEdge> edgesOf(RouteableVertex vertex, int direction, boolean download) {
+		if(download)
+			return edgesOf(vertex, direction);
+		else
+			return checkBufferedEdgeForId(vertex, direction);
+	}
+	
 	@Override
 	public Set<StreetEdge> edgesOf(RouteableVertex v){
 		try {
@@ -64,7 +72,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 	}
 
 	public void addEdge(StreetEdge e, RouteableVertex sv) {
-		super.addVertex(e.getOtherKnotThan(sv));
+		super.addVertex(e.getOtherVertexThan(sv));
 		StreetEdge se = addEdge(e.getStart(), e.getEnd());
 		if(se != null)
 			se.setWeight(e.getWeight());
@@ -104,9 +112,14 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 			return incomingEdgesOf(startVertex);
 	}
 	
+	/**
+	 * O(|V|). But not That bad, because this mostly used twice at the beginning of an routing algorithm
+	 * @param id
+	 * @return
+	 */
 	private RouteableVertex checkBufferedVerticesForId(long id) {
 		for(RouteableVertex n : super.vertexSet())
-			if(n.getId() == id && n.isEdgesLoaded())
+			if(n.getId() == id)
 				return n;
 		return null;
 	}
@@ -116,5 +129,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 //		linkWithAlredyKnownNodes(newNode);
 		super.addVertex(newNode);
 	}
+
+
 
 }

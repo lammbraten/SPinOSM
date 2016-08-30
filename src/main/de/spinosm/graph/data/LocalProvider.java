@@ -7,7 +7,6 @@ import java.util.Set;
 
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.weights.WeightFunction;
 import de.westnordost.osmapi.map.data.Node;
 import de.westnordost.osmapi.map.data.OsmNode;
@@ -28,21 +27,6 @@ public class LocalProvider extends AbstractProvider{
 	public RouteableVertex getVertex(long id) {
 		OsmNode n = (OsmNode) osmxmlelements.getNode(id);
 		return 	buildNewStreetVertex(n);
-	}
-
-	@Override
-	public StreetEdge getStreetEdge(long id) {
-		return null;
-	}
-
-	@Override
-	public List<RouteableVertex> getVerteciesOfStreetEdge(long id) {
-		return null;
-	}
-
-	@Override
-	public List<StreetEdge> getStreetEdgesForVertexId(long id) {
-		return null;
 	}
 
 	@Override

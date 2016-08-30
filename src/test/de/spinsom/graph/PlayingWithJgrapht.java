@@ -30,8 +30,8 @@ import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.data.OsmApiWrapper;
 import de.spinosm.graph.weights.DefaultCostFunction;
 import de.spinosm.graph.weights.PythagoreanDistanceWeight;
-import de.spinosm.graph.weights.SimpleCrowFliesHeuristic;
-import de.spinosm.graph.weights.SimpleCrowFliesTimeHeuristic;
+import de.spinosm.graph.weights.CrowFliesHeuristic;
+import de.spinosm.graph.weights.CrowFliesTimeHeuristic;
 import de.spinosm.graph.weights.WeightFunction;
 import de.spinosm.gui.GraphMapViewer;
 import de.spinosm.gui.ShortestPathObserver;
@@ -53,19 +53,19 @@ public class PlayingWithJgrapht {
 	private static long DORTMUND = 342488679l; //DORTMUND
 	private static long PADERBORN = 6566103l; 
 	
-	private static long start = CAMPUS_SUED;
-	private static long end = SCH_GU;
+	private static long start = SCH_GU;
+	private static long end = CAMPUS_SUED;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		WeightFunction wf = new PythagoreanDistanceWeight();
 		//osmapi = new OsmApiWrapper(wf);
-       // osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
-		//streetgraph = new StreetGraph(osmapi);
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets4.streetgraph.bin"));
+        osmapi = new LocalProvider("C:\\Users\\lammbraten\\Desktop\\nrw.streets.osm", wf);
+		streetgraph = new StreetGraph(osmapi);
+		/*ObjectInputStream ois = new ObjectInputStream(new FileInputStream("E:\\OSM-Files\\OSM.compiler\\deliveries\\graphs\\nrw.streets4.streetgraph.bin"));
 		streetgraph = (StreetGraph) ois.readObject();
 		streetgraph.setDataprovider(new DefaultDataProvider());
-		ois.close();
+		ois.close();*/
 	}
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
@@ -95,8 +95,8 @@ public class PlayingWithJgrapht {
 		ShortestPathObserver spo = new ShortestPathObserver();
 		//spo.start();
 		//ObservableShortestPath sp = new Dijkstra(streetgraph);
-		ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
-		//ObservableShortestPath sp = new AStar(streetgraph, new SimpleCrowFliesHeuristic(endJunction, 1.0f));
+		//ObservableShortestPath sp = new BiDirectionalDijkstra(streetgraph);
+		ObservableShortestPath sp = new AStar(streetgraph, new CrowFliesHeuristic(endJunction, 1.0f));
 		//sp.addObserver(spo);
 		//sp.addObserver(gmv);
 

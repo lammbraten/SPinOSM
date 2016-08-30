@@ -12,11 +12,13 @@ import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.StreetVertex;
 
 public class BiDirectionalDijkstra extends ObservableShortestPath{
+	private static final long serialVersionUID = 78753746760491437L;
 	private static final int REVERSE_DIRECTION = -1;
 	private static final int STRAIGHT_DIRECTION = 1;
 	private StreetGraph graph; 
 	private Dijkstra reverseDijkstra;
 	private Dijkstra straightDijkstra;
+	private List<RouteableVertex> calculatetdPath;
 	private static RouteableVertex startVertex;
 	private static RouteableVertex endVertex;	
 	
@@ -69,6 +71,7 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		shortestPath.add(jointValue);		
 		shortestPath.addAll(shortestSub2Path);
 
+		calculatetdPath = shortestPath;
 		return shortestPath;
 	}
 
@@ -94,6 +97,8 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	@Override
 	public void setGraph(StreetGraph g) {
 		this.graph = g;	
+		reverseDijkstra.setGraph(g);
+		straightDijkstra.setGraph(g);
 	}
 
 	private TreeSet<RouteableVertex> intersectionOf(HashSet<RouteableVertex> hashSet, HashSet<RouteableVertex> hashSet2){
@@ -127,5 +132,10 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 	public void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<RouteableVertex> getCalculatedShortestPath() {
+		return calculatetdPath;
 	}
 }

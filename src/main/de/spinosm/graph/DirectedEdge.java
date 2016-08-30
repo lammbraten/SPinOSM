@@ -42,7 +42,7 @@ public abstract class DirectedEdge implements RouteableEdge{
 		
 	}
 	
-	public RouteableVertex getOtherKnotThan(RouteableVertex u) {
+	public RouteableVertex getOtherVertexThan(RouteableVertex u) {
 		if(isStartVertex(u))
 			return target;
 		else if(isEndVertex(u))
@@ -91,7 +91,7 @@ public abstract class DirectedEdge implements RouteableEdge{
     
     @Override 
     public int hashCode(){
-		return Long.hashCode(source.getId()) + Long.hashCode(target.getId());
+		return Long.hashCode(Long.hashCode(source.getId()) + Long.hashCode(target.getId()));
     }
 
 	private boolean isStartVertex(RouteableVertex that) {

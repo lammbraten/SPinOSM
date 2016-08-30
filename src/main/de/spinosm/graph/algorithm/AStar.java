@@ -6,12 +6,12 @@ import java.util.PriorityQueue;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.DistanceHeuristicComparator;
 import de.spinosm.graph.weights.DefaultHeuristic;
 import de.spinosm.graph.weights.Heuristic;
 
 public class AStar extends Dijkstra {
+	private static final long serialVersionUID = -8285289477827305700L;
 	private Heuristic heuristic;	
 	
 	public AStar(StreetGraph streetgraph){
@@ -27,7 +27,7 @@ public class AStar extends Dijkstra {
 	@Override
 	public List<RouteableVertex> getShortestPath(RouteableVertex start, RouteableVertex end) {
 		endVertex = end;		
-		init(start);
+		this.init(start);
 
 		return iterateThrougGraph();
 	}
@@ -39,7 +39,7 @@ public class AStar extends Dijkstra {
 		notifyObservers(u);		
 		
 		for(StreetEdge e : graph.edgesOf(u, direction)){
-			RouteableVertex v = e.getOtherKnotThan(u);
+			RouteableVertex v = e.getOtherVertexThan(u);
 			if(!visitedVertecies.contains(v)){
 				try {	
 					if(toVisitVertecies.contains(v)){
@@ -55,7 +55,7 @@ public class AStar extends Dijkstra {
 		}
 	}
 
-	void init(StreetVertex start){
+	void init(RouteableVertex start){
 		if(heuristic == null)
 			heuristic = new DefaultHeuristic(endVertex);	
 		else
