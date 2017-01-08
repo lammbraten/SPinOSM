@@ -38,20 +38,16 @@
     </display>  
   </interface>  
   <dependency id="5">    
-    <bendpoint x="608" y="197"/>    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
   </dependency>  
   <dependency id="6">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
   </dependency>  
   <dependency id="7">    
-    <bendpoint x="948" y="293"/>    
-    <bendpoint x="760" y="302"/>    
-    <bendpoint x="599" y="296"/>    
-    <bendpoint x="584" y="296"/>    
-    <end type="SOURCE" refId="3"/>    
+    <bendpoint x="608" y="197"/>    
+    <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
   <dependency id="8">    
@@ -60,12 +56,16 @@
     <end type="TARGET" refId="4"/>  
   </dependency>  
   <dependency id="9">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
+    <bendpoint x="948" y="293"/>    
+    <bendpoint x="760" y="302"/>    
+    <bendpoint x="599" y="296"/>    
+    <bendpoint x="584" y="296"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
   </dependency>  
   <dependency id="10">    
     <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="1"/>  
+    <end type="TARGET" refId="2"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    

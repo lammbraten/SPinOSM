@@ -14,7 +14,7 @@ import de.spinosm.graph.RouteableEdge;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.algorithm.AStar;
-import de.spinosm.graph.algorithm.DepthFirstSearch;
+import de.spinosm.graph.algorithm.BreadthFirstSearch;
 import de.spinosm.graph.data.DataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.DefaultCostFunction;
@@ -40,11 +40,12 @@ public class DepthFirstSearchTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
+	
 
 	@Test
 	public void testDFS() {
 		streetgraph.getVertex(KOE_HA);
-		DepthFirstSearch dfs = new DepthFirstSearch(streetgraph, KOE_HA , 1000);
+		BreadthFirstSearch dfs = new BreadthFirstSearch(streetgraph, KOE_HA , 1000);
 		
 		Common.writeStreetGraph(streetgraph);
 

@@ -109,7 +109,7 @@ public class PlayingWithJgrapht {
 		//gmv.paintAlsoEdgesOf(new HashSet<RouteableVertex>(sp.getFinishedVertecies()));
 		//gmv.paintAlsoEdgesOf(new HashSet<StreetVertex>(graphPath));
 		//gmv.paintAlsoFinished(sp.getFinishedVertecies(), false);
-		gmv.paintAlsoBorder(sp.getBorderVertecies(), false);
+		gmv.paintAlsoBorder(sp.getBorderVertices(), false);
 		gmv.paintAlsoRoute(graphPath);
 		gmv.showMap();
 		

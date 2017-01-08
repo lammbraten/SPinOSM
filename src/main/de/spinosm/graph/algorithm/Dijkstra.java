@@ -9,19 +9,18 @@ import java.util.TreeMap;
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetEdge;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.StreetVertex;
 import de.spinosm.graph.pattern.DistanceComparator;
 import de.spinosm.graph.pattern.IdComparator;
 
 public class Dijkstra extends ObservableShortestPath {
 	private static final long serialVersionUID = 8742913011912127748L;
 	protected StreetGraph graph; 
-	protected HashSet<RouteableVertex> visitedVertecies;
-	protected PriorityQueue<RouteableVertex> toVisitVertecies;
-	protected TreeMap<RouteableVertex, RouteableVertex> shortestPathMap;
+	protected HashSet<RouteableVertex> visitedVertices;
+	protected PriorityQueue<RouteableVertex> toVisitVertices;
 	protected RouteableVertex startVertex;
 	protected RouteableVertex endVertex;
 	protected int direction;
+	private TreeMap<RouteableVertex, RouteableVertex> shortestPathMap;
 	private LinkedList<RouteableVertex> calculatetdPath;	
 	
 	public Dijkstra(StreetGraph streetgraph) {
@@ -31,15 +30,15 @@ public class Dijkstra extends ObservableShortestPath {
 	public Dijkstra(StreetGraph streetgraph, int direction){
 		this.graph = streetgraph;
 		this.direction = direction;
-		visitedVertecies = new HashSet<RouteableVertex>();
-		toVisitVertecies = new PriorityQueue<RouteableVertex>(new DistanceComparator());		
+		visitedVertices = new HashSet<RouteableVertex>();
+		toVisitVertices = new PriorityQueue<RouteableVertex>(new DistanceComparator());		
 		shortestPathMap = new TreeMap<RouteableVertex, RouteableVertex>(new IdComparator());
 	}
 	
 	public Dijkstra(StreetGraph streetgraph, HashSet<RouteableVertex> visitedVertecies, PriorityQueue<RouteableVertex> toVisitVertecies) {
 		this.graph = streetgraph;
-		this.visitedVertecies = visitedVertecies;
-		this.toVisitVertecies = toVisitVertecies;
+		this.visitedVertices = visitedVertecies;
+		this.toVisitVertices = toVisitVertecies;
 	}
 
 	@Override
@@ -53,8 +52,8 @@ public class Dijkstra extends ObservableShortestPath {
 	/**
 	 * @return
 	 */
-	protected List<RouteableVertex> iterateThrougGraph() {
-		while(!toVisitVertecies.isEmpty()){
+	List<RouteableVertex> iterateThrougGraph() {
+		while(!toVisitVertices.isEmpty()){
 			if(isEndVertexFound())
 				return buildShortestPathTo(endVertex);
 			checkNextVertex();
@@ -62,17 +61,17 @@ public class Dijkstra extends ObservableShortestPath {
 		return null;
 	}
 	
-	void checkNextVertex() {
-		RouteableVertex u = toVisitVertecies.poll();
-		visitedVertecies.add(u);
+	RouteableVertex checkNextVertex() {
+		RouteableVertex u = toVisitVertices.poll();
+		visitedVertices.add(u);
 		setChanged();
 		notifyObservers(u);		
 		
 		for(StreetEdge e : graph.edgesOf(u, direction)){
 			RouteableVertex v = e.getOtherVertexThan(u);
-			if(!visitedVertecies.contains(v)){
+			if(!visitedVertices.contains(v)){
 				try {				
-					if(toVisitVertecies.contains(v)){					
+					if(toVisitVertices.contains(v)){					
 						decraeseValueIfLower(u, v, e.getWeight());
 					}else{
 						insertNewValue(u, v, e.getWeight());
@@ -82,13 +81,10 @@ public class Dijkstra extends ObservableShortestPath {
 				}
 			}
 		}
+		return u;
 	}
 	
-	private boolean isEndVertexFound() {
-		return toVisitVertecies.peek().getId() == endVertex.getId();
-	}
-	
-	protected void decraeseValueIfLower(RouteableVertex u, RouteableVertex v, double weight) throws Exception {
+	void decraeseValueIfLower(RouteableVertex u, RouteableVertex v, double weight) throws Exception {
 		RouteableVertex alreadyFoundV = shortestPathMap.ceilingKey(v);
 		if(!alreadyFoundV.equals(v) || alreadyFoundV == null || u == null)
 			throw new Exception("Something went wrong");
@@ -99,17 +95,14 @@ public class Dijkstra extends ObservableShortestPath {
 		}
 	}
 
-	protected void insertNewValue(RouteableVertex u, RouteableVertex v, double weight) throws Exception {
+	void insertNewValue(RouteableVertex u, RouteableVertex v, double weight) throws Exception {
 		v.setDistance(u.getDistance() + weight);						
-		toVisitVertecies.add(v);
+		toVisitVertices.add(v);
 		if(shortestPathMap.put(v, u) != null)
 			throw new Exception("Something went wrong");
 	}
 
-	protected void loadEdges(StreetVertex u) {
-		for(StreetEdge e : 	graph.edgesOf(u, direction))
-			graph.addEdge(e,u);
-	}
+
 
 	List<RouteableVertex> buildShortestPathTo(RouteableVertex endVertex2) {
 		//writeToLogFile(shortestPathMap.descendingMap());
@@ -131,7 +124,7 @@ public class Dijkstra extends ObservableShortestPath {
 		startVertex = start;
 		startVertex.setDistance(0);
 		graph.edgesOf(startVertex, direction);
-		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
+		toVisitVertices.add(graph.getVertex(startVertex.getId()));
 	}
 
 	@Override
@@ -146,23 +139,23 @@ public class Dijkstra extends ObservableShortestPath {
 	}
 	
 	@Override
-	public List<RouteableVertex> getBorderVertecies() {
-		return  new ArrayList<RouteableVertex>(toVisitVertecies);
+	public List<RouteableVertex> getBorderVertices() {
+		return  new ArrayList<RouteableVertex>(toVisitVertices);
 	}
 
 	@Override
-	public List<RouteableVertex> getFinishedVertecies() {
-		return new ArrayList<RouteableVertex>(visitedVertecies);
+	public List<RouteableVertex> getFinishedVertices() {
+		return new ArrayList<RouteableVertex>(visitedVertices);
 	}
 	
 	@Override
-	public HashSet<RouteableVertex> getVisitedVertecies() {
-		return visitedVertecies;
+	public HashSet<RouteableVertex> getVisitedVertices() {
+		return visitedVertices;
 	}
 
 	@Override
-	public void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies) {
-		this.visitedVertecies = visitedVertecies;
+	public void setVisitedVertices(HashSet<RouteableVertex> visitedVertices) {
+		this.visitedVertices = visitedVertices;
 	}
 
 	
@@ -185,5 +178,9 @@ public class Dijkstra extends ObservableShortestPath {
 	@Override
 	public List<RouteableVertex> getCalculatedShortestPath() {
 		return calculatetdPath;
+	}
+
+	private boolean isEndVertexFound() {
+		return toVisitVertices.peek().getId() == endVertex.getId();
 	}
 }

@@ -7,13 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
-import de.spinosm.graph.algorithm.DepthFirstSearch;
+import de.spinosm.graph.algorithm.BreadthFirstSearch;
 import de.spinosm.graph.data.DefaultDataProvider;
 import de.spinosm.graph.data.LocalProvider;
 import de.spinosm.graph.weights.CrowFliesDistanceWeight;
@@ -44,8 +43,9 @@ public class OSMtoStreetgraphConverter {
 		if (parseArguments(args)){ 
 			System.out.println( "starting at " + new Date());
 			generateOSMFileReader();
+			System.out.println( "parsing at " + new Date());
 			//ShortestPathObserver spo = new ShortestPathObserver();			
-			new DepthFirstSearch(streetgraph, nid, -1).searchDephtFirst();
+			new BreadthFirstSearch(streetgraph, nid, -1).searchBraedthFirst();
 
 			
 			System.out.println( "  ending at " + new Date() );
@@ -59,7 +59,7 @@ public class OSMtoStreetgraphConverter {
 		}
 		else{
 			System.out.println("Wrong arguments.");
-			System.out.println("-rx InFilePath -wx OutFilePath -nid SomeNodeIdInTheFile");
+			System.out.println("-rx InFilePath -wx OutFilePath -nid SomeNodeIdInTheFile -wf SomeValidWeightFunction-Name");
 		}
 	}
 
@@ -89,7 +89,6 @@ public class OSMtoStreetgraphConverter {
 	}
 
 	private static void generateOSMFileReader() {
-		WeightFunction wf = new CrowFliesDistanceWeight();
 		dataprovider = new LocalProvider(inFile, wf);
 		streetgraph = new StreetGraph(dataprovider);
 	}

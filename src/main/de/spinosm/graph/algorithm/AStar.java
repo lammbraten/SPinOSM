@@ -21,7 +21,7 @@ public class AStar extends Dijkstra {
 	public AStar(StreetGraph streetgraph, Heuristic heuristic){
 		super(streetgraph);
 		this.heuristic = heuristic;	
-		toVisitVertecies = new PriorityQueue<RouteableVertex>(new DistanceHeuristicComparator());
+		toVisitVertices = new PriorityQueue<RouteableVertex>(new DistanceHeuristicComparator());
 	}
 	
 	@Override
@@ -32,17 +32,17 @@ public class AStar extends Dijkstra {
 		return iterateThrougGraph();
 	}
 
-	void checkNextVertex() {
-		RouteableVertex u = toVisitVertecies.poll();
-		visitedVertecies.add(u);
+	RouteableVertex checkNextVertex() {
+		RouteableVertex u = toVisitVertices.poll();
+		visitedVertices.add(u);
 		setChanged();
 		notifyObservers(u);		
 		
 		for(StreetEdge e : graph.edgesOf(u, direction)){
 			RouteableVertex v = e.getOtherVertexThan(u);
-			if(!visitedVertecies.contains(v)){
+			if(!visitedVertices.contains(v)){
 				try {	
-					if(toVisitVertecies.contains(v)){
+					if(toVisitVertices.contains(v)){
 						decraeseValueIfLower(u, v, e.getWeight());
 					}else{
 						v.setHeuristic(heuristicForVertex(v));
@@ -53,6 +53,7 @@ public class AStar extends Dijkstra {
 				}
 			}
 		}
+		return u;
 	}
 
 	void init(RouteableVertex start){
@@ -64,15 +65,10 @@ public class AStar extends Dijkstra {
 		startVertex.setDistance(0);
 		startVertex.setHeuristic(heuristicForVertex(startVertex));
 		graph.edgesOf(startVertex, StreetGraph.DEFAULT_DIRECTION);
-		toVisitVertecies.add(graph.getVertex(startVertex.getId()));
+		toVisitVertices.add(graph.getVertex(startVertex.getId()));
 
 	}
 
-
-	private double heuristicForVertex(RouteableVertex startVertex) {			
-		//return Common.asTheCrowFlies(endVertex.getPosition(), v.getPosition()) /(50 * 2) ; //(Angenommene Durchschnittsgeschwindigkeit * Gewichtung) 
-		return this.heuristic.heuristicForVertex(startVertex);
-	}
 
 	@Override
 	public StreetGraph getGraph() {
@@ -82,5 +78,9 @@ public class AStar extends Dijkstra {
 	@Override
 	public void setGraph(StreetGraph g) {
 		this.graph = g;
+	}
+
+	private double heuristicForVertex(RouteableVertex startVertex) {			
+		return this.heuristic.heuristicForVertex(startVertex);
 	}
 }

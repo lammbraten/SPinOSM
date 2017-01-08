@@ -45,7 +45,6 @@ public class PlayingWithApi {
 	}
 
 	@Test
-	@Ignore
 	public void testKoelnerStraﬂe() {
 		for(Long n : osmapi.getWay(KOELNERSTRASSE).getNodeIds()){
 			List<Way> ways = osmapi.getWaysForNode(n);
@@ -63,7 +62,6 @@ public class PlayingWithApi {
 	}
 	
 	@Test
-	@Ignore
 	public void testOtherStreet() {
 		for(Long n : osmapi.getWay(BIRMESSTRASSE).getNodeIds()){
 			List<Way> ways = osmapi.getWaysForNode(n);
@@ -78,20 +76,21 @@ public class PlayingWithApi {
 				}
 			}
 		}
-		/*System.out.println("-----------------------------");
+		System.out.println("-----------------------------");
 		for(long nid : osmapi.getWay(HAFELSTRASSE).getNodeIds())
 			System.out.println(nid);
-		System.out.println(osmapi.getWaysForNode(415866943l));*/
+		System.out.println(osmapi.getWaysForNode(415866943l));
 	}
 
 	@Test
+	@Ignore
 	public void testGetWayComplete() {
-		/*ArrayList<Node> nodeList = null;
+		ArrayList<Node> nodeList = null;
 		for(int i = 0; i < 10; i++){
-			nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE);
+			nodeList = (ArrayList<Node>) osmapi.getWayNodesComplete(KOELNERSTRASSE, null);
 		}
 		for(Node node : nodeList)
-			System.out.println(node.getId());*/
+			System.out.println(node.getId());
 	}
 	
 	@Test

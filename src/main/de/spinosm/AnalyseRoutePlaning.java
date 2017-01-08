@@ -1,13 +1,18 @@
 package de.spinosm;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import de.spinosm.graph.RouteableVertex;
 import de.spinosm.graph.StreetGraph;
 import de.spinosm.graph.algorithm.AStar;
@@ -73,7 +78,35 @@ public class AnalyseRoutePlaning {
 	private static WeightFunction wf;
 	private static Date endTime;
 	private static Date startTime;
+	private static Date initEndTime;
+	private static Date initStartTime;
+	private static Date graphInitStart;
+	private static Date graphInitEnd;
 
+	public AnalyseRoutePlaning(){
+		dp = null;
+		sg = null;
+		sps = null;
+		heuristicWeightStrings = new LinkedList<String>();
+		heuristicStrings = new LinkedList<String>();
+		algStrings = new LinkedList<String>();
+		wfString = null;
+		dpString = null;
+		startId = 0;
+		endId = 0;
+		reuse = false;
+		save = false;
+		dpSrcString = null;
+		startVertex = null;
+		endVertex = null;
+		savePath = null;
+		wf = null;
+		endTime = null;
+		startTime = null;
+		initEndTime = null;
+		initStartTime = null;
+		
+	}
 
 	public static void main(String[] args) {
 		parseArguments(args);
@@ -212,6 +245,7 @@ public class AnalyseRoutePlaning {
 
 
 	protected static void parseGraph(){
+		setGraphInitStartTime();
 		switch (wfString){
 		case CROW_FLIES:
 			wf = new CrowFliesDistanceWeight();
@@ -247,8 +281,19 @@ public class AnalyseRoutePlaning {
 		}
 		
 		sg = new StreetGraph(dp);
+		setGraphInitEndTime();
 	}
 	
+	private static void setGraphInitEndTime() {
+		graphInitEnd = new Date();
+		
+	}
+
+	private static void setGraphInitStartTime() {
+		graphInitStart= new Date();
+		
+	}
+
 	protected static void parseAlgorithm(){
 		sps = new LinkedList<ShortestPath>();
 		for(String algName : algStrings){
@@ -305,6 +350,7 @@ public class AnalyseRoutePlaning {
 
 
 	private static void initAnalyse(){
+		setInitStartTime();
 		if(dp instanceof DefaultDataProvider)
 			sg = readSG();
 		else{
@@ -312,6 +358,7 @@ public class AnalyseRoutePlaning {
 		}
 		startVertex = sg.getVertex(startId);
 		endVertex = sg.getVertex(endId);
+		setInitEndTime();
 	}
 	
 	public static void startAnlyse(){
@@ -325,21 +372,33 @@ public class AnalyseRoutePlaning {
 			sp.setGraph(sg);
 			sp.getShortestPath(startVertex, endVertex);
 			stopTimeMeasurment();
-			printResults(sp);
+			printResults(sp, i);
 			if(save)
 				writeSP(sp, i);
 		}
 	}
 
 
-	private static void printResults(ShortestPath sp) {
-		long time = endTime.getTime() - startTime.getTime() ;		
+	private static void printResults(ShortestPath sp, int i) {
+		long time = endTime.getTime() - startTime.getTime() ;
+		long initTime = initEndTime.getTime() - initStartTime.getTime();
+		long graphInitTime = graphInitEnd.getTime() - graphInitStart.getTime();		
+
+		try {
+			File f = new File(savePath);
+			f.mkdirs();
+			PrintWriter writer = new PrintWriter(savePath+i+"-logfile"+".txt", "UTF-8");
+			writer.write("Results for " + sp.getClass().getName() + " with " + wf.getClass().getName()+"\n");
+			writer.write("DataProvider: " + sp.getGraph().getDataprovider().getClass().getName()+"\n");
+			writer.write("Start: " + startVertex + ", End: " + endVertex +"\n");
+
+			writer.write("Graph-Init-Time: " + graphInitTime + "ms\n");
+			writer.write("Init-Time: " + initTime + "ms\n");			
+			writer.write("Time: " + time + "ms\n");
+			writer.write("Nodes covered:"+ sp.getFinishedVertices().size() +  " from " + sp.getGraph().vertexSet().size()+"\n");	
 		
-		System.out.println("------------------");
-		System.out.println("Results for " + sp.getClass().getName() + " with " + wf.getClass().getName());
-		System.out.println("Start: " + startVertex + ", End: " + endVertex );
-		System.out.println("Time: " + time + "ms");
-		System.out.println("Nodes covered:"+ sp.getFinishedVertecies().size() +  " from " + sp.getGraph().vertexSet().size());
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {e.printStackTrace();} 
 	}
 
 
@@ -351,6 +410,18 @@ public class AnalyseRoutePlaning {
 
 	private static void startTimeMeasurment() {
 		startTime = new Date();
+		
+	}
+
+
+	private static void setInitStartTime() {
+		initStartTime = new Date();
+		
+	}
+
+
+	private static void setInitEndTime() {
+		initEndTime = new Date();
 		
 	}
 

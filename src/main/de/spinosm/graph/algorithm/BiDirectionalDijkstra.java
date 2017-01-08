@@ -28,7 +28,6 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		
 		this.reverseDijkstra = new Dijkstra(graph,REVERSE_DIRECTION);
 		this.straightDijkstra = new Dijkstra(graph,STRAIGHT_DIRECTION);
-		
 	}
 
 	@Override
@@ -38,57 +37,17 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		
 		reverseDijkstra.init(startVertex);
 		straightDijkstra.init(endVertex);
-		
-		while(!hasSomeSameElement(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies()) && (!reverseDijkstra.getBorderVertecies().isEmpty() || !straightDijkstra.getBorderVertecies().isEmpty())){
-			reverseDijkstra.checkNextVertex();
-			straightDijkstra.checkNextVertex();
+		while(!reverseDijkstra.getBorderVertices().isEmpty() || !straightDijkstra.getBorderVertices().isEmpty()){
+			if(straightDijkstra.getVisitedVertices().contains(reverseDijkstra.checkNextVertex()))
+				break;
+			if(reverseDijkstra.getVisitedVertices().contains(straightDijkstra.checkNextVertex()))
+				break;
+			
 		}
 			
 		return buildShortestPath();
 	}
-
 	
-	private boolean hasSomeSameElement(HashSet<RouteableVertex> visitedVertecies, HashSet<RouteableVertex> visitedVertecies2) {
-		for(RouteableVertex rv : visitedVertecies)
-			if(visitedVertecies2.contains(rv))
-				return true;
-		return false;
-	}
-
-	private List<RouteableVertex> buildShortestPath() {
-		RouteableVertex jointValue = getMiddleVertex();
-		List<RouteableVertex> shortestSub1PathReverse = reverseDijkstra.buildShortestPathTo(jointValue);	
-		List<RouteableVertex> shortestSub2Path = straightDijkstra.buildShortestPathTo(jointValue);
-	    ListIterator<RouteableVertex> listIterator = shortestSub1PathReverse.listIterator();
-		List<RouteableVertex>  shortestPath = new LinkedList<RouteableVertex>();
-		
-	    //vorwärts
-	    while(listIterator.hasNext())
-	    	listIterator.next();
-	    //zurück
-		while(listIterator.hasPrevious())
-			shortestPath.add(listIterator.previous());	
-		shortestPath.add(jointValue);		
-		shortestPath.addAll(shortestSub2Path);
-
-		calculatetdPath = shortestPath;
-		return shortestPath;
-	}
-
-	/**
-	 * @return
-	 */
-	public RouteableVertex getMiddleVertex() {
-		TreeSet<RouteableVertex> intersectionSet = intersectionOf(reverseDijkstra.getVisitedVertecies(),straightDijkstra.getVisitedVertecies());
-		RouteableVertex lowestDistance = new StreetVertex();
-		
-		for(RouteableVertex sv : intersectionSet)
-			if(sv.getDistance() < lowestDistance.getDistance())
-				lowestDistance = sv;
-		
-		return lowestDistance;
-	}
-
 	@Override
 	public StreetGraph getGraph() {
 		return graph;
@@ -101,41 +60,68 @@ public class BiDirectionalDijkstra extends ObservableShortestPath{
 		straightDijkstra.setGraph(g);
 	}
 
-	private TreeSet<RouteableVertex> intersectionOf(HashSet<RouteableVertex> hashSet, HashSet<RouteableVertex> hashSet2){
-		//TODO; Make This more effictive
-		TreeSet<RouteableVertex> intersection = new TreeSet<RouteableVertex>(hashSet);
-		intersection.retainAll(hashSet2);
-		return intersection;
-	}
-	
 	@Override
-	public List<RouteableVertex> getBorderVertecies() {
-		ArrayList<RouteableVertex> returnList = new ArrayList<RouteableVertex>(straightDijkstra.getBorderVertecies()); 
-		returnList.addAll(reverseDijkstra.getBorderVertecies());
+	public List<RouteableVertex> getBorderVertices() {
+		ArrayList<RouteableVertex> returnList = new ArrayList<RouteableVertex>(straightDijkstra.getBorderVertices()); 
+		returnList.addAll(reverseDijkstra.getBorderVertices());
 		return returnList;
 	}
 
 	@Override
-	public List<RouteableVertex> getFinishedVertecies() {
-		ArrayList<RouteableVertex> returnList = new ArrayList<RouteableVertex>(straightDijkstra.getFinishedVertecies()); 
-		returnList.addAll(reverseDijkstra.getFinishedVertecies());
+	public List<RouteableVertex> getFinishedVertices() {
+		ArrayList<RouteableVertex> returnList = new ArrayList<RouteableVertex>(straightDijkstra.getFinishedVertices()); 
+		returnList.addAll(reverseDijkstra.getFinishedVertices());
 		return returnList;
 	}
 
 	@Override
-	public HashSet<RouteableVertex> getVisitedVertecies() {
-		// TODO Auto-generated method stub
+	public HashSet<RouteableVertex> getVisitedVertices() {
 		return null;
 	}
 
 	@Override
-	public void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies) {
-		// TODO Auto-generated method stub
-		
+	public void setVisitedVertices(HashSet<RouteableVertex> visitedVertecies) {
 	}
 
 	@Override
 	public List<RouteableVertex> getCalculatedShortestPath() {
 		return calculatetdPath;
+	}
+
+	private TreeSet<RouteableVertex> intersectionOf(HashSet<RouteableVertex> hashSet, HashSet<RouteableVertex> hashSet2){
+		TreeSet<RouteableVertex> intersection = new TreeSet<RouteableVertex>(hashSet);
+		intersection.retainAll(hashSet2);
+		return intersection;
+	}
+
+	private List<RouteableVertex> buildShortestPath() {
+		RouteableVertex jointValue = getMiddleVertex();
+		List<RouteableVertex> shortestSub1PathReverse = reverseDijkstra.buildShortestPathTo(jointValue);	
+		List<RouteableVertex> shortestSub2Path = straightDijkstra.buildShortestPathTo(jointValue);
+	    ListIterator<RouteableVertex> listIterator = shortestSub1PathReverse.listIterator();
+		List<RouteableVertex>  shortestPath = new LinkedList<RouteableVertex>();
+		
+	    //vorwaerts
+	    while(listIterator.hasNext())
+	    	listIterator.next();
+	    //zurueck
+		while(listIterator.hasPrevious())
+			shortestPath.add(listIterator.previous());	
+		shortestPath.add(jointValue);		
+		shortestPath.addAll(shortestSub2Path);
+	
+		calculatetdPath = shortestPath;
+		return shortestPath;
+	}
+
+	private RouteableVertex getMiddleVertex() {
+		TreeSet<RouteableVertex> intersectionSet = intersectionOf(reverseDijkstra.getVisitedVertices(),straightDijkstra.getVisitedVertices());
+		RouteableVertex lowestDistance = new StreetVertex();
+		
+		for(RouteableVertex sv : intersectionSet)
+			if(sv.getDistance() < lowestDistance.getDistance())
+				lowestDistance = sv;
+		
+		return lowestDistance;
 	}
 }

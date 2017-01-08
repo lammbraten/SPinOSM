@@ -1,13 +1,10 @@
 package de.spinsom;
 
-import static org.junit.Assert.*;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.spinosm.AnalyseRoutePlaning;
 import de.spinosm.OSMtoStreetgraphConverter;
 
 public class Converter {

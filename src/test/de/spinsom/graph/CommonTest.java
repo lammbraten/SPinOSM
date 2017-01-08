@@ -16,8 +16,8 @@ import de.westnordost.osmapi.map.data.OsmLatLon;
 import de.westnordost.osmapi.map.data.Way;
 
 public class CommonTest {
-	private static OsmLatLon KREFELD_CAMPUS_SUED = new OsmLatLon(51.3162898, 6.569983);
-	private static OsmLatLon KREFELD_CAMPUS_SUED_BIB = new OsmLatLon(51.3166598, 6.5694603);
+	private static OsmLatLon KREFELD_CAMPUS_SUED = new OsmLatLon(51.316273, 6.569993);
+	private static OsmLatLon KREFELD_CAMPUS_SUED_BIB = new OsmLatLon(51.316642, 6.569489);
 	private static OsmLatLon KREFELD_CAMPUS_WEST = new OsmLatLon(51.3240241, 6.5539725);
 	private static OsmLatLon MGLADBACH_CAMPUS = new OsmLatLon(51.1791281, 6.4412589);
 	private static OsmLatLon FISCHELN_RATHAUS = new OsmLatLon(51.305541, 6.5871852);
@@ -95,7 +95,9 @@ public class CommonTest {
 		for(int i = 0; TARTANBAHN.length-1 > i; i++){
 			length += Common.asTheCrowFlies(TARTANBAHN[i], TARTANBAHN[i+1]);
 		}
+		System.out.println("CrowFlies:" + length);
 		assertEquals(TARTANBAHN_DISTANCE, length, 0.5);
+		
 	}
 	
 	@Test
@@ -104,6 +106,7 @@ public class CommonTest {
 		for(int i = 0; TARTANBAHN.length-1 > i; i++){
 			length += Common.PythagoreanDistance(TARTANBAHN[i], TARTANBAHN[i+1]);
 		}
+		System.out.println("Pyth:" + length);
 		assertEquals(TARTANBAHN_DISTANCE, length, 105);
 	}
 

@@ -11,10 +11,10 @@ public interface ShortestPath extends Serializable {
 	public List<RouteableVertex> getShortestPath(RouteableVertex start, RouteableVertex end);
 	public StreetGraph getGraph();
 	public void setGraph(StreetGraph g);
-	public List<RouteableVertex> getBorderVertecies();
-	public List<RouteableVertex> getFinishedVertecies();
-	public Set<RouteableVertex> getVisitedVertecies();
-	void setVisitedVertecies(HashSet<RouteableVertex> visitedVertecies);
+	public List<RouteableVertex> getBorderVertices();
+	public List<RouteableVertex> getFinishedVertices();
+	public Set<RouteableVertex> getVisitedVertices();
+	void setVisitedVertices(HashSet<RouteableVertex> visitedVertecies);
 	public List<RouteableVertex> getCalculatedShortestPath();
 	
 }

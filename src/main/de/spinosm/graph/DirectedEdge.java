@@ -13,6 +13,7 @@ public abstract class DirectedEdge implements RouteableEdge{
 		this.source = source2;
 		this.target = target2;
 		this.weight = weight;
+		
 	}
 	
 	@Override

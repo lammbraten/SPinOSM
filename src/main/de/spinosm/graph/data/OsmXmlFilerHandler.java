@@ -1,5 +1,6 @@
 package de.spinosm.graph.data;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +18,8 @@ import de.westnordost.osmapi.map.data.Way;
 
 public class OsmXmlFilerHandler{
 
+	private static final int BUFFER_SIZE = 16 * 1024 * 1024;
+	
 	File xmlFile;
 	OsmXmlHandler handler;
 	OsmMapDataFactory mdf;
@@ -32,7 +35,8 @@ public class OsmXmlFilerHandler{
 			handler = new OsmXmlHandler(nodes, ways, waysOfNode);
 			mdf = new OsmMapDataFactory();
 			mdp = new MapDataParser(handler, mdf);
-			mdp.parse(new FileInputStream(xmlFile));
+			mdp.parse(new BufferedInputStream(
+					new FileInputStream(xmlFile), BUFFER_SIZE));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

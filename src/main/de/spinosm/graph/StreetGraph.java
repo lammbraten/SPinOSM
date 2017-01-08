@@ -23,7 +23,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 			this.dataprovider = dataprovider;
 	}
 	
-	public void setVertecies(TreeSet<RouteableVertex> vertecies) {
+	public void setVertices(TreeSet<RouteableVertex> vertecies) {
 		if(vertecies != null){
 			super.removeAllVertices(vertecies);
 			for(RouteableVertex v : vertecies)
@@ -33,7 +33,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 		}
 	}
 	
-	public Set<RouteableVertex> getVertecies() {
+	public Set<RouteableVertex> getVertices() {
 		return super.vertexSet();	
 	}
 
@@ -64,7 +64,7 @@ public class StreetGraph extends SimpleDirectedWeightedGraph<RouteableVertex, St
 	@Override
 	public Set<StreetEdge> edgesOf(RouteableVertex v){
 		try {
-			throw new Exception("Don't use me. use getEdgesForVertec(sj)");
+			throw new Exception("Don't use me. use edges(rv, int)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
